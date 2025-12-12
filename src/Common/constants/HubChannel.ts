@@ -4,5 +4,5 @@ export enum HubChannel {
   Message = "message",
   PlayersLeft = "players_left",
   Iterations = "iterations",
-  Game = "game",
+  Game = "session",
 }

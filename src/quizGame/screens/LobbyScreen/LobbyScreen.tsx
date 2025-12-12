@@ -16,6 +16,7 @@ import { QuizGameScreen, QuizSession } from "../../constants/quizTypes";
 
 export const LobbyScreen = ({ navigation }: any) => {
   const [question, setQuestion] = useState<string>("");
+  const [started, setStarted] = useState<boolean>(false);
 
   const { gameEntryMode, gameKey, hubAddress } = useGlobalGameProvider();
   const { connect, disconnect, setListener, invokeFunction } = useHubConnectionProvider();
@@ -53,11 +54,16 @@ export const LobbyScreen = ({ navigation }: any) => {
       displayErrorModal(message, () => navigation.navigate(Screen.Home));
     });
 
-    setListener(HubChannel.Game, async (game: QuizSession) => {
+    setListener(HubChannel.Game, (game: QuizSession) => {
+      console.log("Received game session, navigating to game screen");
       setQuizSession(game);
       console.debug(game);
       setScreen(QuizGameScreen.Game);
-      await disconnect();
+    });
+
+    setListener(HubChannel.State, (message: string) => {
+      console.log(message);
+      setScreen(QuizGameScreen.Started);
     });
   };
 
@@ -65,13 +71,18 @@ export const LobbyScreen = ({ navigation }: any) => {
     const result = await invokeFunction("AddQuestion", gameKey, question);
     if (result.isError()) {
       displayErrorModal("Klarte ikke legge til spørsmål");
+      return;
     }
+
+    setQuestion("");
   };
 
   const handleStartGame = async () => {
+    setStarted(true);
     const result = await invokeFunction("StartGame", gameKey);
     if (result.isError()) {
-      displayErrorModal(result.error);
+      displayErrorModal("Klarte ikke starte spill");
+      setStarted(false);
       return;
     }
   };

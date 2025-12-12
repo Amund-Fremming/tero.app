@@ -11,7 +11,7 @@ export interface QuizSession {
   base_id: string;
   quiz_id: string;
   name: string;
-  description: string | null;
+  description?: string | null;
   category: GameCategory;
   iterations: number;
   current_iteration: number;
