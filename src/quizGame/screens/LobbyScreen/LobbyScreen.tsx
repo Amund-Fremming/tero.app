@@ -78,9 +78,14 @@ export const LobbyScreen = ({ navigation }: any) => {
   };
 
   const handleStartGame = async () => {
-    setStarted(true);
+    if (started) {
+      return;
+    }
+
     const result = await invokeFunction("StartGame", gameKey);
+    setStarted(true);
     if (result.isError()) {
+      console.error(result.error);
       displayErrorModal("Klarte ikke starte spill");
       setStarted(false);
       return;
