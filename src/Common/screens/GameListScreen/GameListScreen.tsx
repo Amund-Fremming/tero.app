@@ -6,11 +6,10 @@ import { useModalProvider } from "../../context/ModalProvider";
 import { useGlobalGameProvider } from "@/src/Common/context/GlobalGameProvider";
 import { useAuthProvider } from "../../context/AuthProvider";
 import { useNavigation } from "@react-navigation/native";
-import { useSpinGameProvider } from "@/src/SpinGame/context/SpinGameProvider";
 import { useQuizGameProvider } from "@/src/quizGame/context/QuizGameProvider";
 import styles from "./gameListScreenStyles";
 import { useServiceProvider } from "../../context/ServiceProvider";
-import { GameBase, GameCategory, GamePageQuery, PagedResponse } from "../../constants/Types";
+import { GameBase, GameCategory, GameEntryMode, GamePageQuery, GameType, PagedResponse } from "../../constants/Types";
 import Screen from "../../constants/Screen";
 import { Feather } from "@expo/vector-icons";
 import Color from "../../constants/Color";
@@ -26,6 +25,8 @@ const CATEGORY_LABELS: Record<GameCategory, string> = {
 export const GameListScreen = () => {
   const navigation: any = useNavigation();
 
+  const { setQuizSession } = useQuizGameProvider();
+  const { setGameEntryMode } = useGlobalGameProvider();
   const { displayErrorModal, displayActionModal } = useModalProvider();
   const { pseudoId, accessToken, triggerLogin } = useAuthProvider();
   const { gameType } = useGlobalGameProvider();
@@ -114,8 +115,23 @@ export const GameListScreen = () => {
     }
   };
 
-  const { setSpinGame } = useSpinGameProvider();
-  const { setQuizSession: setQuizGame } = useQuizGameProvider();
+  const handleGamePressed = (gameType: GameType) => {
+    switch (gameType) {
+      case GameType.Quiz:
+        //const game = gameService().initiateStandaloneGame();
+        // fetch the quiz
+        // set the quiz
+        // setQuizSession();
+        setGameEntryMode(GameEntryMode.Host);
+        navigation.navigate(Screen.Spin);
+        break;
+      case GameType.Spin:
+        // TODO HANDLE
+        break;
+      default:
+        console.error("Oh yes this is bad. Game had unsupported type");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -125,11 +141,11 @@ export const GameListScreen = () => {
         {games.length === 0 && <Text>Det finnes ingen spill av denne typen enda</Text>}
 
         {games.map((game) => (
-          <TouchableOpacity key={game.id} style={styles.card}>
+          <TouchableOpacity onPress={() => handleGamePressed(game.game_type)} key={game.id} style={styles.card}>
             <View style={styles.innerCard}>
               <View style={styles.iconCardOuter}>
                 <View style={styles.iconCardInner}>
-                  <Text style={styles.iconCardText}>{game.gameType || "SPILL"}</Text>
+                  <Text style={styles.iconCardText}>{game.game_type || "SPILL"}</Text>
                 </View>
               </View>
 

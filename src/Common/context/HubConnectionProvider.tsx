@@ -114,8 +114,9 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
 
       return ok();
     } catch (error) {
+      clearValues();
       setConnectedState(false);
-      return err("En feil skjedde når du skulle forlate spillet.");
+      return err("Failed to close down websocket");
     }
   }
 

@@ -9,13 +9,11 @@ import { QuizSession } from "../../constants/quizTypes";
 
 export const GameScreen = () => {
   const navigation: any = useNavigation();
-  const { disconnect } = useHubConnectionProvider();
   const { quizSession } = useQuizGameProvider();
 
   const [quiz, setQuiz] = useState<QuizSession | undefined>(quizSession);
 
   useEffect(() => {
-    disconnect();
     console.debug(quizSession);
   }, []);
 

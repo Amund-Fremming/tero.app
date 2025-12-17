@@ -170,9 +170,9 @@ export interface GameBase {
   id: string;
   name: string;
   description?: string;
-  gameType: GameType;
+  game_type: GameType;
   category: GameCategory;
   iterations: number;
-  timesPlayed: number;
-  lastPlayed: string;
+  times_played: number;
+  last_played: string;
 }

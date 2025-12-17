@@ -17,11 +17,12 @@ import { QuizGameScreen, QuizSession } from "../../constants/quizTypes";
 export const LobbyScreen = ({ navigation }: any) => {
   const [question, setQuestion] = useState<string>("");
   const [started, setStarted] = useState<boolean>(false);
+  const [iterations, setIterations] = useState<number>(0);
 
   const { gameEntryMode, gameKey, hubAddress } = useGlobalGameProvider();
   const { connect, disconnect, setListener, invokeFunction } = useHubConnectionProvider();
   const { displayErrorModal } = useModalProvider();
-  const { setQuizSession, setIterations, iterations, setScreen } = useQuizGameProvider();
+  const { setQuizSession, setScreen } = useQuizGameProvider();
 
   useEffect(() => {
     if (gameKey) {
@@ -82,14 +83,17 @@ export const LobbyScreen = ({ navigation }: any) => {
       return;
     }
 
-    const result = await invokeFunction("StartGame", gameKey);
     setStarted(true);
+    const result = await invokeFunction("StartGame", gameKey);
+
     if (result.isError()) {
       console.error(result.error);
       displayErrorModal("Klarte ikke starte spill");
       setStarted(false);
       return;
     }
+
+    disconnect();
   };
 
   return (
