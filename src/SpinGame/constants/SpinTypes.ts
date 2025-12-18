@@ -2,10 +2,7 @@ import { BaseUser, GameBase, GameCategory } from "@/src/Common/constants/Types";
 
 export const enum SpinSessionScreen {
   Lobby = "Lobby",
-  Started = "Started",
-  Finished = "Finished",
   Create = "Create",
-  Choose = "Choose",
   Game = "Game",
 }
 

@@ -2,25 +2,24 @@ import { View, Text } from "react-native";
 import styles from "./lobbyScreenStyles";
 import AbsoluteHomeButton from "@/src/Common/components/AbsoluteHomeButton/AbsoluteHomeButton";
 import { useGlobalGameProvider } from "@/src/Common/context/GlobalGameProvider";
-import { Pressable, TextInput } from "react-native-gesture-handler";
+import { TextInput } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
 import { useHubConnectionProvider } from "@/src/Common/context/HubConnectionProvider";
 import { HubChannel } from "@/src/Common/constants/HubChannel";
 import { useModalProvider } from "@/src/Common/context/ModalProvider";
-import Screen from "@/src/Common/constants/Screen";
 import { GameEntryMode } from "@/src/Common/constants/Types";
 import { useAuthProvider } from "@/src/Common/context/AuthProvider";
-import SpinGame from "../../SpinGame";
-import AddChallenge from "../../components/AddChallenge/AddChallenge";
 import MediumButton from "@/src/Common/components/MediumButton/MediumButton";
 import Color from "@/src/Common/constants/Color";
-import { useServiceProvider } from "@/src/Common/context/ServiceProvider";
+import { SpinSessionScreen } from "../../constants/SpinTypes";
+import { useSpinGameProvider } from "../../context/SpinGameProvider";
 
-export const LobbyScreen = ({ navigation }: any) => {
+export const LobbyScreen = () => {
   const { pseudoId } = useAuthProvider();
-  const { connect, disconnect, setListener, invokeFunction } = useHubConnectionProvider();
+  const { connect, setListener, invokeFunction } = useHubConnectionProvider();
   const { displayErrorModal } = useModalProvider();
   const { gameKey, gameEntryMode, hubAddress } = useGlobalGameProvider();
+  const { setScreen } = useSpinGameProvider();
 
   const [iterations, setIterations] = useState<number>(0);
   const [round, setRound] = useState<string>("");
@@ -61,7 +60,14 @@ export const LobbyScreen = ({ navigation }: any) => {
   };
 
   const handleStartGame = async () => {
-    //
+    const result = await invokeFunction("ConnectToGroup", gameKey);
+    if (result.isError()) {
+      console.error(result.error);
+      displayErrorModal("Klarte ikke koble til spillet, prøv igjen senere");
+      return;
+    }
+
+    setScreen(SpinSessionScreen.Game);
   };
 
   return (

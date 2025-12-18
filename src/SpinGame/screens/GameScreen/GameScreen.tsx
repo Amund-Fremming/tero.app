@@ -13,10 +13,9 @@ import Screen from "@/src/Common/constants/Screen";
 import { useAuthProvider } from "@/src/Common/context/AuthProvider";
 
 export const GameScreen = ({ navigation }: any) => {
-  const [challenge, setChallenge] = useState<string>();
-  const [gameState, setGameState] = useState<SpinGameState>();
   const [bgColor, setBgColor] = useState<string>(Color.Gray);
   const [state, setState] = useState<SpinGameState>(SpinGameState.RoundStarted);
+  const [roundText, setRoundText] = useState<string>("");
 
   const { disconnect, connect, setListener, invokeFunction } = useHubConnectionProvider();
   const { gameEntryMode } = useGlobalGameProvider();
@@ -25,17 +24,44 @@ export const GameScreen = ({ navigation }: any) => {
 
   const isHost = gameEntryMode === GameEntryMode.Creator || gameEntryMode === GameEntryMode.Host;
 
+  useEffect(() => {
+    setupListeners();
+    handleStartGame();
+  }, []);
+
+  const setupListeners = async () => {
+    setListener(HubChannel.Error, (message: string) => {
+      displayErrorModal(message);
+    });
+
+    setListener("round_text", (roundText: string) => {
+      setRoundText(roundText);
+    });
+  };
+
+  const handleStartGame = async () => {
+    const result = await invokeFunction("StartGame");
+    if (result.isError()) {
+      console.error(result.error);
+      displayErrorModal("Klarte ikke starte spill, prøv igjen senere");
+      return;
+    }
+  };
+
+  const handleStartSpin = () => {
+    console.log("Starting...");
+  };
+
   return (
     <View style={{ ...styles.container, backgroundColor: bgColor }}>
-      {isHost && state === SpinGameState.RoundStarted && (
-        <Pressable style={styles.button}>
-          <Text style={styles.buttonText}>Start spin</Text>
-        </Pressable>
-      )}
-      {isHost && state === SpinGameState.RoundFinished && (
-        <Pressable style={styles.button}>
-          <Text style={styles.buttonText}>Neste runde</Text>
-        </Pressable>
+      {isHost && (
+        <View>
+          <Text>{roundText}</Text>
+
+          <Pressable onPress={handleStartSpin}>
+            <Text>Start spin</Text>
+          </Pressable>
+        </View>
       )}
       <AbsoluteHomeButton />
     </View>
