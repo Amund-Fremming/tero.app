@@ -73,7 +73,6 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
         return ok(connectionRef.current);
       }
 
-      console.warn("Address:", hubAddress);
       const hubConnection = new signalR.HubConnectionBuilder()
         .withUrl(hubAddress)
         .configureLogging(signalR.LogLevel.Information)

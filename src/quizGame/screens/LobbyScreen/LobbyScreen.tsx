@@ -1,8 +1,8 @@
 import Color from "@/src/Common/constants/Color";
 import MediumButton from "@/src/Common/components/MediumButton/MediumButton";
 import { useModalProvider } from "@/src/Common/context/ModalProvider";
-import { useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { View, Text, Pressable } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import styles from "./lobbyScreenStyles";
 import { useHubConnectionProvider } from "@/src/Common/context/HubConnectionProvider";
@@ -13,8 +13,10 @@ import { HubChannel } from "@/src/Common/constants/HubChannel";
 import { GameEntryMode } from "@/src/Common/constants/Types";
 import { useQuizGameProvider } from "../../context/QuizGameProvider";
 import { QuizGameScreen, QuizSession } from "../../constants/quizTypes";
+import { useNavigation } from "expo-router";
 
-export const LobbyScreen = ({ navigation }: any) => {
+export const LobbyScreen = () => {
+  const navigation: any = useNavigation();
   const [question, setQuestion] = useState<string>("");
   const [started, setStarted] = useState<boolean>(false);
   const [iterations, setIterations] = useState<number>(0);
@@ -26,21 +28,18 @@ export const LobbyScreen = ({ navigation }: any) => {
 
   useEffect(() => {
     if (gameKey) {
-      createHubConnection();
+      createHubConnection(gameKey, hubAddress);
     }
+
+    return () => {
+      disconnect();
+    };
   }, [gameKey]);
 
-  const createHubConnection = async () => {
-    const result = await connect(hubAddress);
+  const createHubConnection = async (key: string, address: string) => {
+    const result = await connect(address);
     if (result.isError()) {
       displayErrorModal(result.error);
-      return;
-    }
-
-    const connectResult = await invokeFunction("ConnectToGroup", gameKey);
-    if (connectResult.isError()) {
-      displayErrorModal("En feil har skjedd, forsøk å gå ut og inn av spillet");
-      await disconnect();
       return;
     }
 
@@ -59,6 +58,14 @@ export const LobbyScreen = ({ navigation }: any) => {
       console.log("Received game session");
       setQuizSession(game);
     });
+
+    console.debug("Connecting to group with key:", key);
+    const connectResult = await invokeFunction("ConnectToGroup", key);
+    if (connectResult.isError()) {
+      displayErrorModal("En feil har skjedd, forsøk å gå ut og inn av spillet");
+      await disconnect();
+      return;
+    }
   };
 
   const handleAddQuestion = async () => {
