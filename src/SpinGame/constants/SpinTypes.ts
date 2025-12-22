@@ -40,12 +40,11 @@ export interface CreateSpinGameRequest {
 }
 
 export enum SpinGameState {
-  Initialized,
-  ChallengesClosed,
-  RoundStarted,
-  Spinning,
-  RoundFinished,
-  Finished,
+  Initialized = "Initialized",
+  RoundStarted = "RoundStarted",
+  RoundInProgress = "RoundInProgress",
+  RoundFinished = "RoundFinished",
+  Finished = "Finished",
 }
 
 export default SpinSession;

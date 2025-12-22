@@ -17,13 +17,12 @@ export const GameTypeListScreen = () => {
   const { setGameType, gameEntryMode } = useGlobalGameProvider();
 
   const handlePress = (screen: string) => {
-    console.log("SCREEN: ", screen);
     const screenEnum = screen as GameType;
     const creating = gameEntryMode === GameEntryMode.Creator;
     setGameType(screenEnum);
 
     const navTarget = creating ? screenEnum : Screen.GameList;
-    console.log("Navigating to:", navTarget, "creating:", creating);
+    console.debug("Navigating to:", navTarget, "creating:", creating);
     navigation.navigate(navTarget);
   };
 
@@ -48,9 +47,9 @@ export const GameTypeListScreen = () => {
       >
         <View style={styles.topWrapper}>
           <Pressable onPress={() => navigation.goBack()} style={styles.iconWrapper}>
-            <Feather name="chevron-left" size={32} color={Color.OffBlack} />
+            <Feather name="chevron-left" size={45} color={Color.OffBlack} />
           </Pressable>
-          <View>
+          <View style={styles.borderAndHeader}>
             <Text style={styles.header}>{gameEntryMode === GameEntryMode.Creator ? "Lag spill" : "Velg spill"}</Text>
             <View style={styles.borderWrapper}>
               <View style={styles.borderLeft} />

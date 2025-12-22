@@ -37,7 +37,8 @@ export const JoinScreen = () => {
     console.debug("Trying to join:", gameKey);
     const result = await gameService().joinInteractiveGame(pseudoId, gameKey);
     if (result.isError()) {
-      displayErrorModal(result.error);
+      console.error(result.error);
+      displayErrorModal("Spillet finnes ikke");
       return;
     }
 

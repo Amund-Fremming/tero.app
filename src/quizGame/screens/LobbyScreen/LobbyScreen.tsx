@@ -14,6 +14,7 @@ import { GameEntryMode } from "@/src/Common/constants/Types";
 import { useQuizGameProvider } from "../../context/QuizGameProvider";
 import { QuizGameScreen, QuizSession } from "../../constants/quizTypes";
 import { useNavigation } from "expo-router";
+import { SpinGameState } from "@/src/SpinGame/constants/SpinTypes";
 
 export const LobbyScreen = () => {
   const navigation: any = useNavigation();
@@ -57,6 +58,12 @@ export const LobbyScreen = () => {
     setListener(HubChannel.Game, (game: QuizSession) => {
       console.log("Received game session");
       setQuizSession(game);
+    });
+
+    setListener(HubChannel.State, (message: string) => {
+      console.log("Received state message:", message);
+      setScreen(QuizGameScreen.Started);
+      disconnect();
     });
 
     console.debug("Connecting to group with key:", key);

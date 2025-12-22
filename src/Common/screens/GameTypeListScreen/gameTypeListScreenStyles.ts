@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     backgroundColor: Color.LightGray,
-    paddingTop: verticalScale(40),
+    paddingTop: verticalScale(44),
     paddingBottom: verticalScale(20)
   },
 
@@ -34,20 +34,26 @@ export const styles = StyleSheet.create({
   },
 
   icon: {
-    fontSize: moderateScale(28)
+    fontSize: moderateScale(40)
   },
 
   borderWrapper: {
     paddingTop: verticalScale(4),
     flexDirection: "row",
-    width: horizontalScale(100)
+    width: "100%"
+  },
+
+  borderAndHeader: {
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
   },
 
   borderLeft: {
     backgroundColor: Color.Red,
     borderTopLeftRadius: moderateScale(5),
     borderBottomLeftRadius: moderateScale(5),
-    width: "100%",
+    flex: 1,
     height: verticalScale(7)
   },
 
@@ -55,17 +61,17 @@ export const styles = StyleSheet.create({
     borderTopRightRadius: moderateScale(5),
     borderBottomRightRadius: moderateScale(5),
     backgroundColor: Color.Green,
-    width: "100%",
+    flex: 1,
     height: verticalScale(7)
   },
 
   iconWrapper: {
+    paddingTop: verticalScale(7),
     backgroundColor: Color.LightGray,
-    borderRadius: moderateScale(10),
     justifyContent: "center",
     alignItems: "center",
-    height: verticalScale(40),
-    width: horizontalScale(40)
+    height: verticalScale(50),
+    width: horizontalScale(50)
   },
 
   card: {

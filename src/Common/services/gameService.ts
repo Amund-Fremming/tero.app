@@ -189,7 +189,7 @@ export class GameService {
       return ok(result);
     } catch (error) {
       console.error("joinInteractiveGame:", error);
-      return err("Klarte ikke bli med i spill");
+      return err("Failed to join game");
     }
   }
 }

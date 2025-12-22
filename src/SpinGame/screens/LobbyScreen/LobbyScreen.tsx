@@ -46,6 +46,13 @@ export const LobbyScreen = () => {
     setListener(HubChannel.Iterations, (iterations: number) => {
       setIterations(iterations);
     });
+
+    const groupResult = await invokeFunction("ConnectToGroup", gameKey, pseudoId);
+    if (result.isError()) {
+      console.error(groupResult.error);
+      displayErrorModal("Klarte ikke koble til spillet, prøv igjen senere");
+      return;
+    }
   };
 
   const handleAddRound = async () => {
@@ -60,10 +67,9 @@ export const LobbyScreen = () => {
   };
 
   const handleStartGame = async () => {
-    const result = await invokeFunction("ConnectToGroup", gameKey);
-    if (result.isError()) {
-      console.error(result.error);
-      displayErrorModal("Klarte ikke koble til spillet, prøv igjen senere");
+    if (!pseudoId) {
+      // TODO  handle
+      console.error("No pseudo id present");
       return;
     }
 
