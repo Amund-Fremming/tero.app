@@ -11,14 +11,17 @@ import { useModalProvider } from "@/src/Common/context/ModalProvider";
 import { HubChannel } from "@/src/Common/constants/HubChannel";
 import { useAuthProvider } from "@/src/Common/context/AuthProvider";
 import { useSpinGameProvider } from "../../context/SpinGameProvider";
+import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "expo-router";
 
-export const GameScreen = ({ navigation }: any) => {
+export const GameScreen = () => {
+  const navigation: any = useNavigation();
   const [bgColor, setBgColor] = useState<string>(Color.Gray);
   const [state, setState] = useState<SpinGameState>(SpinGameState.RoundStarted);
   const [roundText, setRoundText] = useState<string>("");
   const [gameStarted, setGameStarted] = useState<boolean>(false);
 
-  const { isHost, clearGlobalSessionValues } = useGlobalSessionProvider();
+  const { isHost, setIsHost, clearGlobalSessionValues } = useGlobalSessionProvider();
   const { clearSpinSessionValues } = useSpinGameProvider();
   const { disconnect, setListener, invokeFunction } = useHubConnectionProvider();
   const { gameKey } = useGlobalSessionProvider();
@@ -52,6 +55,11 @@ export const GameScreen = ({ navigation }: any) => {
       if (state == SpinGameState.RoundStarted || state == SpinGameState.Finished) {
         setBgColor(Color.Gray);
       }
+    });
+
+    setListener("host", (hostId: string) => {
+      console.info("Received new host:", hostId);
+      setIsHost(hostId == pseudoId);
     });
 
     setListener("selected", (batch: string[]) => {
@@ -101,8 +109,19 @@ export const GameScreen = ({ navigation }: any) => {
     }
   };
 
+  const handleBackPressed = async () => {
+    await disconnect();
+    navigation.goBack();
+    clearGlobalSessionValues();
+  };
+
   return (
     <View style={{ ...styles.container, backgroundColor: bgColor }}>
+      <View>
+        <Pressable onPress={handleBackPressed}>
+          <Feather name="chevron-left" size={45} />
+        </Pressable>
+      </View>
       {state === SpinGameState.RoundStarted && isHost && (
         <View>
           <Text>{roundText}</Text>
@@ -136,8 +155,6 @@ export const GameScreen = ({ navigation }: any) => {
           <Text>Spillet er ferdig!</Text>
         </View>
       )}
-
-      <AbsoluteHomeButton />
     </View>
   );
 };
