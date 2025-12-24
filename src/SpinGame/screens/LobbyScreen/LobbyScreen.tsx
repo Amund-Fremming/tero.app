@@ -7,20 +7,22 @@ import { useEffect, useState } from "react";
 import { useHubConnectionProvider } from "@/src/Common/context/HubConnectionProvider";
 import { HubChannel } from "@/src/Common/constants/HubChannel";
 import { useModalProvider } from "@/src/Common/context/ModalProvider";
-import { GameEntryMode } from "@/src/Common/constants/Types";
+import { GameEntryMode, GameType } from "@/src/Common/constants/Types";
 import { useAuthProvider } from "@/src/Common/context/AuthProvider";
 import MediumButton from "@/src/Common/components/MediumButton/MediumButton";
 import Color from "@/src/Common/constants/Color";
 import { SpinGameState, SpinSessionScreen } from "../../constants/SpinTypes";
 import { useSpinGameProvider } from "../../context/SpinGameProvider";
 import Screen from "@/src/Common/constants/Screen";
+import { useServiceProvider } from "@/src/Common/context/ServiceProvider";
 
 export const LobbyScreen = () => {
   const { pseudoId } = useAuthProvider();
   const { connect, setListener, invokeFunction } = useHubConnectionProvider();
-  const { displayErrorModal } = useModalProvider();
+  const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { gameKey, gameEntryMode, hubAddress } = useGlobalGameProvider();
   const { setScreen } = useSpinGameProvider();
+  const { gameService } = useServiceProvider();
 
   const [iterations, setIterations] = useState<number>(0);
   const [round, setRound] = useState<string>("");
@@ -78,13 +80,26 @@ export const LobbyScreen = () => {
       return;
     }
 
+    const result = await gameService().sessionPlayersCount(pseudoId, GameType.Spin, gameKey);
+    if (result.isError()) {
+      console.error(result.error);
+      displayErrorModal("En feil har skjedd forsøk igjen senere");
+      return;
+    }
+
+    const playersCount = result.value;
+    if (playersCount < 3) {
+      displayInfoModal(`Minimum 3 spillere for å starte, du har: ${playersCount}`);
+      return;
+    }
+
     setScreen(SpinSessionScreen.Game);
   };
 
   return (
     <View style={styles.container}>
       <Text>Spin game</Text>
-      <Text style={styles.gameKey}>ID: {gameKey.toUpperCase()}</Text>
+      <Text style={styles.gameKey}>ID: {gameKey?.toUpperCase()}</Text>
       <Text style={styles.header}>Legg til spørsmål</Text>
       <Text style={styles.paragraph}>Antall spørsmål: {iterations}</Text>
       <TextInput style={styles.input} value={round} onChangeText={(input) => setRound(input)} />

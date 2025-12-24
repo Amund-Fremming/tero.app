@@ -138,18 +138,18 @@ export class GameService {
     }
   }
 
-    async initiateStandaloneGame<T>(game_type: string, game_id: string, pseudo_id: string): Promise<Result<T>> {
-        try {
-            const response = await axios.get(`${this.urlBase}/games/static/${game_type}/initiate/${game_id}`, {
-                headers: getHeaders(pseudo_id, null)
-            });
-            const data: T = response.data;
-            return ok(data);
-        } catch (error) {
-            console.error("", error);
-            return err("Failed to initiate standalone game");
-        }
+  async initiateStandaloneGame<T>(game_type: string, game_id: string, pseudo_id: string): Promise<Result<T>> {
+    try {
+      const response = await axios.get(`${this.urlBase}/games/static/${game_type}/initiate/${game_id}`, {
+        headers: getHeaders(pseudo_id, null),
+      });
+      const data: T = response.data;
+      return ok(data);
+    } catch (error) {
+      console.error("initiateStandaloneGame", error);
+      return err("Failed to initiate standalone game");
     }
+  }
 
   // Remove?
   async initiateInteractiveGame(
@@ -172,6 +172,19 @@ export class GameService {
     } catch (error) {
       console.error("initiateInteractiveGame:", error);
       return err("Klarte ikke starte spill");
+    }
+  }
+
+  async sessionPlayersCount(pseudo_id: string, game_type: GameType, game_key: string): Promise<Result<number>> {
+    try {
+      const response = await axios.get(`${this.urlBase}/games/session/count/${game_type}/${game_key}`, {
+        headers: getHeaders(pseudo_id, null),
+      });
+      const count: number = response.data;
+      return ok(count);
+    } catch (error) {
+      console.error("sessionPlayersCount:", error);
+      return err("Failed to get session players count");
     }
   }
 
