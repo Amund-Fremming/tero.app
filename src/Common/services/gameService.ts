@@ -24,6 +24,8 @@ export class GameService {
     request: CreateGameRequest
   ): Promise<Result<InteractiveGameResponse>> {
     try {
+      console.log("Sending:", JSON.stringify({ name: request.name, category: request.category }));
+      console.log(`GameType: ${this.urlBase}/games/general/${type}/create`);
       const response = await axios.post<InteractiveGameResponse>(
         `${this.urlBase}/games/general/${type}/create`,
         request,

@@ -8,9 +8,10 @@ import { useAuthProvider } from "@/src/Common/context/AuthProvider";
 import { useGlobalSessionProvider } from "../../../Common/context/GlobalSessionProvider";
 import { Feather } from "@expo/vector-icons";
 import Color from "@/src/Common/constants/Color";
-import { GameEntryMode } from "@/src/Common/constants/Types";
+import { GameEntryMode, GameType } from "@/src/Common/constants/Types";
 import { useServiceProvider } from "@/src/Common/context/ServiceProvider";
 import { useNavigation } from "expo-router";
+import Screen from "@/src/Common/constants/Screen";
 
 export const JoinScreen = () => {
   const navigation: any = useNavigation();
@@ -49,8 +50,16 @@ export const JoinScreen = () => {
     const response = result.value;
     console.debug(response);
     setGameEntryMode(GameEntryMode.Participant);
+
+    console.log("Received hub address:", response.hub_address);
     setHubAddress(response.hub_address);
     setGameKey(response.game_key);
+
+    if ([GameType.Duel, GameType.Roulette].includes(response.game_type)) {
+      navigation.navigate(Screen.Spin);
+      return;
+    }
+
     navigation.navigate(response.game_type);
   };
 

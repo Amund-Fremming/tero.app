@@ -14,11 +14,10 @@ import { SpinSessionScreen } from "../../constants/SpinTypes";
 import { useSpinGameProvider } from "../../context/SpinGameProvider";
 
 const CATEGORY_OPTIONS = [
-  { label: "Standard", value: GameCategory.Default },
-  { label: "Tilfeldig", value: GameCategory.Random },
-  { label: "Casual", value: GameCategory.Casual },
+  { label: "Vors", value: GameCategory.Vors },
   { label: "Damer", value: GameCategory.Ladies },
   { label: "Gutter", value: GameCategory.Boys },
+  { label: "All", value: GameCategory.All },
 ];
 
 export const CreateScreen = () => {
@@ -32,8 +31,7 @@ export const CreateScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [createRequest, setCreateRequest] = useState<CreateGameRequest>({
     name: "",
-    description: "",
-    category: GameCategory.Random,
+    category: GameCategory.All,
   });
 
   useEffect(() => {
@@ -50,7 +48,7 @@ export const CreateScreen = () => {
     }
 
     setLoading(true);
-    let result = await gameService().createInteractiveGame(pseudoId, GameType.Spin, createRequest);
+    let result = await gameService().createInteractiveGame(pseudoId, GameType.Roulette, createRequest);
     if (result.isError()) {
       displayErrorModal(result.error);
       setLoading(false);
@@ -80,19 +78,6 @@ export const CreateScreen = () => {
             placeholderTextColor={Color.Gray}
             value={createRequest.name}
             onChangeText={(input) => setCreateRequest((prev) => ({ ...prev, name: input }))}
-          />
-        </View>
-
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Beskrivelse</Text>
-          <TextInput
-            style={[styles.input, styles.textArea]}
-            placeholder="Skriv en beskrivelse"
-            placeholderTextColor={Color.Gray}
-            value={createRequest.description}
-            multiline
-            numberOfLines={3}
-            onChangeText={(input) => setCreateRequest((prev) => ({ ...prev, description: input }))}
           />
         </View>
 

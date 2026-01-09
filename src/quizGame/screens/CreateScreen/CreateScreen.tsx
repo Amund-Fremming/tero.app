@@ -26,8 +26,7 @@ export const CreateScreen = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [createRequest, setCreateRequest] = useState<CreateGameRequest>({
     name: "",
-    description: "",
-    category: GameCategory.Random,
+    category: GameCategory.All,
   });
 
   const handleCreateGame = async () => {
@@ -66,12 +65,6 @@ export const CreateScreen = () => {
         placeholder="Spillnavn"
         value={createRequest.name}
         onChangeText={(val) => setCreateRequest((prev) => ({ ...prev, name: val }))}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Forklaring"
-        value={createRequest.description}
-        onChangeText={(val) => setCreateRequest((prev) => ({ ...prev, description: val }))}
       />
 
       <Text style={styles.paragraph}>Mangler kategorivalg her</Text>

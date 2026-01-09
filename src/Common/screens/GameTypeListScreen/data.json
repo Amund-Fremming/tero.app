@@ -1,27 +1,27 @@
 [
-    {
-        "name": "Rulett",
-        "icon": "roulette.webp",
-        "screen": "Spin"
-    },
-    {
-        "name": "Quiz",
-        "icon": "quiz.webp",
-        "screen": "Quiz"
-    },
-    {
-        "name": "Challenge",
-        "icon": "spin.webp",
-        "screen": "Home"
-    },
-    {
-        "name": "Terning",
-        "icon": "",
-        "screen": "Home"
-    },
-    {
-        "name": "Imposter",
-        "icon": "",
-        "screen": "Home"
-    }
+  {
+    "name": "Quiz",
+    "icon": "quiz.webp",
+    "screen": "Quiz"
+  },
+  {
+    "name": "Rulett",
+    "icon": "roulette.webp",
+    "screen": "Spin"
+  },
+  {
+    "name": "Duel",
+    "icon": "duel.webp",
+    "screen": "Spin"
+  },
+  {
+    "name": "Terning",
+    "icon": "",
+    "screen": "Home"
+  },
+  {
+    "name": "Imposter",
+    "icon": "",
+    "screen": "Home"
+  }
 ]

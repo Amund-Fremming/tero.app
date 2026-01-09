@@ -35,7 +35,7 @@ export const GameScreen = () => {
   const handleNextPressed = () => {
     setQuiz((prev) => {
       if (!prev) return prev;
-      if (prev.current_iteration == prev.iterations - 1) return prev;
+      if (prev.current_iteration == prev.questions.length - 1) return prev;
       return { ...prev, current_iteration: prev.current_iteration + 1 };
     });
   };
@@ -43,7 +43,7 @@ export const GameScreen = () => {
   return (
     <View style={styles.container}>
       <Text>
-        Gjenstående spørsmål: {(quiz?.current_iteration ?? 0) + 1}/{quiz?.iterations ?? 1}
+        Gjenstående spørsmål: {(quiz?.current_iteration ?? 0) + 1}/{quiz?.questions.length ?? 1}
       </Text>
 
       <Text>{quiz?.questions[quiz.current_iteration]}</Text>
@@ -57,7 +57,7 @@ export const GameScreen = () => {
               <Text>Forrige</Text>
             </Pressable>
           )}
-          {quiz.current_iteration < quiz.iterations - 1 && (
+          {quiz.current_iteration < quiz.questions.length - 1 && (
             <Pressable onPress={handleNextPressed}>
               <Text>Neste</Text>
             </Pressable>

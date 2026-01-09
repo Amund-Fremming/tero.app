@@ -116,21 +116,20 @@ export interface UserWithRole {
 
 export enum GameType {
   Quiz = "Quiz",
-  Spin = "Spin",
+  Roulette = "Roulette",
+  Duel = "Duel",
 }
 
 export interface CreateGameRequest {
   name: string;
-  description?: string;
-  category?: GameCategory;
+  category: GameCategory;
 }
 
 export enum GameCategory {
-  Casual = "Casual",
-  Random = "Random",
+  Vors = "Vors",
   Ladies = "Ladies",
   Boys = "Boys",
-  Default = "Default",
+  All = "All",
 }
 
 export interface InteractiveGameResponse {

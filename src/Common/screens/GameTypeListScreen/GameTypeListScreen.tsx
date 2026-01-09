@@ -22,7 +22,7 @@ export const GameTypeListScreen = () => {
     setGameType(screenEnum);
 
     const navTarget = creating ? screenEnum : Screen.GameList;
-    console.debug("Navigating to:", navTarget, "creating:", creating);
+    console.debug("Navigating to:", navTarget, ", creating:", creating);
     navigation.navigate(navTarget);
   };
 

@@ -18,7 +18,7 @@ interface IGlobalSessionContext {
 const defaultContextValue: IGlobalSessionContext = {
   gameEntryMode: GameEntryMode.Host,
   setGameEntryMode: () => {},
-  gameType: GameType.Spin,
+  gameType: GameType.Quiz,
   setGameType: () => {},
   gameKey: "",
   setGameKey: () => {},
@@ -39,14 +39,14 @@ interface GlobalSessionProviderProps {
 
 export const GlobalGameProvider = ({ children }: GlobalSessionProviderProps) => {
   const [gameEntryMode, setGameEntryMode] = useState<GameEntryMode>(GameEntryMode.Host);
-  const [gameType, setGameType] = useState<GameType>(GameType.Spin);
+  const [gameType, setGameType] = useState<GameType>(GameType.Quiz);
   const [gameKey, setGameKey] = useState<string>("");
   const [hubAddress, setHubAddress] = useState<string>("");
   const [isHost, setIsHost] = useState<boolean>(false);
 
   const clearGlobalSessionValues = () => {
     setGameEntryMode(GameEntryMode.Host);
-    setGameType(GameType.Spin);
+    setGameType(GameType.Quiz);
     setGameKey("");
     setHubAddress("");
     setIsHost(false);

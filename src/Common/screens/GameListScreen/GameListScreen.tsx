@@ -16,11 +16,10 @@ import Color from "../../constants/Color";
 import { QuizSession } from "@/src/quizGame/constants/quizTypes";
 
 const CATEGORY_LABELS: Record<GameCategory, string> = {
-  [GameCategory.Default]: "Standard",
-  [GameCategory.Random]: "Tilfeldig",
-  [GameCategory.Casual]: "Casual",
-  [GameCategory.Ladies]: "Damer",
+  [GameCategory.All]: "All",
+  [GameCategory.Ladies]: "Jenter",
   [GameCategory.Boys]: "Gutter",
+  [GameCategory.Vors]: "Vors",
 };
 
 export const GameListScreen = () => {
@@ -137,7 +136,9 @@ export const GameListScreen = () => {
         setGameEntryMode(GameEntryMode.Host);
         navigation.navigate(Screen.Quiz);
         break;
-      case GameType.Spin:
+      case GameType.Roulette:
+      // TODO HANDLE
+      case GameType.Duel:
         // TODO HANDLE
         break;
       default:

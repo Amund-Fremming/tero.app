@@ -56,7 +56,8 @@ export const LobbyScreen = () => {
     });
 
     setListener(HubChannel.Game, (game: QuizSession) => {
-      console.log("Received game session");
+      console.log(`Received game session`);
+      console.log("Questions: ", game.questions);
       setQuizSession(game);
     });
 

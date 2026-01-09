@@ -13,13 +13,14 @@ import { SpinSessionScreen } from "../../constants/SpinTypes";
 import { useSpinGameProvider } from "../../context/SpinGameProvider";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
+import { GameType } from "@/src/Common/constants/Types";
 
 export const LobbyScreen = () => {
   const navigation: any = useNavigation();
   const { pseudoId } = useAuthProvider();
   const { connect, setListener, invokeFunction, disconnect } = useHubConnectionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
-  const { gameKey, hubAddress, setIsHost, isHost, clearGlobalSessionValues } = useGlobalSessionProvider();
+  const { gameKey, gameType, hubAddress, setIsHost, isHost, clearGlobalSessionValues } = useGlobalSessionProvider();
   const { setScreen } = useSpinGameProvider();
 
   const [iterations, setIterations] = useState<number>(0);
@@ -31,6 +32,7 @@ export const LobbyScreen = () => {
   }, []);
 
   const createHubConnecion = async () => {
+    console.log("Hub address:", hubAddress);
     const result = await connect(hubAddress);
     if (result.isError()) {
       console.error(result.error);
@@ -94,8 +96,10 @@ export const LobbyScreen = () => {
       return;
     }
 
-    if (players < 3) {
-      displayInfoModal(`Minimum 3 spillere for å starte, du har: ${players}`);
+    let minPlayers = gameType == GameType.Roulette ? 3 : 2;
+
+    if (players < minPlayers) {
+      displayInfoModal(`Minimum ${minPlayers} spillere for å starte, du har: ${players}`);
       return;
     }
 
@@ -115,6 +119,7 @@ export const LobbyScreen = () => {
           <Feather name="chevron-left" size={45} />
         </Pressable>
       </View>
+      <Text>{gameType}</Text>
       <Text>{players} Players</Text>
       <Text>Spin game</Text>
       <Text style={styles.gameKey}>ID: {gameKey?.toUpperCase()}</Text>
