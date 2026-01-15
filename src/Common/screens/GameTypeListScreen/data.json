@@ -7,12 +7,12 @@
   {
     "name": "Rulett",
     "icon": "roulette.webp",
-    "screen": "Spin"
+    "screen": "Roulette"
   },
   {
     "name": "Duel",
     "icon": "duel.webp",
-    "screen": "Spin"
+    "screen": "Duel"
   },
   {
     "name": "Terning",

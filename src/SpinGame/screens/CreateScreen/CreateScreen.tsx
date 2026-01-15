@@ -68,7 +68,9 @@ export const CreateScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
-        <Text style={styles.header}>Opprett spill</Text>
+        <View>
+          <Text style={styles.header}>Opprett</Text>
+        </View>
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Spillnavn</Text>

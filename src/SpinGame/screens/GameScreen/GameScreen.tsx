@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from "react-native";
 import styles from "./gameScreenStyles";
 import AbsoluteHomeButton from "@/src/Common/components/AbsoluteHomeButton/AbsoluteHomeButton";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { SpinGameState } from "../../constants/SpinTypes";
 import { useGlobalSessionProvider } from "@/src/Common/context/GlobalSessionProvider";
 import { GameEntryMode } from "@/src/Common/constants/Types";
@@ -20,6 +20,8 @@ export const GameScreen = () => {
   const [state, setState] = useState<SpinGameState>(SpinGameState.RoundStarted);
   const [roundText, setRoundText] = useState<string>("");
   const [gameStarted, setGameStarted] = useState<boolean>(false);
+  const exitTriggeredRef = useRef<boolean>(false);
+  const hasStartedGameRef = useRef<boolean>(false);
 
   const { isHost, setIsHost, clearGlobalSessionValues } = useGlobalSessionProvider();
   const { clearSpinSessionValues } = useSpinGameProvider();
@@ -29,7 +31,12 @@ export const GameScreen = () => {
   const { pseudoId } = useAuthProvider();
 
   useEffect(() => {
-    setupListeners().then(() => handleStartGame());
+    setupListeners().then(() => {
+      if (!hasStartedGameRef.current && isHost) {
+        hasStartedGameRef.current = true;
+        handleStartGame();
+      }
+    });
 
     return () => {
       clearSpinSessionValues();
@@ -94,6 +101,8 @@ export const GameScreen = () => {
   const handleNextRound = async () => {
     const result = await invokeFunction("NextRound", gameKey);
     if (result.isError()) {
+      if (exitTriggeredRef.current) return; // User left the game, don't show error
+
       console.error(result.error);
       displayErrorModal("En feil har skjedd med forbindelsen");
       return;
@@ -107,6 +116,8 @@ export const GameScreen = () => {
     console.debug("Starting spin");
     const result = await invokeFunction(channel, gameKey);
     if (result.isError()) {
+      if (exitTriggeredRef.current) return; // User left the game, don't show error
+
       console.error(result.error);
       displayErrorModal("En feil har skjedd med forbindelsen");
       return;
@@ -114,9 +125,11 @@ export const GameScreen = () => {
   };
 
   const handleLeaveGame = async () => {
+    exitTriggeredRef.current = true;
     await disconnect();
-    navigation.goBack();
     clearGlobalSessionValues();
+    clearSpinSessionValues();
+    navigation.goBack();
   };
 
   return (

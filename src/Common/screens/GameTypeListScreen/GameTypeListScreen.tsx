@@ -23,6 +23,10 @@ export const GameTypeListScreen = () => {
 
     const navTarget = creating ? screenEnum : Screen.GameList;
     console.debug("Navigating to:", navTarget, ", creating:", creating);
+    if (screenEnum == GameType.Duel || screenEnum == GameType.Roulette) {
+      navigation.navigate("Spin");
+      return;
+    }
     navigation.navigate(navTarget);
   };
 

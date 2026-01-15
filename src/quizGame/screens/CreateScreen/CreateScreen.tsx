@@ -13,6 +13,8 @@ import { useHubConnectionProvider } from "@/src/Common/context/HubConnectionProv
 import { useNavigation } from "expo-router";
 import { QuizGameScreen as QuizSessionScreen } from "../../constants/quizTypes";
 import { useQuizGameProvider } from "../../context/QuizGameProvider";
+import { Feather } from "@expo/vector-icons";
+import { moderateScale } from "@/src/Common/utils/dimensions";
 
 export const CreateScreen = () => {
   const navigation: any = useNavigation();
@@ -58,22 +60,39 @@ export const CreateScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Opprett spill</Text>
-
+      <View style={styles.headerWrapper}>
+        <Pressable onPress={() => navigation.goBack()} style={styles.iconWrapper}>
+          <Feather name="chevron-left" size={moderateScale(45)} />
+        </Pressable>
+        <Text style={styles.header}>Opprett</Text>
+        <View style={styles.iconWrapper}>
+          <Text style={styles.textIcon}>?</Text>
+        </View>
+      </View>
+      <View style={styles.midSection}>
+        <Text style={styles.iterations}>4</Text>
+        <Feather
+          name="layers"
+          size={moderateScale(200)}
+          style={{
+            opacity: 0.5,
+          }}
+        />
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Spillnavn"
         value={createRequest.name}
         onChangeText={(val) => setCreateRequest((prev) => ({ ...prev, name: val }))}
       />
-
-      <Text style={styles.paragraph}>Mangler kategorivalg her</Text>
-
-      <Pressable onPress={handleCreateGame}>
-        <Text>Opprett</Text>
-      </Pressable>
-
-      <AbsoluteHomeButton primary={Color.Beige} secondary={Color.White} />
+      <View style={styles.bottomSection}>
+        <Pressable style={styles.categoryButton}>
+          <Text style={styles.bottomText}>Velg categori</Text>
+        </Pressable>
+        <Pressable onPress={handleCreateGame} style={styles.createButton}>
+          <Text style={styles.bottomText}>Opprett</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };

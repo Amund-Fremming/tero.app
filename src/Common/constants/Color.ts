@@ -10,6 +10,7 @@ export const Color = {
   Green: "#75cf30",
   Gray: "gray",
   LightGray: "#f2f2f4",
+  DarkerGray: "#D9D9D9",
   Blue: "#6db0b6",
   LightBlue: "#ddeefb",
   Burgunde: "#720000",
@@ -20,9 +21,10 @@ export const Color = {
   BuzzifyDarkBg: "#1E1E1E",
   BuzzifyOrange: "#FF6E4A",
   BuzzifyLavender: "#A9A4EB",
+  BuzzifyLavenderLight: "#9793ce",
   BuzzifyLightBeige: "#F3D9CC",
   BuzzifyPeach: "#F3DDD6",
-  BuzzifyYellow: "#FFEB99"
+  BuzzifyYellow: "#FFEB99",
 };
 
 export default Color;
