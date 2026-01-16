@@ -1,13 +1,13 @@
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import { useQuizGameProvider } from "../../context/QuizGameProvider";
 import styles from "./gameScreenStyles";
-import AbsoluteHomeButton from "@/src/Common/components/AbsoluteHomeButton/AbsoluteHomeButton";
-import { useHubConnectionProvider } from "@/src/Common/context/HubConnectionProvider";
 import { useEffect, useState } from "react";
 import { useNavigation } from "expo-router";
 import { QuizSession } from "../../constants/quizTypes";
 import { useModalProvider } from "@/src/Common/context/ModalProvider";
 import Screen from "@/src/Common/constants/Screen";
+import { Feather } from "@expo/vector-icons";
+import { moderateScale } from "@/src/Common/utils/dimensions";
 
 export const GameScreen = () => {
   const navigation: any = useNavigation();
@@ -25,6 +25,11 @@ export const GameScreen = () => {
   }, [quizSession]);
 
   const handlePrevPressed = () => {
+    if (quiz?.current_iteration === 0) {
+      console.log("Tried getting prev when at iteration:", quiz?.current_iteration);
+      return;
+    }
+
     setQuiz((prev) => {
       if (!prev) return prev;
       if (prev.current_iteration == 0) return prev;
@@ -33,6 +38,11 @@ export const GameScreen = () => {
   };
 
   const handleNextPressed = () => {
+    if ((quiz?.current_iteration ?? 0) + 1 === (quiz?.questions.length ?? 0)) {
+      console.log("Tried getting next when at max iteration");
+      return;
+    }
+
     setQuiz((prev) => {
       if (!prev) return prev;
       if (prev.current_iteration == prev.questions.length - 1) return prev;
@@ -40,32 +50,34 @@ export const GameScreen = () => {
     });
   };
 
+  const handleInfoPressed = () => {
+    console.log("Info pressed");
+  };
+
   return (
     <View style={styles.container}>
-      <Text>
-        Gjenstående spørsmål: {(quiz?.current_iteration ?? 0) + 1}/{quiz?.questions.length ?? 1}
-      </Text>
+      <View style={styles.headerWrapper}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconWrapper}>
+          <Feather name="chevron-left" size={moderateScale(45)} />
+        </TouchableOpacity>
+        <Text style={styles.header}>
+          {(quiz?.current_iteration ?? 0) + 1} / {quiz?.questions.length ?? 1}
+        </Text>
+        <TouchableOpacity onPress={handleInfoPressed} style={styles.iconWrapper}>
+          <Text style={styles.textIcon}>?</Text>
+        </TouchableOpacity>
+      </View>
 
-      <Text>{quiz?.questions[quiz.current_iteration]}</Text>
+      <Text style={styles.question}>{quiz?.questions[quiz.current_iteration]}</Text>
 
-      {quiz && <Text>s</Text>}
-
-      {quiz && (
-        <View>
-          {quiz.current_iteration > 0 && (
-            <Pressable onPress={handlePrevPressed}>
-              <Text>Forrige</Text>
-            </Pressable>
-          )}
-          {quiz.current_iteration < quiz.questions.length - 1 && (
-            <Pressable onPress={handleNextPressed}>
-              <Text>Neste</Text>
-            </Pressable>
-          )}
-        </View>
-      )}
-
-      <AbsoluteHomeButton />
+      <View style={styles.buttonWrapper}>
+        <TouchableOpacity style={styles.nextButton} onPress={handleNextPressed}>
+          <Text style={styles.nextText}>Neste</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.prevButton} onPress={handlePrevPressed}>
+          <Text style={styles.prevText}>Forrige</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

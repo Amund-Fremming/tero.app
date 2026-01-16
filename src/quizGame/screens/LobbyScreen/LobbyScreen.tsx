@@ -2,7 +2,7 @@ import Color from "@/src/Common/constants/Color";
 import MediumButton from "@/src/Common/components/MediumButton/MediumButton";
 import { useModalProvider } from "@/src/Common/context/ModalProvider";
 import { useEffect, useState } from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import styles from "./lobbyScreenStyles";
 import createStyles from "../CreateScreen/createScreenStyles";
@@ -116,10 +116,13 @@ export const LobbyScreen = () => {
   return (
     <View style={createStyles.container}>
       <View style={createStyles.headerWrapper}>
-        <Pressable onPress={() => navigation.goBack()} style={createStyles.iconWrapper}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={createStyles.iconWrapper}>
           <Feather name="chevron-left" size={moderateScale(45)} />
-        </Pressable>
-        <Text style={createStyles.header}>Opprett</Text>
+        </TouchableOpacity>
+        <View style={styles.headerInline}>
+          <Text style={styles.toastHeader}>Rom:</Text>
+          <Text style={styles.header}>{gameKey.toUpperCase()}</Text>
+        </View>
         <View style={createStyles.iconWrapper}>
           <Text style={createStyles.textIcon}>?</Text>
         </View>
@@ -137,12 +140,12 @@ export const LobbyScreen = () => {
           onChangeText={(input) => setQuestion(input)}
         />
         <View style={createStyles.inputBorder} />
-        <Pressable onPress={handleAddQuestion} style={createStyles.categoryButton}>
+        <TouchableOpacity onPress={handleAddQuestion} style={createStyles.categoryButton}>
           <Text style={createStyles.bottomText}>Legg til</Text>
-        </Pressable>
-        <Pressable onPress={handleStartGame} style={createStyles.createButton}>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleStartGame} style={createStyles.createButton}>
           <Text style={createStyles.bottomText}>Start spill</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import styles from "./createScreenStyles";
 import { useState } from "react";
 import { CreateGameRequest, GameCategory, GameEntryMode, GameType } from "@/src/Common/constants/Types";
@@ -76,16 +76,20 @@ export const CreateScreen = () => {
     setLoading(false);
   };
 
+  const handleInfoPressed = () => {
+    console.log("Info pressed");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.headerWrapper}>
-        <Pressable onPress={() => navigation.goBack()} style={styles.iconWrapper}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconWrapper}>
           <Feather name="chevron-left" size={moderateScale(45)} />
-        </Pressable>
+        </TouchableOpacity>
         <Text style={styles.header}>Opprett</Text>
-        <View style={styles.iconWrapper}>
+        <TouchableOpacity onPress={handleInfoPressed} style={styles.iconWrapper}>
           <Text style={styles.textIcon}>?</Text>
-        </View>
+        </TouchableOpacity>
       </View>
       <View style={styles.midSection}>
         <Text style={{ ...styles.iterations, opacity }}>?</Text>
@@ -125,9 +129,9 @@ export const CreateScreen = () => {
             </View>
           )}
         />
-        <Pressable onPress={handleCreateGame} style={styles.createButton}>
+        <TouchableOpacity onPress={handleCreateGame} style={styles.createButton}>
           <Text style={styles.bottomText}>Opprett</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );
