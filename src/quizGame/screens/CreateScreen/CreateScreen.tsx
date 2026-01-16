@@ -1,7 +1,6 @@
 import { Text, View } from "react-native";
 import styles from "./createScreenStyles";
-import Color from "@/src/Common/constants/Color";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CreateGameRequest, GameCategory, GameEntryMode, GameType } from "@/src/Common/constants/Types";
 import { Pressable, TextInput } from "react-native-gesture-handler";
 import { useAuthProvider } from "@/src/Common/context/AuthProvider";
@@ -15,24 +14,38 @@ import { QuizGameScreen as QuizSessionScreen } from "../../constants/quizTypes";
 import { useQuizGameProvider } from "../../context/QuizGameProvider";
 import { Feather } from "@expo/vector-icons";
 import { moderateScale } from "@/src/Common/utils/dimensions";
+import { Dropdown } from "react-native-element-dropdown";
 
 export const CreateScreen = () => {
   const navigation: any = useNavigation();
   const { pseudoId } = useAuthProvider();
-  const { displayErrorModal } = useModalProvider();
+  const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { gameService } = useServiceProvider();
   const { setGameKey, setGameEntryMode, setHubAddress } = useGlobalSessionProvider();
   const { setScreen } = useQuizGameProvider();
   const {} = useHubConnectionProvider();
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [opacity, setOpacity] = useState<number>(0.4);
   const [createRequest, setCreateRequest] = useState<CreateGameRequest>({
     name: "",
-    category: GameCategory.All,
+    category: "" as any,
   });
+
+  const categoryData = [
+    { label: "Alle", value: GameCategory.All },
+    { label: "Vors", value: GameCategory.Vors },
+    { label: "Jenter", value: GameCategory.Ladies },
+    { label: "Gutter", value: GameCategory.Boys },
+  ];
 
   const handleCreateGame = async () => {
     if (loading) return;
+
+    if (!createRequest.category) {
+      displayInfoModal("Du må velge kategori");
+      return;
+    }
 
     if (!pseudoId) {
       // TODO - handle
@@ -70,12 +83,12 @@ export const CreateScreen = () => {
         </View>
       </View>
       <View style={styles.midSection}>
-        <Text style={styles.iterations}>4</Text>
+        <Text style={{ ...styles.iterations, opacity }}>4</Text>
         <Feather
           name="layers"
           size={moderateScale(200)}
           style={{
-            opacity: 0.5,
+            opacity,
           }}
         />
       </View>
@@ -86,9 +99,26 @@ export const CreateScreen = () => {
         onChangeText={(val) => setCreateRequest((prev) => ({ ...prev, name: val }))}
       />
       <View style={styles.bottomSection}>
-        <Pressable style={styles.categoryButton}>
-          <Text style={styles.bottomText}>Velg categori</Text>
-        </Pressable>
+        <Dropdown
+          style={styles.categoryButton}
+          containerStyle={styles.dropdownContainer}
+          itemContainerStyle={styles.dropdownItemContainer}
+          itemTextStyle={styles.dropdownItemText}
+          selectedTextStyle={styles.selectedText}
+          placeholderStyle={styles.selectedText}
+          data={categoryData}
+          labelField="label"
+          valueField="value"
+          placeholder="Velg categori"
+          value={createRequest.category}
+          onChange={(item) => setCreateRequest((prev) => ({ ...prev, category: item.value }))}
+          dropdownPosition="top"
+          renderItem={(item) => (
+            <View style={styles.dropdownItem}>
+              <Text style={styles.bottomText}>{item.label}</Text>
+            </View>
+          )}
+        />
         <Pressable onPress={handleCreateGame} style={styles.createButton}>
           <Text style={styles.bottomText}>Opprett</Text>
         </Pressable>
