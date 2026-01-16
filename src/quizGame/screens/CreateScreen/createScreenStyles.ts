@@ -33,10 +33,6 @@ export const styles = StyleSheet.create({
     fontSize: moderateScale(16),
   },
 
-  input: {
-    fontSize: moderateScale(16),
-  },
-
   headerWrapper: {
     width: "90%",
     flexDirection: "row",
@@ -129,6 +125,21 @@ export const styles = StyleSheet.create({
     fontFamily: Font.PassionOneBold,
     fontSize: moderateScale(35),
     textAlign: "center",
+  },
+
+  input: {
+    fontSize: moderateScale(35),
+    marginBottom: verticalScale(-10),
+    fontFamily: Font.PassionOneRegular,
+    color: Color.C2,
+  },
+
+  inputBorder: {
+    backgroundColor: Color.Black,
+    opacity: 0.9,
+    width: "85%",
+    height: verticalScale(10),
+    borderRadius: moderateScale(10),
   },
 });
 

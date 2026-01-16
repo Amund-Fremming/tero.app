@@ -83,7 +83,7 @@ export const CreateScreen = () => {
         </View>
       </View>
       <View style={styles.midSection}>
-        <Text style={{ ...styles.iterations, opacity }}>4</Text>
+        <Text style={{ ...styles.iterations, opacity }}>?</Text>
         <Feather
           name="layers"
           size={moderateScale(200)}
@@ -92,13 +92,14 @@ export const CreateScreen = () => {
           }}
         />
       </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Spillnavn"
-        value={createRequest.name}
-        onChangeText={(val) => setCreateRequest((prev) => ({ ...prev, name: val }))}
-      />
       <View style={styles.bottomSection}>
+        <TextInput
+          style={styles.input}
+          placeholder="Spillnavn"
+          value={createRequest.name}
+          onChangeText={(val) => setCreateRequest((prev) => ({ ...prev, name: val }))}
+        />
+        <View style={styles.inputBorder} />
         <Dropdown
           style={styles.categoryButton}
           containerStyle={styles.dropdownContainer}
