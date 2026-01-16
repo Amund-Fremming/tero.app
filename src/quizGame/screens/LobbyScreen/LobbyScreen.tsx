@@ -1,10 +1,11 @@
 import Color from "@/src/Common/constants/Color";
 import MediumButton from "@/src/Common/components/MediumButton/MediumButton";
 import { useModalProvider } from "@/src/Common/context/ModalProvider";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, Pressable } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import styles from "./lobbyScreenStyles";
+import createStyles from "../CreateScreen/createScreenStyles";
 import { useHubConnectionProvider } from "@/src/Common/context/HubConnectionProvider";
 import { useGlobalSessionProvider } from "@/src/Common/context/GlobalSessionProvider";
 import AbsoluteHomeButton from "@/src/Common/components/AbsoluteHomeButton/AbsoluteHomeButton";
@@ -14,7 +15,8 @@ import { GameEntryMode } from "@/src/Common/constants/Types";
 import { useQuizGameProvider } from "../../context/QuizGameProvider";
 import { QuizGameScreen, QuizSession } from "../../constants/quizTypes";
 import { useNavigation } from "expo-router";
-import { SpinGameState } from "@/src/SpinGame/constants/SpinTypes";
+import { Feather } from "@expo/vector-icons";
+import { moderateScale } from "@/src/Common/utils/dimensions";
 
 export const LobbyScreen = () => {
   const navigation: any = useNavigation();
@@ -24,7 +26,7 @@ export const LobbyScreen = () => {
 
   const { gameEntryMode, gameKey, hubAddress } = useGlobalSessionProvider();
   const { connect, disconnect, setListener, invokeFunction } = useHubConnectionProvider();
-  const { displayErrorModal } = useModalProvider();
+  const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { setQuizSession, setScreen } = useQuizGameProvider();
 
   useEffect(() => {
@@ -77,6 +79,11 @@ export const LobbyScreen = () => {
   };
 
   const handleAddQuestion = async () => {
+    if (question === "") {
+      displayInfoModal("Du har glemt å skrive inn ett spørsmål");
+      return;
+    }
+
     const result = await invokeFunction("AddQuestion", gameKey, question);
     if (result.isError()) {
       console.error(result.error);
@@ -107,16 +114,36 @@ export const LobbyScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text>Universal game id: {gameKey}</Text>
-      <Text style={styles.header}>Legg til spørsmål</Text>
-      <Text style={styles.paragraph}>Antall spørsmål: {iterations}</Text>
-      <TextInput style={styles.input} value={question} onChangeText={(input) => setQuestion(input)} />
-      <MediumButton text="Legg til" color={Color.Beige} onClick={handleAddQuestion} />
-      {gameEntryMode === GameEntryMode.Creator && (
-        <MediumButton text="Start" color={Color.Beige} onClick={handleStartGame} inverted />
-      )}
-      <AbsoluteHomeButton />
+    <View style={createStyles.container}>
+      <View style={createStyles.headerWrapper}>
+        <Pressable onPress={() => navigation.goBack()} style={createStyles.iconWrapper}>
+          <Feather name="chevron-left" size={moderateScale(45)} />
+        </Pressable>
+        <Text style={createStyles.header}>Opprett</Text>
+        <View style={createStyles.iconWrapper}>
+          <Text style={createStyles.textIcon}>?</Text>
+        </View>
+      </View>
+      <View style={createStyles.midSection}>
+        <Text style={{ ...createStyles.iterations, opacity: 0.4 }}>{iterations}</Text>
+        <Feather name="layers" size={moderateScale(200)} style={{ opacity: 0.4 }} />
+      </View>
+      <View style={createStyles.bottomSection}>
+        <TextInput
+          multiline
+          style={createStyles.input}
+          placeholder="Spørsmål..."
+          value={question}
+          onChangeText={(input) => setQuestion(input)}
+        />
+        <View style={createStyles.inputBorder} />
+        <Pressable onPress={handleAddQuestion} style={createStyles.categoryButton}>
+          <Text style={createStyles.bottomText}>Legg til</Text>
+        </Pressable>
+        <Pressable onPress={handleStartGame} style={createStyles.createButton}>
+          <Text style={createStyles.bottomText}>Start spill</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };

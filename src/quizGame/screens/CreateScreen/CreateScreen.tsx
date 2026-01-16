@@ -47,6 +47,11 @@ export const CreateScreen = () => {
       return;
     }
 
+    if (createRequest.name === "") {
+      displayInfoModal("Spillet må ha ett navn");
+      return;
+    }
+
     if (!pseudoId) {
       // TODO - handle
       console.error("No pseudo id present");

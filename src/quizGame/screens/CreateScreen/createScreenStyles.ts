@@ -49,6 +49,7 @@ export const styles = StyleSheet.create({
   iterations: {
     fontFamily: Font.PassionOneBold,
     fontSize: moderateScale(160),
+    marginBottom: verticalScale(-25),
   },
 
   midSection: {
@@ -128,6 +129,7 @@ export const styles = StyleSheet.create({
   },
 
   input: {
+    width: "70%",
     fontSize: moderateScale(35),
     marginBottom: verticalScale(-10),
     fontFamily: Font.PassionOneRegular,
