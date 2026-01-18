@@ -21,17 +21,15 @@ export class GameService {
   async createInteractiveGame(
     pseudoId: string,
     type: GameType,
-    request: CreateGameRequest
+    request: CreateGameRequest,
   ): Promise<Result<InteractiveGameResponse>> {
     try {
-      console.log("Sending:", JSON.stringify({ name: request.name, category: request.category }));
-      console.log(`GameType: ${this.urlBase}/games/general/${type}/create`);
       const response = await axios.post<InteractiveGameResponse>(
-        `${this.urlBase}/games/general/${type}/create`,
+        `${this.urlBase}/games/session/${type}/create`,
         request,
         {
           headers: getHeaders(pseudoId, null),
-        }
+        },
       );
 
       let result: InteractiveGameResponse = response.data;
@@ -42,9 +40,9 @@ export class GameService {
     }
   }
 
-  async deleteGame(guest_id: string, token: string | null, game_type: string, game_id: string): Promise<Result<void>> {
+  async deleteGame(guest_id: string, token: string | null, game_id: string): Promise<Result<void>> {
     try {
-      await axios.delete(`${this.urlBase}/games/${game_type}/${game_id}`, {
+      await axios.delete(`${this.urlBase}/games/${game_id}`, {
         headers: getHeaders(guest_id, token),
       });
       return ok(undefined);
@@ -58,7 +56,7 @@ export class GameService {
     guest_id: string,
     token: string | null,
     game_type: string,
-    key_word: string
+    key_word: string,
   ): Promise<Result<void>> {
     try {
       await axios.patch(
@@ -66,7 +64,7 @@ export class GameService {
         {},
         {
           headers: getHeaders(guest_id, token),
-        }
+        },
       );
 
       return ok(undefined);
@@ -86,7 +84,7 @@ export class GameService {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       return ok(undefined);
@@ -158,7 +156,7 @@ export class GameService {
     guest_id: string,
     token: string | null,
     game_type: string,
-    game_id: string
+    game_id: string,
   ): Promise<Result<InteractiveGameResponse>> {
     try {
       const response = await axios.post(
@@ -166,7 +164,7 @@ export class GameService {
         {},
         {
           headers: getHeaders(guest_id, token),
-        }
+        },
       );
 
       const result: InteractiveGameResponse = response.data;
@@ -184,7 +182,7 @@ export class GameService {
         {},
         {
           headers: getHeaders(pseudo_id, null),
-        }
+        },
       );
 
       const result: JoinGameResponse = response.data;

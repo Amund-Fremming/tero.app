@@ -8,6 +8,7 @@ export const Color = {
   C2: "#FFD275",
   Yellow: "#FEECA9",
   Beige: "#D0B395",
+  BeigeLight: "#b28e6b",
   Green: "#75cf30",
   Gray: "gray",
   LightGray: "#f2f2f4",
@@ -26,6 +27,8 @@ export const Color = {
   BuzzifyLightBeige: "#F3D9CC",
   BuzzifyPeach: "#F3DDD6",
   BuzzifyYellow: "#FFEB99",
+  SkyBlue: "#95B9D0",
+  SkyBlueLight: "#6A899C",
 };
 
 export default Color;

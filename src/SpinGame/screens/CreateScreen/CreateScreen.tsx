@@ -1,121 +1,145 @@
-import { Text, TextInput, View, TouchableOpacity, ScrollView } from "react-native";
-import { useEffect, useState } from "react";
-import Color from "@/src/Common/constants/Color";
-import { Feather } from "@expo/vector-icons";
-import { CreateGameRequest, GameCategory, GameEntryMode, GameType } from "@/src/Common/constants/Types";
-import { useModalProvider } from "@/src/Common/context/ModalProvider";
-import { useAuthProvider } from "@/src/Common/context/AuthProvider";
-import { useServiceProvider } from "@/src/Common/context/ServiceProvider";
+import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./createScreenStyles";
-import AbsoluteHomeButton from "@/src/Common/components/AbsoluteHomeButton/AbsoluteHomeButton";
+import { useEffect, useState } from "react";
+import { CreateGameRequest, GameCategory, GameEntryMode, GameType } from "@/src/Common/constants/Types";
+import { TextInput } from "react-native-gesture-handler";
+import { useAuthProvider } from "@/src/Common/context/AuthProvider";
+import { useModalProvider } from "@/src/Common/context/ModalProvider";
 import { useGlobalSessionProvider } from "@/src/Common/context/GlobalSessionProvider";
+import { useServiceProvider } from "@/src/Common/context/ServiceProvider";
 import { useNavigation } from "expo-router";
 import { SpinSessionScreen } from "../../constants/SpinTypes";
 import { useSpinGameProvider } from "../../context/SpinGameProvider";
-
-const CATEGORY_OPTIONS = [
-  { label: "Vors", value: GameCategory.Vors },
-  { label: "Damer", value: GameCategory.Ladies },
-  { label: "Gutter", value: GameCategory.Boys },
-  { label: "All", value: GameCategory.All },
-];
+import { Feather } from "@expo/vector-icons";
+import { moderateScale } from "@/src/Common/utils/dimensions";
+import Color from "@/src/Common/constants/Color";
+import CategoryDropdown from "@/src/Common/components/CategoryDropdown/CategoryDropdown";
 
 export const CreateScreen = () => {
   const navigation: any = useNavigation();
-  const { displayErrorModal } = useModalProvider();
   const { pseudoId } = useAuthProvider();
+  const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { gameService } = useServiceProvider();
   const { setGameKey, setGameEntryMode, setHubAddress } = useGlobalSessionProvider();
   const { setScreen } = useSpinGameProvider();
+  const { gameType } = useGlobalSessionProvider();
+
+  const [themeColor, setThemeColor] = useState<string>(Color.BeigeLight);
+  const [secondaryThemeColor, setSecondaryThemeColor] = useState<string>(Color.Beige);
+  const [featherIcon, setFeatherIcon] = useState<"refresh-cw" | "rotate-cw">("refresh-cw");
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [opacity, setOpacity] = useState<number>(0.4);
   const [createRequest, setCreateRequest] = useState<CreateGameRequest>({
     name: "",
-    category: GameCategory.All,
+    category: "" as any,
   });
 
-  useEffect(() => {
-    console.log("Create screen yes");
-  }, []);
+  const categoryData = [
+    { label: "Alle", value: GameCategory.All },
+    { label: "Vors", value: GameCategory.Vors },
+    { label: "Jenter", value: GameCategory.Ladies },
+    { label: "Gutter", value: GameCategory.Boys },
+  ];
 
-  const handleCreate = async () => {
+  useEffect(() => {
+    console.log("GameType=", gameType);
+    switch (gameType) {
+      case GameType.Duel:
+        setSecondaryThemeColor(Color.BeigeLight);
+        setThemeColor(Color.Beige);
+        setFeatherIcon("refresh-cw");
+        break;
+      case GameType.Roulette:
+        setSecondaryThemeColor(Color.SkyBlueLight);
+        setThemeColor(Color.SkyBlue);
+        setFeatherIcon("rotate-cw");
+        break;
+    }
+  }, [gameType]);
+
+  const handleCreateGame = async () => {
     if (loading) return;
+
+    if (!createRequest.category) {
+      displayInfoModal("Du må velge kategori");
+      return;
+    }
+
+    if (createRequest.name === "") {
+      displayInfoModal("Spillet må ha ett navn");
+      return;
+    }
 
     if (!pseudoId) {
       console.error("No pseudo id present");
-      // TODO - handle
+      displayErrorModal("En feil har skjedd, forsøk å åpne appen på nytt");
       return;
     }
 
     setLoading(true);
-    let result = await gameService().createInteractiveGame(pseudoId, GameType.Roulette, createRequest);
+    const result = await gameService().createInteractiveGame(pseudoId, gameType, createRequest);
+
     if (result.isError()) {
       displayErrorModal(result.error);
       setLoading(false);
       return;
     }
 
-    const gameKey = result.value.key;
-    const hubAddress = result.value.hub_address;
-
-    setGameKey(gameKey);
-    setHubAddress(hubAddress);
+    console.info("Game initiated with key:", result.value.key);
+    setGameKey(result.value.key);
+    setHubAddress(result.value.hub_address);
     setGameEntryMode(GameEntryMode.Creator);
     setScreen(SpinSessionScreen.Lobby);
     setLoading(false);
   };
 
+  const handleInfoPressed = () => {
+    console.log("Info pressed");
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.header}>Opprett</Text>
-        </View>
-
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Spillnavn</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Skriv spillnavn her"
-            placeholderTextColor={Color.Gray}
-            value={createRequest.name}
-            onChangeText={(input) => setCreateRequest((prev) => ({ ...prev, name: input }))}
-          />
-        </View>
-
-        <View style={styles.categoryContainer}>
-          <Text style={styles.label}>Velg kategori</Text>
-          <View style={styles.categoryGrid}>
-            {CATEGORY_OPTIONS.map((category) => (
-              <TouchableOpacity
-                key={category.value}
-                style={[
-                  styles.categoryButton,
-                  createRequest.category === category.value && styles.categoryButtonSelected,
-                ]}
-                onPress={() => setCreateRequest((prev) => ({ ...prev, category: category.value }))}
-              >
-                <Text
-                  style={[
-                    styles.categoryButtonText,
-                    createRequest.category === category.value && styles.categoryButtonTextSelected,
-                  ]}
-                >
-                  {category.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-
-        <TouchableOpacity style={styles.createButton} onPress={handleCreate}>
-          <Feather name="plus-circle" size={24} color={Color.White} />
-          <Text style={styles.createButtonText}>Opprett spill</Text>
+    <View style={{ ...styles.container, backgroundColor: themeColor }}>
+      <View style={styles.headerWrapper}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconWrapper}>
+          <Feather name="chevron-left" size={moderateScale(45)} />
         </TouchableOpacity>
-
-        <AbsoluteHomeButton />
+        <Text style={styles.header}>Opprett</Text>
+        <TouchableOpacity onPress={handleInfoPressed} style={styles.iconWrapper}>
+          <Text style={styles.textIcon}>?</Text>
+        </TouchableOpacity>
       </View>
-    </ScrollView>
+      <View style={styles.midSection}>
+        <Text style={{ ...styles.iterations, opacity }}>?</Text>
+        <Feather
+          name={featherIcon}
+          size={moderateScale(200)}
+          style={{
+            opacity,
+          }}
+        />
+      </View>
+      <View style={styles.bottomSection}>
+        <TextInput
+          style={styles.input}
+          placeholder="Spillnavn"
+          value={createRequest.name}
+          onChangeText={(val) => setCreateRequest((prev) => ({ ...prev, name: val }))}
+        />
+        <View style={styles.inputBorder} />
+        <CategoryDropdown
+          data={categoryData}
+          value={createRequest.category}
+          onChange={(value) => setCreateRequest((prev) => ({ ...prev, category: value as GameCategory }))}
+          placeholder="Velg categori"
+          buttonBackgroundColor={secondaryThemeColor}
+          buttonTextColor={Color.White}
+        />
+        <TouchableOpacity onPress={handleCreateGame} style={styles.createButton}>
+          <Text style={styles.bottomText}>Opprett</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 

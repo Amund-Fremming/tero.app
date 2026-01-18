@@ -2,19 +2,18 @@ import { Text, TouchableOpacity, View } from "react-native";
 import styles from "./createScreenStyles";
 import { useState } from "react";
 import { CreateGameRequest, GameCategory, GameEntryMode, GameType } from "@/src/Common/constants/Types";
-import { Pressable, TextInput } from "react-native-gesture-handler";
+import { TextInput } from "react-native-gesture-handler";
 import { useAuthProvider } from "@/src/Common/context/AuthProvider";
 import { useModalProvider } from "@/src/Common/context/ModalProvider";
 import { useGlobalSessionProvider } from "@/src/Common/context/GlobalSessionProvider";
-import AbsoluteHomeButton from "@/src/Common/components/AbsoluteHomeButton/AbsoluteHomeButton";
 import { useServiceProvider } from "@/src/Common/context/ServiceProvider";
-import { useHubConnectionProvider } from "@/src/Common/context/HubConnectionProvider";
 import { useNavigation } from "expo-router";
 import { QuizGameScreen as QuizSessionScreen } from "../../constants/quizTypes";
 import { useQuizGameProvider } from "../../context/QuizGameProvider";
 import { Feather } from "@expo/vector-icons";
 import { moderateScale } from "@/src/Common/utils/dimensions";
-import { Dropdown } from "react-native-element-dropdown";
+import Color from "@/src/Common/constants/Color";
+import CategoryDropdown from "@/src/Common/components/CategoryDropdown/CategoryDropdown";
 
 export const CreateScreen = () => {
   const navigation: any = useNavigation();
@@ -23,7 +22,6 @@ export const CreateScreen = () => {
   const { gameService } = useServiceProvider();
   const { setGameKey, setGameEntryMode, setHubAddress } = useGlobalSessionProvider();
   const { setScreen } = useQuizGameProvider();
-  const {} = useHubConnectionProvider();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [opacity, setOpacity] = useState<number>(0.4);
@@ -109,25 +107,13 @@ export const CreateScreen = () => {
           onChangeText={(val) => setCreateRequest((prev) => ({ ...prev, name: val }))}
         />
         <View style={styles.inputBorder} />
-        <Dropdown
-          style={styles.categoryButton}
-          containerStyle={styles.dropdownContainer}
-          itemContainerStyle={styles.dropdownItemContainer}
-          itemTextStyle={styles.dropdownItemText}
-          selectedTextStyle={styles.selectedText}
-          placeholderStyle={styles.selectedText}
+        <CategoryDropdown
           data={categoryData}
-          labelField="label"
-          valueField="value"
-          placeholder="Velg categori"
           value={createRequest.category}
-          onChange={(item) => setCreateRequest((prev) => ({ ...prev, category: item.value }))}
-          dropdownPosition="top"
-          renderItem={(item) => (
-            <View style={styles.dropdownItem}>
-              <Text style={styles.bottomText}>{item.label}</Text>
-            </View>
-          )}
+          onChange={(value) => setCreateRequest((prev) => ({ ...prev, category: value as GameCategory }))}
+          placeholder="Velg categori"
+          buttonBackgroundColor={Color.BuzzifyLavenderLight}
+          buttonTextColor={Color.White}
         />
         <TouchableOpacity onPress={handleCreateGame} style={styles.createButton}>
           <Text style={styles.bottomText}>Opprett</Text>
