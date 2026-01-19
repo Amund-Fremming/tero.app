@@ -1,9 +1,10 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { styles } from "./simpleInitScreenStyles";
 import { TextInput } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
 import { moderateScale } from "@/src/Common/utils/dimensions";
 import { useNavigation } from "expo-router";
+import { useMemo } from "react";
 
 interface SimpleInitScreenProps {
   topButtonCallback: () => void;
@@ -40,6 +41,23 @@ export const SimpleInitScreen = ({
 }: SimpleInitScreenProps) => {
   const navigation: any = useNavigation();
 
+  const containerStyle = useMemo(
+    () => StyleSheet.compose(styles.container, { backgroundColor: themeColor }),
+    [themeColor]
+  );
+
+  const iterationsStyle = useMemo(
+    () => StyleSheet.compose(styles.iterations, { opacity: 0.4 }),
+    []
+  );
+
+  const categoryButtonStyle = useMemo(
+    () => StyleSheet.compose(styles.categoryButton, { backgroundColor: secondaryThemeColor }),
+    [secondaryThemeColor]
+  );
+
+  const iconOpacityStyle = useMemo(() => ({ opacity: 0.4 }), []);
+
   const handleBackPressed = () => {
     if (onBackPressed) {
       onBackPressed();
@@ -55,7 +73,7 @@ export const SimpleInitScreen = ({
   };
 
   return (
-    <View style={{ ...styles.container, backgroundColor: themeColor }}>
+    <View style={containerStyle}>
       <View style={styles.headerWrapper}>
         <TouchableOpacity onPress={handleBackPressed} style={styles.iconWrapper}>
           <Feather name="chevron-left" size={moderateScale(45)} />
@@ -66,13 +84,11 @@ export const SimpleInitScreen = ({
         </TouchableOpacity>
       </View>
       <View style={styles.midSection}>
-        <Text style={{ ...styles.iterations, opacity: 0.4 }}>{iterations}</Text>
+        <Text style={iterationsStyle}>{iterations}</Text>
         <Feather
           name={featherIcon as any}
           size={moderateScale(200)}
-          style={{
-            opacity: 0.4,
-          }}
+          style={iconOpacityStyle}
         />
       </View>
       <View style={styles.bottomSection}>
@@ -86,7 +102,7 @@ export const SimpleInitScreen = ({
         <View style={styles.inputBorder} />
         <TouchableOpacity
           onPress={topButtonCallback}
-          style={{ ...styles.categoryButton, backgroundColor: secondaryThemeColor }}
+          style={categoryButtonStyle}
         >
           <Text style={styles.bottomText}>{topButtonText}</Text>
         </TouchableOpacity>
