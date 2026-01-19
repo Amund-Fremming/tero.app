@@ -11,98 +11,92 @@ import { screenHeight, verticalScale } from "@/src/Common/utils/dimensions";
 import Color from "@/src/Common/constants/Color";
 import { Feather } from "@expo/vector-icons";
 
-
 export const SavedGamesScreen = () => {
-    const navigation: any = useNavigation();
-    const { gameService } = useServiceProvider();
-    const { pseudoId: guestId, accessToken } = useAuthProvider();
-    const { displayErrorModal } = useModalProvider();
+  const navigation: any = useNavigation();
+  const { gameService } = useServiceProvider();
+  const { pseudoId: guestId, accessToken } = useAuthProvider();
+  const { displayErrorModal } = useModalProvider();
 
-    const [games, setGames] = useState<GameBase[] | undefined>(undefined);
-    const [hasNext, setHasNext] = useState<boolean>(false);
-    const [pageNum, setPageNum] = useState<number>(0);
+  const [games, setGames] = useState<GameBase[] | undefined>(undefined);
+  const [pageNum, setPageNum] = useState<number>(0);
 
-    const hasPrev = () => pageNum > 0;
+  const hasPrev = () => pageNum > 0;
 
-    useEffect(() => {
-        fetchSavedGames();
-    }, []);
+  useEffect(() => {
+    fetchSavedGames();
+  }, []);
 
-    const handleUnsavePressed = async (game: GameBase) => {
-        if (!accessToken) {
-            console.warn("No access token present");
-            return;
-        }
-
-        setGames((prev) => (prev?.filter(g => g.id != game.id)));
-        await gameService().unsaveGame(accessToken, game.id);
+  const handleUnsavePressed = async (game: GameBase) => {
+    if (!accessToken) {
+      console.warn("No access token present");
+      return;
     }
 
-    const fetchSavedGames = async () => {
-        if (!accessToken) {
-            console.warn("No access token present");
-            return;
-        }
+    setGames((prev) => prev?.filter((g) => g.id != game.id));
+    await gameService().unsaveGame(accessToken, game.id);
+  };
 
-        const result = await gameService().getSavedGames(accessToken, pageNum);
-        if (result.isError()) {
-            displayErrorModal(result.error);
-            return;
-        }
-
-        const page = result.value;
-        setGames(page.items);
+  const fetchSavedGames = async () => {
+    if (!accessToken) {
+      console.warn("No access token present");
+      return;
     }
 
-    const handleGamePressed = (id: string) => {
-        //
+    const result = await gameService().getSavedGames(accessToken, pageNum);
+    if (result.isError()) {
+      displayErrorModal(result.error);
+      return;
     }
 
-    return (
-        <ScrollView
-            showsVerticalScrollIndicator={false}
-            scrollEnabled={true}
-            style={{
-                width: "100%",
-                backgroundColor: Color.LightGray,
-                height: screenHeight(),
-            }}
-            contentContainerStyle={{
-                alignItems: "center",
-                gap: verticalScale(15),
-                paddingBottom: verticalScale(200),
-            }}
-        >
-            <View style={styles.topWrapper}>
-                <Pressable onPress={() => navigation.goBack()}>
-                    <Text style={styles.header}>Dine spill</Text>
-                </Pressable>
+    const page = result.value;
+    setGames(page.items);
+  };
+
+  const handleGamePressed = (id: string) => {
+    //
+  };
+
+  return (
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      scrollEnabled={true}
+      style={{
+        width: "100%",
+        backgroundColor: Color.LightGray,
+        height: screenHeight(),
+      }}
+      contentContainerStyle={{
+        alignItems: "center",
+        gap: verticalScale(15),
+        paddingBottom: verticalScale(200),
+      }}
+    >
+      <View style={styles.topWrapper}>
+        <Pressable onPress={() => navigation.goBack()}>
+          <Text style={styles.header}>Dine spill</Text>
+        </Pressable>
+      </View>
+
+      {!games || (games.length == 0 && <Text>Du har ingen lagrede spill</Text>)}
+
+      {games &&
+        games.map((game) => (
+          <TouchableOpacity onPress={() => handleGamePressed(game.id)} style={styles.card} key={game.id}>
+            <View style={styles.innerCard}>
+              <View style={styles.iconCardOuter}>
+                <View style={styles.iconCardInner}></View>
+              </View>
+
+              <View style={styles.textWrapper}>
+                <Text style={styles.cardHeader}>{game.name}</Text>
+                <Text style={styles.cardParagraph}>{game.description}</Text>
+              </View>
             </View>
-
-            {games && (
-                games.map(game => (
-                    <TouchableOpacity onPress={() => handleGamePressed(game.id)} style={styles.card} key={game.id}>
-                        <View style={styles.innerCard}>
-                            <View style={styles.iconCardOuter}>
-                                <View style={styles.iconCardInner}>
-                                    <Text style={styles.iconCardText}>{game.gameType ? game.gameType : "TEST"}</Text>
-                                </View>
-                            </View>
-
-                            <View style={styles.textWrapper}>
-                                <Text style={styles.cardHeader}>{game.name}</Text>
-                                <Text style={styles.cardParagraph}>{game.description}</Text>
-                                <Text>{game.gameType}</Text>
-                            </View>
-                        </View>
-                        <Pressable style={styles.icon} onPress={() => handleUnsavePressed(game)}>
-                            <Feather name="x" size={30} />
-                        </Pressable>
-
-                    </TouchableOpacity>
-                ))
-            )}
-
-        </ScrollView>
-    );
-}
+            <Pressable style={styles.icon} onPress={() => handleUnsavePressed(game)}>
+              <Feather name="x" size={30} />
+            </Pressable>
+          </TouchableOpacity>
+        ))}
+    </ScrollView>
+  );
+};

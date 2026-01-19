@@ -20,13 +20,8 @@ export const CreateScreen = () => {
   const { pseudoId } = useAuthProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { gameService } = useServiceProvider();
-  const { setGameKey, setGameEntryMode, setHubAddress } = useGlobalSessionProvider();
-  const { setScreen } = useSpinGameProvider();
-  const { gameType } = useGlobalSessionProvider();
-
-  const [themeColor, setThemeColor] = useState<string>(Color.BeigeLight);
-  const [secondaryThemeColor, setSecondaryThemeColor] = useState<string>(Color.Beige);
-  const [featherIcon, setFeatherIcon] = useState<"refresh-cw" | "rotate-cw">("refresh-cw");
+  const { setGameKey, setGameEntryMode, setHubAddress, gameType } = useGlobalSessionProvider();
+  const { setScreen, themeColor, secondaryThemeColor, featherIcon, setThemeColors } = useSpinGameProvider();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [opacity, setOpacity] = useState<number>(0.4);
@@ -43,19 +38,8 @@ export const CreateScreen = () => {
   ];
 
   useEffect(() => {
-    console.log("GameType=", gameType);
-    switch (gameType) {
-      case GameType.Duel:
-        setSecondaryThemeColor(Color.BeigeLight);
-        setThemeColor(Color.Beige);
-        setFeatherIcon("refresh-cw");
-        break;
-      case GameType.Roulette:
-        setSecondaryThemeColor(Color.SkyBlueLight);
-        setThemeColor(Color.SkyBlue);
-        setFeatherIcon("rotate-cw");
-        break;
-    }
+    console.log("GameType=" + gameType);
+    setThemeColors(gameType);
   }, [gameType]);
 
   const handleCreateGame = async () => {
@@ -72,6 +56,7 @@ export const CreateScreen = () => {
     }
 
     if (!pseudoId) {
+      // TODO - handle
       console.error("No pseudo id present");
       displayErrorModal("En feil har skjedd, forsøk å åpne appen på nytt");
       return;

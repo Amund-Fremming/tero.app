@@ -18,10 +18,11 @@ export const styles = StyleSheet.create({
     paddingBottom: verticalScale(25),
     paddingLeft: horizontalScale(20),
     width: "100%",
-    color: Color.OffBlack,
-    fontSize: moderateScale(40),
+    color: Color.Black,
+    fontSize: moderateScale(45),
     fontWeight: 900,
-    fontFamily: Font.PassionOneBold
+    fontFamily: Font.PassionOneBold,
+    opacity: 0.7,
   },
 
   goBack: {
@@ -33,7 +34,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: horizontalScale(40),
-    height: horizontalScale(40)
+    height: horizontalScale(40),
   },
 
   paragraph: {
@@ -41,11 +42,19 @@ export const styles = StyleSheet.create({
   },
 
   input: {
-    paddingLeft: horizontalScale(15),
-    fontSize: moderateScale(18),
+    width: "70%",
+    fontSize: moderateScale(35),
+    marginBottom: verticalScale(-10),
+    fontFamily: Font.PassionOneRegular,
     color: Color.OffBlack,
-    height: 50,
-    width: 240,
+  },
+
+  inputBorder: {
+    backgroundColor: Color.Black,
+    opacity: 0.9,
+    width: "85%",
+    height: verticalScale(10),
+    borderRadius: moderateScale(10),
   },
 
   card: {
@@ -55,31 +64,29 @@ export const styles = StyleSheet.create({
     borderRadius: moderateScale(20),
     backgroundColor: Color.White,
     gap: verticalScale(25),
-    paddingBottom: verticalScale(40)
+    paddingBottom: verticalScale(40),
   },
 
   inputWrapper: {
-    paddingLeft: horizontalScale(30),
+    alignItems: "center",
     justifyContent: "flex-start",
     flexDirection: "row",
-    alignItems: "center",
-    borderBottomWidth: moderateScale(4),
-    borderRadius: moderateScale(10)
+    marginBottom: verticalScale(-10),
   },
 
   button: {
-    width: horizontalScale(300),
-    height: verticalScale(63),
     justifyContent: "center",
     alignItems: "center",
+    width: "86%",
     borderRadius: moderateScale(10),
-    backgroundColor: Color.Purple,
+    height: verticalScale(69),
+    backgroundColor: Color.SoftPurple,
   },
 
   buttonText: {
-    fontFamily: Font.PassionOneRegular,
-    fontSize: moderateScale(28),
-    color: Color.White
+    color: Color.White,
+    fontFamily: Font.PassionOneBold,
+    fontSize: moderateScale(35),
   },
 });
 

@@ -13,6 +13,7 @@ import { useAuthProvider } from "@/src/Common/context/AuthProvider";
 import { useSpinGameProvider } from "../../context/SpinGameProvider";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
+import Screen from "@/src/Common/constants/Screen";
 
 export const GameScreen = () => {
   const navigation: any = useNavigation();
@@ -20,6 +21,8 @@ export const GameScreen = () => {
   const [state, setState] = useState<SpinGameState>(SpinGameState.RoundStarted);
   const [roundText, setRoundText] = useState<string>("");
   const [gameStarted, setGameStarted] = useState<boolean>(false);
+  const [gameFinished, setGameFinished] = useState<boolean>(false);
+
   const exitTriggeredRef = useRef<boolean>(false);
   const hasStartedGameRef = useRef<boolean>(false);
 
@@ -79,6 +82,14 @@ export const GameScreen = () => {
         setBgColor(Color.Green);
       } else {
         setBgColor(Color.Red);
+      }
+    });
+
+    setListener("state", async (state: SpinGameState) => {
+      console.info("Received state:");
+      if (state === SpinGameState.Finished) {
+        await disconnect();
+        displayInfoModal("Spillet er ferdig", "Finito!", () => navigation.navigate(Screen.Home));
       }
     });
   };

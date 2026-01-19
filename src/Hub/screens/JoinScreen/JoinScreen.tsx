@@ -12,6 +12,7 @@ import { GameEntryMode, GameType } from "@/src/Common/constants/Types";
 import { useServiceProvider } from "@/src/Common/context/ServiceProvider";
 import { useNavigation } from "expo-router";
 import Screen from "@/src/Common/constants/Screen";
+import { moderateScale } from "@/src/Common/utils/dimensions";
 
 export const JoinScreen = () => {
   const navigation: any = useNavigation();
@@ -65,13 +66,24 @@ export const JoinScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Pressable style={styles.goBack} onPress={() => navigation.goBack()}>
-        <Feather name="chevron-left" size={36} color={Color.OffBlack} />
-      </Pressable>
+      <View style={styles.headerWrapper}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconWrapper}>
+          <Feather name="chevron-left" size={moderateScale(45)} />
+        </TouchableOpacity>
+        <Text style={styles.header}>Opprett</Text>
+        <TouchableOpacity onPress={handleInfoPressed} style={styles.iconWrapper}>
+          <Text style={styles.textIcon}>?</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.card}>
-        <Text style={styles.header}>Skriv in kodeordet</Text>
+        <Text style={styles.header}>Skriv in rommet</Text>
         <View style={styles.inputWrapper}>
-          <Feather name="key" size={30} color={Color.OffBlack} />
+          <Feather
+            style={{ paddingLeft: moderateScale(20), paddingRight: moderateScale(10) }}
+            name="key"
+            size={45}
+            color={Color.OffBlack}
+          />
           <TextInput
             style={styles.input}
             placeholder="SLEM POTET"
@@ -79,6 +91,7 @@ export const JoinScreen = () => {
             onChangeText={(input) => setUserInput(input?.toUpperCase())}
           />
         </View>
+        <View style={styles.inputBorder} />
         <TouchableOpacity style={styles.button} onPress={handleJoinGame}>
           <Text style={styles.buttonText}>Bli med</Text>
         </TouchableOpacity>

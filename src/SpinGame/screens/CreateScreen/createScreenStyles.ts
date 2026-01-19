@@ -74,6 +74,14 @@ export const styles = StyleSheet.create({
     backgroundColor: Color.Black,
   },
 
+  categoryButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "86%",
+    borderRadius: moderateScale(10),
+    height: verticalScale(69),
+  },
+
   bottomText: {
     color: Color.White,
     fontFamily: Font.PassionOneBold,
@@ -96,3 +104,5 @@ export const styles = StyleSheet.create({
     borderRadius: moderateScale(10),
   },
 });
+
+export default styles;

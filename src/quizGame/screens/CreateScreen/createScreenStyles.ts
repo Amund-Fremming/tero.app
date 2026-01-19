@@ -75,6 +75,15 @@ export const styles = StyleSheet.create({
     backgroundColor: Color.Black,
   },
 
+  categoryButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "86%",
+    borderRadius: moderateScale(10),
+    height: verticalScale(69),
+    backgroundColor: Color.BuzzifyLavenderLight,
+  },
+
   bottomText: {
     color: Color.White,
     fontFamily: Font.PassionOneBold,
