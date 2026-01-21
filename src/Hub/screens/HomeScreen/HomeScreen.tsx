@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Button } from "react-native";
+import { View, Text, Pressable, Button, Image } from "react-native";
 import Screen from "../../../Common/constants/Screen";
 import styles from "./homeScreenStyles";
 import { useGlobalSessionProvider } from "../../../Common/context/GlobalSessionProvider";
@@ -9,6 +9,8 @@ import DiagonalSplit from "../../../Common/components/BuzzifyShapes/DiagonalSpli
 import ArcWithCircles from "../../../Common/components/BuzzifyShapes/ArcWithCircles";
 import ScatteredCircles from "../../../Common/components/BuzzifyShapes/ScatteredCircles";
 import { GameEntryMode } from "@/src/Common/constants/Types";
+
+import redFigure from "../../../Common/assets/images/red-figure.png";
 
 const subHeaderList = [
   "klar for en runde?",
@@ -66,13 +68,6 @@ export const HomeScreen = ({ navigation }: any) => {
       console.error("Failed health, returning error page");
       navigation.navigate(Screen.Error);
     }
-
-    /* TODO  -  UNCOMMENT
-    let status = result.value;
-    if (!status.database || !status.session || !status.platform) {
-      console.error("Failed health, returning error page");
-      navigation.navigate(Screen.Error);
-    }*/
   };
 
   const handlePress = (gameEntryMode: GameEntryMode, destination: Screen) => {
@@ -91,6 +86,7 @@ export const HomeScreen = ({ navigation }: any) => {
           style={{ ...styles.buttonBase, ...styles.topLeft }}
           onPress={() => handlePress(GameEntryMode.Creator, Screen.GameTypeList)}
         >
+          <Image style={styles.image} source={redFigure} />
           <View style={styles.buttonTextWrapper}>
             <Text style={{ ...styles.textBase, ...styles.textTopLeft }}>LAG</Text>
             <Text style={{ ...styles.textBase, ...styles.textTopLeft }}>SPILL</Text>

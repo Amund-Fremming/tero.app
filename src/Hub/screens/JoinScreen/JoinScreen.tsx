@@ -64,19 +64,23 @@ export const JoinScreen = () => {
     navigation.navigate(response.game_type);
   };
 
+  const handleInfoPressed = () => {
+    console.log("Info pressed");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.headerWrapper}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconWrapper}>
           <Feather name="chevron-left" size={moderateScale(45)} />
         </TouchableOpacity>
-        <Text style={styles.header}>Opprett</Text>
+        <Text style={styles.header}></Text>
         <TouchableOpacity onPress={handleInfoPressed} style={styles.iconWrapper}>
           <Text style={styles.textIcon}>?</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.card}>
-        <Text style={styles.header}>Skriv in rommet</Text>
+        <Text style={styles.header}>Rom navn:</Text>
         <View style={styles.inputWrapper}>
           <Feather
             style={{ paddingLeft: moderateScale(20), paddingRight: moderateScale(10) }}

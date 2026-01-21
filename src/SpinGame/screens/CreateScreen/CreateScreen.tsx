@@ -80,7 +80,7 @@ export const CreateScreen = () => {
 
   return (
     <SimpleInitScreen
-      isFirstPage={true}
+      createScreen={true}
       themeColor={themeColor}
       secondaryThemeColor={secondaryThemeColor}
       onBackPressed={() => navigation.goBack()}

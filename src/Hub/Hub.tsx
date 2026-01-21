@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { TransitionPresets } from "@react-navigation/stack";
 import Color from "../Common/constants/Color";
@@ -20,6 +20,7 @@ import { SavedGamesScreen } from "./screens/SavedGamesScreen/SavedGamesScreen";
 import { TipsUsScreen } from "../Common/screens/TipsUsScreen/TipsUsScreen";
 import { ErrorScreen } from "./screens/ErrorScreen/ErrorScreen";
 import { ProblemScreen } from "./screens/ProblemScreen/ProblemScreen";
+import ImposterGame from "../imposter/ImposterGame";
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,7 @@ export const Hub = () => {
       <Stack.Screen name={Screen.Join} component={JoinScreen} />
       <Stack.Screen name={Screen.Spin} component={SpinGame} />
       <Stack.Screen name={Screen.Quiz} component={QuizGame} />
+      <Stack.Screen name={Screen.Imposter} component={ImposterGame} />
       <Stack.Screen name={Screen.GameList} component={GameListScreen} />
       <Stack.Screen name={Screen.GameTypeList} component={GameTypeListScreen} />
       <Stack.Screen name={Screen.Admin} component={AdminScreen} />

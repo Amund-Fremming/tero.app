@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: "100%",
-    paddingTop: verticalScale(80),
+    paddingTop: verticalScale(60),
     alignItems: "center",
     gap: 10,
   },
@@ -60,6 +60,7 @@ export const styles = StyleSheet.create({
     paddingTop: verticalScale(3),
     fontSize: moderateScale(45),
     fontFamily: Font.PassionOneRegular,
+    opacity: 0.8,
   },
 
   iterations: {

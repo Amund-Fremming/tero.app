@@ -115,7 +115,7 @@ export const LobbyScreen = () => {
 
   return (
     <SimpleInitScreen
-      isFirstPage={false}
+      createScreen={false}
       themeColor={Color.BuzzifyLavender}
       secondaryThemeColor={Color.BuzzifyLavenderLight}
       onBackPressed={() => navigation.goBack()}

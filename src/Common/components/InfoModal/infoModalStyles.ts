@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
     width: horizontalScale(350),
     height: verticalScale(240),
     borderWidth: moderateScale(2),
-    borderRadius: moderateScale(15),
+    borderRadius: moderateScale(35),
     gap: verticalScale(15),
     paddingHorizontal: horizontalScale(20),
   },

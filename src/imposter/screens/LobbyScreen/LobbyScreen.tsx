@@ -4,19 +4,20 @@ import { useHubConnectionProvider } from "@/src/Common/context/HubConnectionProv
 import { HubChannel } from "@/src/Common/constants/HubChannel";
 import { useModalProvider } from "@/src/Common/context/ModalProvider";
 import { useAuthProvider } from "@/src/Common/context/AuthProvider";
-import { SpinSessionScreen } from "../../constants/SpinTypes";
-import { useSpinGameProvider } from "../../context/SpinGameProvider";
 import { useNavigation } from "expo-router";
 import { GameType } from "@/src/Common/constants/Types";
 import SimpleInitScreen from "@/src/Common/screens/SimpleInitScreen/SimpleInitScreen";
+import { useImposterSessionProvider } from "../../context/ImposterSessionProvider";
+import { ImposterSessionScreen } from "../../constants/imposterTypes";
+import Color from "@/src/Common/constants/Color";
 
 export const LobbyScreen = () => {
   const navigation: any = useNavigation();
   const { pseudoId } = useAuthProvider();
   const { connect, setListener, invokeFunction, disconnect } = useHubConnectionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
-  const { gameKey, gameType, hubAddress, setIsHost, isHost, clearGlobalSessionValues } = useGlobalSessionProvider();
-  const { setScreen, themeColor, secondaryThemeColor, featherIcon, clearSpinSessionValues } = useSpinGameProvider();
+  const { gameKey, gameType, hubAddress, setIsHost, clearGlobalSessionValues } = useGlobalSessionProvider();
+  const { clearImposterSessionValues, setScreen } = useImposterSessionProvider();
 
   const [round, setRound] = useState<string>("");
   const [started, setStarted] = useState<boolean>(false);
@@ -63,7 +64,7 @@ export const LobbyScreen = () => {
 
     setListener("signal_start", (_value: boolean) => {
       console.info("Received start signal");
-      setScreen(SpinSessionScreen.Game);
+      setScreen(ImposterSessionScreen.Game);
     });
 
     const groupResult = await invokeFunction("ConnectToGroup", gameKey, pseudoId);
@@ -119,14 +120,14 @@ export const LobbyScreen = () => {
     }
 
     await disconnect();
-    setScreen(SpinSessionScreen.Game);
+    setScreen(ImposterSessionScreen.Game);
   };
 
   const handleBackPressed = async () => {
     await disconnect();
     navigation.goBack();
     clearGlobalSessionValues();
-    clearSpinSessionValues();
+    clearImposterSessionValues();
   };
 
   const handleInfoPressed = () => {
@@ -136,8 +137,8 @@ export const LobbyScreen = () => {
   return (
     <SimpleInitScreen
       createScreen={false}
-      themeColor={themeColor}
-      secondaryThemeColor={secondaryThemeColor}
+      themeColor={Color.LightGreen}
+      secondaryThemeColor={Color.DarkGreen}
       onBackPressed={handleBackPressed}
       onInfoPressed={handleInfoPressed}
       headerText="Opprett"
@@ -146,7 +147,7 @@ export const LobbyScreen = () => {
       topButtonOnPress={handleAddRound}
       bottomButtonText="Opprett"
       bottomButtonCallback={handleStartGame}
-      featherIcon={featherIcon}
+      featherIcon={"users"}
       iterations={iterations}
       inputPlaceholder="Spillnavn..."
       inputValue={round}

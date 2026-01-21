@@ -1,11 +1,11 @@
 import styles from "./gameTypeListScreenStyles";
 import data from "./data.json";
-import { View, Text, Pressable, ScrollView, Dimensions, Image } from "react-native";
+import { View, Text, Pressable, ScrollView, Dimensions, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { useNavigation } from "expo-router";
 import { useGlobalSessionProvider } from "../../context/GlobalSessionProvider";
 import Screen from "../../constants/Screen";
-import { verticalScale } from "../../utils/dimensions";
+import { moderateScale, verticalScale } from "../../utils/dimensions";
 import { Feather } from "@expo/vector-icons";
 import Color from "../../constants/Color";
 import { GameEntryMode, GameType } from "../../constants/Types";
@@ -30,6 +30,10 @@ export const GameTypeListScreen = () => {
     navigation.navigate(navTarget);
   };
 
+  const handleInfoPressed = () => {
+    console.log("Info pressed");
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -50,19 +54,21 @@ export const GameTypeListScreen = () => {
         }}
       >
         <View style={styles.topWrapper}>
-          <Pressable onPress={() => navigation.goBack()} style={styles.iconWrapper}>
-            <Feather name="chevron-left" size={45} color={Color.OffBlack} />
-          </Pressable>
-          <View style={styles.borderAndHeader}>
-            <Text style={styles.header}>{gameEntryMode === GameEntryMode.Creator ? "Lag spill" : "Velg spill"}</Text>
-            <View style={styles.borderWrapper}>
-              <View style={styles.borderLeft} />
-              <View style={styles.borderRight} />
+          <View style={styles.headerWrapper}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconWrapper}>
+              <Feather name="chevron-left" size={moderateScale(45)} />
+            </TouchableOpacity>
+            <View style={styles.borderAndHeader}>
+              <Text style={styles.header}>{gameEntryMode === GameEntryMode.Creator ? "Lag spill" : "Velg spill"}</Text>
+              <View style={styles.borderWrapper}>
+                <View style={styles.borderLeft} />
+                <View style={styles.borderRight} />
+              </View>
             </View>
+            <TouchableOpacity onPress={handleInfoPressed} style={styles.iconWrapper}>
+              <Text style={styles.textIcon}>?</Text>
+            </TouchableOpacity>
           </View>
-          <Pressable style={styles.iconWrapper}>
-            <Text style={styles.icon}>?</Text>
-          </Pressable>
         </View>
         {data &&
           data.map((item, index) => (

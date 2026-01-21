@@ -1,22 +1,22 @@
-import { useState } from "react";
-import { CreateGameRequest, GameCategory, GameEntryMode, GameType } from "@/src/Common/constants/Types";
+import { useEffect, useState } from "react";
+import { CreateGameRequest, GameCategory, GameEntryMode } from "@/src/Common/constants/Types";
 import { useAuthProvider } from "@/src/Common/context/AuthProvider";
 import { useModalProvider } from "@/src/Common/context/ModalProvider";
 import { useGlobalSessionProvider } from "@/src/Common/context/GlobalSessionProvider";
 import { useServiceProvider } from "@/src/Common/context/ServiceProvider";
 import { useNavigation } from "expo-router";
-import { QuizGameScreen as QuizSessionScreen } from "../../constants/quizTypes";
-import { useQuizGameProvider } from "../../context/QuizGameProvider";
-import Color from "@/src/Common/constants/Color";
 import SimpleInitScreen from "@/src/Common/screens/SimpleInitScreen/SimpleInitScreen";
+import { useImposterSessionProvider } from "../../context/ImposterSessionProvider";
+import { ImposterSessionScreen } from "../../constants/imposterTypes";
+import Color from "@/src/Common/constants/Color";
 
 export const CreateScreen = () => {
   const navigation: any = useNavigation();
   const { pseudoId } = useAuthProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { gameService } = useServiceProvider();
-  const { setGameKey, setGameEntryMode, setHubAddress } = useGlobalSessionProvider();
-  const { setScreen } = useQuizGameProvider();
+  const { setGameKey, setGameEntryMode, setHubAddress, gameType } = useGlobalSessionProvider();
+  const { setScreen } = useImposterSessionProvider();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [createRequest, setCreateRequest] = useState<CreateGameRequest>({
@@ -36,7 +36,7 @@ export const CreateScreen = () => {
     if (loading) return;
 
     if (!createRequest.category) {
-      displayInfoModal("Du må velge kategori!");
+      displayInfoModal("Du må velge kategori");
       return;
     }
 
@@ -53,7 +53,7 @@ export const CreateScreen = () => {
     }
 
     setLoading(true);
-    const result = await gameService().createInteractiveGame(pseudoId, GameType.Quiz, createRequest);
+    const result = await gameService().createInteractiveGame(pseudoId, gameType, createRequest);
 
     if (result.isError()) {
       displayErrorModal(result.error);
@@ -65,7 +65,7 @@ export const CreateScreen = () => {
     setGameKey(result.value.key);
     setHubAddress(result.value.hub_address);
     setGameEntryMode(GameEntryMode.Creator);
-    setScreen(QuizSessionScreen.Lobby);
+    setScreen(ImposterSessionScreen.Lobby);
     setLoading(false);
   };
 
@@ -76,8 +76,8 @@ export const CreateScreen = () => {
   return (
     <SimpleInitScreen
       createScreen={true}
-      themeColor={Color.BuzzifyLavender}
-      secondaryThemeColor={Color.BuzzifyLavenderLight}
+      themeColor={Color.LightGreen}
+      secondaryThemeColor={Color.DarkGreen}
       onBackPressed={() => navigation.goBack()}
       onInfoPressed={handleInfoPressed}
       headerText="Opprett"
@@ -86,7 +86,7 @@ export const CreateScreen = () => {
       topButtonOnPress={() => {}}
       bottomButtonText="Opprett"
       bottomButtonCallback={handleCreateGame}
-      featherIcon="layers"
+      featherIcon={"users"}
       iterations={"?"}
       inputPlaceholder="Spillnavn..."
       inputValue={createRequest.name}
@@ -94,3 +94,5 @@ export const CreateScreen = () => {
     />
   );
 };
+
+export default CreateScreen;

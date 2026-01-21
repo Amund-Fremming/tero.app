@@ -10,6 +10,7 @@ import { GameCategory } from "../../constants/Types";
 import Color from "../../constants/Color";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { useGlobalSessionProvider } from "../../context/GlobalSessionProvider";
+import { create } from "react-test-renderer";
 
 const STATIC_STYLES = {
   iterationsOpacity: { opacity: 0.4 },
@@ -17,7 +18,7 @@ const STATIC_STYLES = {
 };
 
 interface SimpleInitScreenProps {
-  isFirstPage: boolean;
+  createScreen: boolean;
   themeColor: string;
   secondaryThemeColor: string;
   onBackPressed?: () => void;
@@ -36,7 +37,7 @@ interface SimpleInitScreenProps {
 }
 
 export const SimpleInitScreen = ({
-  isFirstPage,
+  createScreen,
   topButtonOnChange,
   topButtonOnPress,
   bottomButtonCallback,
@@ -83,8 +84,8 @@ export const SimpleInitScreen = ({
         <TouchableOpacity onPress={handleBackPressed} style={styles.iconWrapper}>
           <Feather name="chevron-left" size={moderateScale(45)} />
         </TouchableOpacity>
-        {isFirstPage && <Text style={styles.header}>{headerText}</Text>}
-        {!isFirstPage && (
+        {createScreen && <Text style={styles.header}>{headerText}</Text>}
+        {!createScreen && (
           <View style={styles.headerInline}>
             <Text style={styles.toastHeader}>Rom:</Text>
             <Text style={styles.headerSecondScreen}>{gameKey?.toUpperCase()}</Text>
@@ -107,7 +108,7 @@ export const SimpleInitScreen = ({
           onChangeText={setInput}
         />
         <View style={styles.inputBorder} />
-        {isFirstPage && (
+        {createScreen && (
           <CategoryDropdown
             data={categoryData}
             value={categoryButtonText}
@@ -117,7 +118,7 @@ export const SimpleInitScreen = ({
             buttonTextColor={Color.White}
           />
         )}
-        {!isFirstPage && (
+        {!createScreen && (
           <TouchableOpacity
             onPress={topButtonOnPress}
             style={{ ...styles.categoryButton, backgroundColor: secondaryThemeColor }}

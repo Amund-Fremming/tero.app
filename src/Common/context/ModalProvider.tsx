@@ -1,25 +1,29 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React, { createContext, ReactNode, useContext, useRef, useState } from "react";
 import InfoModal from "../components/InfoModal/InfoModal";
 import ActionModal from "../components/ActionModal/ActionModal";
 import { Modal } from "react-native";
+import LoadingModal from "../components/LoadingModal/LoadingModal";
 
 enum DisplayOption {
   None,
   Error,
   Info,
   Action,
+  Loading,
 }
 
 interface IModalContext {
   displayActionModal: (message: string, onLeftCloseAction: () => void, onRightCloseAction: () => void) => void;
   displayErrorModal: (errorMessage: string, onCloseAction?: () => void) => void;
   displayInfoModal: (message: string, header?: string, onCloseAction?: () => void) => void;
+  displayLoadingModal: (onCloseAction: () => void) => void;
 }
 
 const defaultContextValue: IModalContext = {
   displayActionModal: () => {},
   displayErrorModal: () => {},
   displayInfoModal: () => {},
+  displayLoadingModal: () => {},
 };
 
 const ModalContext = createContext<IModalContext>(defaultContextValue);
@@ -31,76 +35,85 @@ interface ModalProviderProps {
 }
 
 export const ModalProvider = ({ children }: ModalProviderProps) => {
-  const [onCloseFunc, setOnCloseFunc] = useState<() => void>(() => {});
-  const [onLeftCloseFunc, setOnLeftCloseFunc] = useState<() => void>(() => {});
-  const [onRightCloseFunc, setOnRightCloseFunc] = useState<() => void>(() => {});
   const [displayOption, setDisplayOption] = useState<DisplayOption>(DisplayOption.None);
   const [message, setMessage] = useState<string>("");
   const [header, setHeader] = useState<string>("");
+  const onCloseActionRef = useRef<(() => void) | undefined>(undefined);
+  const onLeftActionRef = useRef<(() => void) | undefined>(undefined);
+  const onRightActionRef = useRef<(() => void) | undefined>(undefined);
 
   const displayErrorModal = (message: string, onCloseAction?: () => void) => {
-    const fn = () => {
-      onCloseAction && onCloseAction();
-      setDisplayOption(DisplayOption.None);
-    };
-
-    setOnCloseFunc(() => fn);
+    onCloseActionRef.current = onCloseAction;
     setDisplayOption(DisplayOption.Error);
     setMessage(message);
     setHeader("Oops");
   };
 
   const displayInfoModal = (message: string, header?: string, onCloseAction?: () => void) => {
-    const fn = () => {
-      onCloseAction && onCloseAction();
-      setDisplayOption(DisplayOption.None);
-    };
-
-    setOnCloseFunc(() => fn);
+    onCloseActionRef.current = onCloseAction;
     setDisplayOption(DisplayOption.Info);
     setMessage(message);
     setHeader(header ? header : "Heisann");
   };
 
   const displayActionModal = (message: string, onLeftCloseAction: () => void, onRightCloseAction: () => void) => {
-    const leftFn = () => {
-      onLeftCloseAction();
-      setDisplayOption(DisplayOption.None);
-    };
-
-    const rightFn = () => {
-      onRightCloseAction();
-      setDisplayOption(DisplayOption.None);
-    };
-
-    setOnLeftCloseFunc(() => leftFn);
-    setOnRightCloseFunc(() => rightFn);
+    onLeftActionRef.current = onLeftCloseAction;
+    onRightActionRef.current = onRightCloseAction;
     setDisplayOption(DisplayOption.Action);
     setMessage(message);
+  };
+
+  const displayLoadingModal = (onCloseAction: () => void) => {
+    setDisplayOption(DisplayOption.Action);
+    onCloseActionRef.current = onCloseAction;
+    setDisplayOption(DisplayOption.Loading);
+  };
+
+  const handleClose = () => {
+    onCloseActionRef.current?.();
+    setDisplayOption(DisplayOption.None);
+  };
+
+  const handleLeftClick = () => {
+    onLeftActionRef.current?.();
+    setDisplayOption(DisplayOption.None);
+  };
+
+  const handleRightClick = () => {
+    onRightActionRef.current?.();
+    setDisplayOption(DisplayOption.None);
   };
 
   const value = {
     displayErrorModal,
     displayInfoModal,
     displayActionModal,
+    displayLoadingModal,
+  };
+
+  const renderModal = () => {
+    switch (displayOption) {
+      case DisplayOption.Action:
+        return <ActionModal message={message} onLeftClick={handleLeftClick} onRightClick={handleRightClick} />;
+      case DisplayOption.Error || DisplayOption.Info:
+        <InfoModal
+          message={message}
+          header={header}
+          isError={displayOption === DisplayOption.Error}
+          onCloseFunc={handleClose}
+        />;
+      case DisplayOption.Loading:
+        return <LoadingModal onCloseFunc={onCloseActionRef.current} />;
+      case DisplayOption.None:
+        return <></>;
+    }
   };
 
   return (
     <ModalContext.Provider value={value}>
       {children}
       <Modal visible={displayOption !== DisplayOption.None} animationType="fade" transparent={true}>
-        {(displayOption === DisplayOption.Info || displayOption === DisplayOption.Error) && (
-          <InfoModal
-            message={message}
-            header={header}
-            isError={displayOption === DisplayOption.Error}
-            onCloseFunc={onCloseFunc}
-          />
-        )}
-
-        {displayOption === DisplayOption.Action && (
-          <ActionModal message={message} onLeftClick={onLeftCloseFunc} onRightClick={onRightCloseFunc} />
-        )}
+        {renderModal()}
       </Modal>
     </ModalContext.Provider>
   );

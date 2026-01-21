@@ -15,12 +15,12 @@
     "screen": "Duel"
   },
   {
-    "name": "Terning",
-    "icon": "",
-    "screen": "Home"
+    "name": "Imposter",
+    "icon": "TODO",
+    "screen": "Imposter"
   },
   {
-    "name": "Imposter",
+    "name": "Terning",
     "icon": "",
     "screen": "Home"
   }

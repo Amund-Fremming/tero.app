@@ -10,6 +10,7 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import QuizSessionProvider from "@/src/quizGame/context/QuizGameProvider";
 import SpinGameProvider from "@/src/SpinGame/context/SpinGameProvider";
+import ImposterSessionProvider from "@/src/imposter/context/ImposterSessionProvider";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -25,7 +26,9 @@ export default () => (
             <HubConnectionProvider>
               <QuizSessionProvider>
                 <SpinGameProvider>
-                  <Hub />
+                  <ImposterSessionProvider>
+                    <Hub />
+                  </ImposterSessionProvider>
                 </SpinGameProvider>
               </QuizSessionProvider>
             </HubConnectionProvider>

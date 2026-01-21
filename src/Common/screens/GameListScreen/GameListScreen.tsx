@@ -105,7 +105,7 @@ export const GameListScreen = () => {
           // Small delay to ensure navigation completes
           setTimeout(() => triggerLogin(), 200);
         },
-        () => {}
+        () => {},
       );
       return;
     }

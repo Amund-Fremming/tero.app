@@ -1,44 +1,44 @@
-import React, { useEffect } from "react";
-import { useGlobalSessionProvider } from "@/src/Common/context/GlobalSessionProvider";
+import { useEffect } from "react";
+import { useGlobalSessionProvider } from "../Common/context/GlobalSessionProvider";
+import { ImposterSessionScreen } from "./constants/imposterTypes";
 import { GameEntryMode } from "../Common/constants/Types";
+import { useImposterSessionProvider } from "./context/ImposterSessionProvider";
 import CreateScreen from "./screens/CreateScreen/CreateScreen";
 import { GameScreen } from "./screens/GameScreen/GameScreen";
 import LobbyScreen from "./screens/LobbyScreen/LobbyScreen";
-import { SpinSessionScreen } from "./constants/SpinTypes";
-import { useSpinGameProvider } from "./context/SpinGameProvider";
 
-export const SpinGame = () => {
+export const ImposterGame = () => {
   const { gameEntryMode } = useGlobalSessionProvider();
-  const { screen, setScreen } = useSpinGameProvider();
+  const { screen, setScreen } = useImposterSessionProvider();
 
   useEffect(() => {
     const initScreen = getInitialScreen();
     setScreen(initScreen);
   }, []);
 
-  const getInitialScreen = (): SpinSessionScreen => {
+  const getInitialScreen = (): ImposterSessionScreen => {
     switch (gameEntryMode) {
       case GameEntryMode.Creator:
-        return SpinSessionScreen.Create;
+        return ImposterSessionScreen.Create;
       case GameEntryMode.Host:
-        return SpinSessionScreen.Game;
+        return ImposterSessionScreen.Game;
       case GameEntryMode.Participant || GameEntryMode.Member:
-        return SpinSessionScreen.Lobby;
+        return ImposterSessionScreen.Lobby;
       default:
-        return SpinSessionScreen.Lobby;
+        return ImposterSessionScreen.Lobby;
     }
   };
 
   switch (screen) {
-    case SpinSessionScreen.Create:
+    case ImposterSessionScreen.Create:
       return <CreateScreen />;
-    case SpinSessionScreen.Game:
+    case ImposterSessionScreen.Game:
       return <GameScreen />;
-    case SpinSessionScreen.Lobby:
+    case ImposterSessionScreen.Lobby:
       return <LobbyScreen />;
     default:
       return <LobbyScreen />;
   }
 };
 
-export default SpinGame;
+export default ImposterGame;

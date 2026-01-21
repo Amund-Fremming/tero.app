@@ -11,7 +11,14 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexWrap: "wrap",
-    flexDirection: "row"
+    flexDirection: "row",
+  },
+
+  headerWrapper: {
+    width: "90%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 
   topWrapper: {
@@ -20,27 +27,37 @@ export const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     backgroundColor: Color.LightGray,
-    paddingTop: verticalScale(44),
-    paddingBottom: verticalScale(20)
+    paddingTop: verticalScale(60),
+    paddingBottom: verticalScale(20),
+  },
+
+  headerInline: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  textIcon: {
+    paddingTop: verticalScale(3),
+    fontSize: moderateScale(45),
+    fontFamily: Font.PassionOneRegular,
+    opacity: 0.8,
   },
 
   header: {
-    marginTop: verticalScale(5),
-    paddingLeft: horizontalScale(10),
-    color: Colors.Purple,
-    fontSize: moderateScale(50),
-    fontWeight: 900,
-    fontFamily: Font.PassionOneBold
+    fontFamily: Font.PassionOneBold,
+    fontSize: moderateScale(55),
+    fontWeight: 600,
+    opacity: 0.8,
   },
 
   icon: {
-    fontSize: moderateScale(40)
+    fontSize: moderateScale(40),
   },
 
   borderWrapper: {
     paddingTop: verticalScale(4),
     flexDirection: "row",
-    width: "100%"
+    width: "100%",
   },
 
   borderAndHeader: {
@@ -54,7 +71,7 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: moderateScale(5),
     borderBottomLeftRadius: moderateScale(5),
     flex: 1,
-    height: verticalScale(7)
+    height: verticalScale(7),
   },
 
   borderRight: {
@@ -62,21 +79,21 @@ export const styles = StyleSheet.create({
     borderBottomRightRadius: moderateScale(5),
     backgroundColor: Color.Green,
     flex: 1,
-    height: verticalScale(7)
+    height: verticalScale(7),
   },
 
   iconWrapper: {
-    paddingTop: verticalScale(7),
-    backgroundColor: Color.LightGray,
+    backgroundColor: Color.DarkerGray,
     justifyContent: "center",
     alignItems: "center",
     height: verticalScale(50),
-    width: horizontalScale(50)
+    width: horizontalScale(50),
+    borderRadius: moderateScale(10),
   },
 
   card: {
     borderWidth: moderateScale(6.3),
-    borderColor: Color.Black,
+    borderColor: Color.OffBlack,
     height: verticalScale(220),
     width: "45%",
     borderRadius: moderateScale(20),
@@ -92,7 +109,7 @@ export const styles = StyleSheet.create({
     bottom: moderateScale(5),
     left: moderateScale(15),
     display: "flex",
-    paddingBottom: verticalScale(5)
+    paddingBottom: verticalScale(5),
   },
 
   cardSubheader: {
@@ -103,7 +120,7 @@ export const styles = StyleSheet.create({
     bottom: moderateScale(5),
     left: moderateScale(15),
     display: "flex",
-    paddingBottom: verticalScale(5)
+    paddingBottom: verticalScale(5),
   },
 
   paragraph: {
@@ -114,8 +131,8 @@ export const styles = StyleSheet.create({
     backgroundColor: Color.Purple,
     width: "100%",
     height: "100%",
-    borderRadius: moderateScale(13)
-  }
+    borderRadius: moderateScale(13),
+  },
 });
 
 export default styles;

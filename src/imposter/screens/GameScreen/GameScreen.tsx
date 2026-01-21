@@ -1,0 +1,108 @@
+import { Pressable, Text, View } from "react-native";
+import styles from "./gameScreenStyles";
+import { useEffect, useState, useRef } from "react";
+import { useGlobalSessionProvider } from "@/src/Common/context/GlobalSessionProvider";
+import Color from "@/src/Common/constants/Color";
+import { useHubConnectionProvider } from "@/src/Common/context/HubConnectionProvider";
+import { useModalProvider } from "@/src/Common/context/ModalProvider";
+import { useAuthProvider } from "@/src/Common/context/AuthProvider";
+import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "expo-router";
+import { ImposterGameState } from "../../constants/imposterTypes";
+import { useImposterSessionProvider } from "../../context/ImposterSessionProvider";
+
+export const GameScreen = () => {
+  const navigation: any = useNavigation();
+  const [bgColor, setBgColor] = useState<string>(Color.Gray);
+  const [state, setState] = useState<ImposterGameState>(ImposterGameState.Initialized);
+  const [roundText, setRoundText] = useState<string>("");
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
+
+  const exitTriggeredRef = useRef<boolean>(false);
+  const hasStartedGameRef = useRef<boolean>(false);
+
+  const { isHost, setIsHost, clearGlobalSessionValues } = useGlobalSessionProvider();
+  const { clearImposterSessionValues } = useImposterSessionProvider();
+  const { disconnect, setListener, invokeFunction } = useHubConnectionProvider();
+  const { gameKey } = useGlobalSessionProvider();
+  const { displayErrorModal, displayInfoModal } = useModalProvider();
+  const { pseudoId } = useAuthProvider();
+
+  useEffect(() => {
+    setupListeners().then(() => {
+      if (!hasStartedGameRef.current && isHost) {
+        hasStartedGameRef.current = true;
+        handleStartGame();
+      }
+    });
+
+    return () => {
+      clearImposterSessionValues();
+      clearGlobalSessionValues();
+      disconnect();
+    };
+  }, []);
+
+  const setupListeners = async () => {
+    //
+  };
+
+  const handleStartGame = async () => {
+    if (!gameKey || gameKey == "") {
+      displayErrorModal("Mangler spill nøkkel");
+      return;
+    }
+    console.debug("Game key:", gameKey);
+
+    const result = await invokeFunction("StartGame", gameKey);
+    if (result.isError()) {
+      console.error(result.error);
+      displayErrorModal("Klarte ikke starte spill, prøv igjen senere");
+      return;
+    }
+  };
+
+  const handleNextRound = async () => {
+    const result = await invokeFunction("NextRound", gameKey);
+    if (result.isError()) {
+      if (exitTriggeredRef.current) return; // User left the game, don't show error
+
+      console.error(result.error);
+      displayErrorModal("En feil har skjedd med forbindelsen");
+      return;
+    }
+  };
+
+  const handleStartRound = async () => {
+    const channel = gameStarted ? "NextRound" : "StartRound";
+    setGameStarted(false);
+
+    console.debug("Starting spin");
+    const result = await invokeFunction(channel, gameKey);
+    if (result.isError()) {
+      if (exitTriggeredRef.current) return; // User left the game, don't show error
+
+      console.error(result.error);
+      displayErrorModal("En feil har skjedd med forbindelsen");
+      return;
+    }
+  };
+
+  const handleLeaveGame = async () => {
+    exitTriggeredRef.current = true;
+    await disconnect();
+    clearGlobalSessionValues();
+    clearImposterSessionValues();
+    navigation.goBack();
+  };
+
+  return (
+    <View style={{ ...styles.container, backgroundColor: bgColor }}>
+      <View>
+        <Pressable onPress={handleLeaveGame}>
+          <Feather name="chevron-left" size={45} />
+        </Pressable>
+      </View>
+    </View>
+  );
+};

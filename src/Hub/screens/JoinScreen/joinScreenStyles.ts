@@ -5,24 +5,45 @@ import { Font } from "../../../Common/constants/Font";
 
 export const styles = StyleSheet.create({
   container: {
+    paddingTop: verticalScale(60),
     backgroundColor: Color.LightGray,
     width: "100%",
     height: "100%",
-    justifyContent: "center",
     alignItems: "center",
     gap: 10,
   },
 
-  header: {
-    paddingTop: verticalScale(40),
-    paddingBottom: verticalScale(25),
-    paddingLeft: horizontalScale(20),
-    width: "100%",
-    color: Color.Black,
+  headerWrapper: {
+    width: "90%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  textIcon: {
+    paddingTop: verticalScale(3),
     fontSize: moderateScale(45),
-    fontWeight: 900,
+    fontFamily: Font.PassionOneRegular,
+    color: Color.Black,
+    opacity: 0.6,
+  },
+
+  header: {
     fontFamily: Font.PassionOneBold,
-    opacity: 0.7,
+    color: Color.Black,
+    fontSize: moderateScale(55),
+    fontWeight: 600,
+    opacity: 0.8,
+    textAlign: "center",
+  },
+
+  iconWrapper: {
+    backgroundColor: Color.DarkerGray,
+    justifyContent: "center",
+    alignItems: "center",
+    height: verticalScale(50),
+    width: horizontalScale(50),
+    borderRadius: moderateScale(10),
   },
 
   goBack: {
@@ -58,6 +79,8 @@ export const styles = StyleSheet.create({
   },
 
   card: {
+    paddingTop: verticalScale(20),
+    marginTop: verticalScale(100),
     width: "90%",
     justifyContent: "center",
     alignItems: "center",

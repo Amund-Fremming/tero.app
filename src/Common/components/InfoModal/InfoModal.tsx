@@ -1,15 +1,15 @@
-import { Button, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { styles } from "./infoModalStyles";
 import Color from "../../constants/Color";
 
-interface IInfoModal {
+interface InfoModalProps {
   header: string;
   message: string;
   isError: boolean;
   onCloseFunc: () => void;
 }
 
-export const InfoModal = ({ isError, header, message, onCloseFunc }: IInfoModal) => {
+export const InfoModal = ({ isError, header, message, onCloseFunc }: InfoModalProps) => {
   return (
     <View style={styles.overlay}>
       <View style={[styles.genericContainer, isError ? styles.errorContainer : styles.messageContainer]}>

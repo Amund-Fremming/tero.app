@@ -1,13 +1,13 @@
 import { Pressable, Text, View } from "react-native";
 import { styles } from "./actionModalStyles";
 
-interface IActionModal {
+interface ActionModalProps {
   message: string;
   onLeftClick: () => void;
   onRightClick: () => void;
 }
 
-export const ActionModal = ({ message, onLeftClick, onRightClick }: IActionModal) => {
+export const ActionModal = ({ message, onLeftClick, onRightClick }: ActionModalProps) => {
   const handleLeftPressed = () => {
     onLeftClick();
   };

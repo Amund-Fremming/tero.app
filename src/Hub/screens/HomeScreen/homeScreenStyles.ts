@@ -13,6 +13,13 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
 
+  image: {
+    width: "95%",
+    height: "95%",
+    position: "absolute",
+    resizeMode: "contain",
+  },
+
   leadContainer: {
     width: "90%",
     height: "55%",
@@ -23,14 +30,14 @@ export const styles = StyleSheet.create({
     fontSize: moderateScale(110),
     color: Colors.Black,
     fontWeight: 900,
-    fontFamily: Font.PassionOneBold
+    fontFamily: Font.PassionOneBold,
   },
 
   subHeader: {
     fontWeight: 700,
     fontSize: moderateScale(30),
     color: Colors.White,
-    fontFamily: Font.PassionOneRegular
+    fontFamily: Font.PassionOneRegular,
   },
 
   buttonContainer: {
@@ -38,6 +45,7 @@ export const styles = StyleSheet.create({
     height: "45%",
     flexWrap: "wrap",
     flexDirection: "row",
+    overflow: "visible",
   },
 
   buttonBase: {
@@ -45,7 +53,7 @@ export const styles = StyleSheet.create({
     height: "50%",
     justifyContent: "center",
     alignItems: "center",
-    overflow: "hidden",
+    overflow: "visible",
   },
 
   topLeft: {
@@ -70,7 +78,7 @@ export const styles = StyleSheet.create({
     height: horizontalScale(90),
     backgroundColor: Color.White,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
 
   buttonTextWrapper: {
@@ -80,6 +88,7 @@ export const styles = StyleSheet.create({
   },
 
   textBase: {
+    fontFamily: Font.PassionOneBold,
     fontSize: moderateScale(18),
     fontWeight: "900",
     textAlign: "center",
