@@ -106,3 +106,5 @@ export const GameScreen = () => {
     </View>
   );
 };
+
+export default GameScreen;
