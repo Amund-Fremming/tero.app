@@ -170,7 +170,6 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
       console.info("Manually disconnected user");
       return ok();
     } catch (error) {
-      connectedStateRef.current = false;
       clearValues();
       console.error("Failed to close down websocket");
       return err("Failed to close down websocket");
