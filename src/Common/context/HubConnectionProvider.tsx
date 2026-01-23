@@ -57,17 +57,14 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
   // Cleanup on unmount - ensure connection is completely removed
   useEffect(() => {
     return () => {
-      const cleanup = async () => {
-        if (connectionRef.current) {
-          try {
-            await connectionRef.current.stop();
-          } catch (error) {
-            console.error("Error stopping connection on unmount:", error);
-          }
-        }
-        clearValues();
-      };
-      cleanup();
+      // Synchronous cleanup - stop connection if it exists
+      if (connectionRef.current) {
+        // Fire and forget - we can't await in cleanup
+        connectionRef.current.stop().catch((error) => {
+          console.error("Error stopping connection on unmount:", error);
+        });
+      }
+      clearValues();
     };
   }, []);
 
