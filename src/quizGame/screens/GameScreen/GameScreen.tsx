@@ -7,7 +7,6 @@ import { QuizSession } from "../../constants/quizTypes";
 import { useModalProvider } from "@/src/Common/context/ModalProvider";
 import { Feather } from "@expo/vector-icons";
 import { moderateScale } from "@/src/Common/utils/dimensions";
-import Screen from "@/src/Common/constants/Screen";
 import { useGlobalSessionProvider } from "@/src/Common/context/GlobalSessionProvider";
 import { resetToHomeScreen } from "@/src/Common/utils/navigation";
 

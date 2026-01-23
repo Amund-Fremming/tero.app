@@ -11,7 +11,6 @@ import { useAuthProvider } from "@/src/Common/context/AuthProvider";
 import { useSpinGameProvider } from "../../context/SpinGameProvider";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
-import Screen from "@/src/Common/constants/Screen";
 import { moderateScale } from "@/src/Common/utils/dimensions";
 import { resetToHomeScreen } from "@/src/Common/utils/navigation";
 

@@ -1,8 +1,7 @@
 import { useModalProvider } from "@/src/Common/context/ModalProvider";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useHubConnectionProvider } from "@/src/Common/context/HubConnectionProvider";
 import { useGlobalSessionProvider } from "@/src/Common/context/GlobalSessionProvider";
-import Screen from "@/src/Common/constants/Screen";
 import { HubChannel } from "@/src/Common/constants/HubChannel";
 import { useQuizGameProvider } from "../../context/QuizGameProvider";
 import { QuizGameScreen, QuizSession } from "../../constants/quizTypes";
