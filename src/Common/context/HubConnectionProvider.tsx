@@ -58,9 +58,10 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
   useEffect(() => {
     return () => {
       // Synchronous cleanup - stop connection if it exists
-      if (connectionRef.current) {
+      const conn = connectionRef.current;
+      if (conn) {
         // Fire and forget - we can't await in cleanup
-        connectionRef.current.stop().catch((error) => {
+        conn.stop().catch((error) => {
           console.error("Error stopping connection on unmount:", error);
         });
       }
@@ -169,6 +170,7 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
       console.info("Manually disconnected user");
       return ok();
     } catch (error) {
+      connectedStateRef.current = false;
       clearValues();
       console.error("Failed to close down websocket");
       return err("Failed to close down websocket");
