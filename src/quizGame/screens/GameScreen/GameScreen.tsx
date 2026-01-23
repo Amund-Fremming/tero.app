@@ -9,6 +9,7 @@ import { Feather } from "@expo/vector-icons";
 import { moderateScale } from "@/src/Common/utils/dimensions";
 import Screen from "@/src/Common/constants/Screen";
 import { useGlobalSessionProvider } from "@/src/Common/context/GlobalSessionProvider";
+import { resetToHomeScreen } from "@/src/Common/utils/navigation";
 
 export const GameScreen = () => {
   const navigation: any = useNavigation();
@@ -54,9 +55,9 @@ export const GameScreen = () => {
   };
 
   const handleLeaveGame = () => {
-    navigation.navigate(Screen.Home);
     clearGlobalSessionValues();
     clearQuizGameValues();
+    resetToHomeScreen(navigation);
   };
 
   return (

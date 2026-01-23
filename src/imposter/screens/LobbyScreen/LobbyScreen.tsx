@@ -10,6 +10,7 @@ import SimpleInitScreen from "@/src/Common/screens/SimpleInitScreen/SimpleInitSc
 import { useImposterSessionProvider } from "../../context/ImposterSessionProvider";
 import { ImposterSessionScreen } from "../../constants/imposterTypes";
 import Color from "@/src/Common/constants/Color";
+import { resetToHomeScreen } from "@/src/Common/utils/navigation";
 
 export const LobbyScreen = () => {
   const navigation: any = useNavigation();
@@ -119,9 +120,9 @@ export const LobbyScreen = () => {
 
   const handleBackPressed = async () => {
     await disconnect();
-    navigation.goBack();
     clearGlobalSessionValues();
     clearImposterSessionValues();
+    resetToHomeScreen(navigation);
   };
 
   const handleInfoPressed = () => {

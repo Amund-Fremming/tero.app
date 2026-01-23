@@ -9,6 +9,7 @@ import { useSpinGameProvider } from "../../context/SpinGameProvider";
 import { useNavigation } from "expo-router";
 import { GameType } from "@/src/Common/constants/Types";
 import SimpleInitScreen from "@/src/Common/screens/SimpleInitScreen/SimpleInitScreen";
+import { resetToHomeScreen } from "@/src/Common/utils/navigation";
 
 export const LobbyScreen = () => {
   const navigation: any = useNavigation();
@@ -124,9 +125,9 @@ export const LobbyScreen = () => {
 
   const handleBackPressed = async () => {
     await disconnect();
-    navigation.goBack();
     clearGlobalSessionValues();
     clearSpinSessionValues();
+    resetToHomeScreen(navigation);
   };
 
   const handleInfoPressed = () => {

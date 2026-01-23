@@ -10,6 +10,7 @@ import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 import { ImposterGameState } from "../../constants/imposterTypes";
 import { useImposterSessionProvider } from "../../context/ImposterSessionProvider";
+import { resetToHomeScreen } from "@/src/Common/utils/navigation";
 
 export const GameScreen = () => {
   const navigation: any = useNavigation();
@@ -93,7 +94,7 @@ export const GameScreen = () => {
     await disconnect();
     clearGlobalSessionValues();
     clearImposterSessionValues();
-    navigation.goBack();
+    resetToHomeScreen(navigation);
   };
 
   return (
