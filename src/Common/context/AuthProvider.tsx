@@ -83,11 +83,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const storedPseudoId = await SecureStore.getItemAsync("pseudo_id");
     await rotateTokens();
 
-    if (storedPseudoId) {
-      setPseudoId(storedPseudoId);
-      return ok(storedPseudoId);
-    }
-
     let result = await userService().ensurePseudoId(storedPseudoId);
     if (result.isError()) {
       console.error(result.error);

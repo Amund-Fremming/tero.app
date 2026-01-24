@@ -22,7 +22,7 @@ export const GameScreen = () => {
   const [hasStartedGame, setHasStartedGame] = useState<boolean>(false);
   const [bgColor, setBgColor] = useState<string>(Color.Gray);
 
-  const exitTriggeredRef = useRef<boolean>(false);
+  const disconnectTriggeredRef = useRef<boolean>(false);
 
   const { isHost, setIsHost, clearGlobalSessionValues } = useGlobalSessionProvider();
   const { clearSpinSessionValues, themeColor } = useSpinGameProvider();
@@ -53,11 +53,16 @@ export const GameScreen = () => {
     resetToHomeScreen(navigation);
   };
 
+  // Only disconnects the hub
   const handleGameFinshed = async () => {
+    disconnectTriggeredRef.current = true;
     await disconnect();
   };
 
+  // Only used when `disconnect()` is called first
   const navigateHome = () => {
+    clearGlobalSessionValues();
+    clearSpinSessionValues();
     resetToHomeScreen(navigation);
   };
 
@@ -68,7 +73,7 @@ export const GameScreen = () => {
       handleLeaveGame();
     });
 
-    setListener("round", (roundText: string) => {
+    setListener("round_text", (roundText: string) => {
       console.info("Received round text:", roundText);
       setRoundText(roundText);
     });
@@ -95,6 +100,7 @@ export const GameScreen = () => {
     });
 
     setListener("cancelled", (message: string) => {
+      if (disconnectTriggeredRef.current) return;
       displayInfoModal(message, "Spillet ble avsluttet", () => {
         handleLeaveGame();
       });
@@ -115,7 +121,6 @@ export const GameScreen = () => {
       displayErrorModal("Mangler spill nøkkel");
       return;
     }
-    console.debug("Game key:", gameKey);
 
     const result = await invokeFunction("StartGame", gameKey);
     if (result.isError()) {
@@ -130,11 +135,19 @@ export const GameScreen = () => {
   const handleNextRound = async () => {
     const result = await invokeFunction("NextRound", gameKey);
     if (result.isError()) {
-      if (exitTriggeredRef.current) return; // User left the game, don't show error
+      if (disconnectTriggeredRef.current) return; // User left the game, don't show error
 
       console.error(result.error);
       displayErrorModal("En feil har skjedd med forbindelsen");
       return;
+    }
+
+    const state: SpinGameState = result.value;
+    if (state === SpinGameState.Finished) {
+      console.debug("Host received game finished");
+      setBgColor(Color.Gray);
+      setState(state);
+      await handleGameFinshed();
     }
   };
 
@@ -142,10 +155,9 @@ export const GameScreen = () => {
     const channel = gameStarted ? "NextRound" : "StartRound";
     setGameStarted(false);
 
-    console.debug("Starting spin");
     const result = await invokeFunction(channel, gameKey);
     if (result.isError()) {
-      if (exitTriggeredRef.current) return; // User left the game, don't show error
+      if (disconnectTriggeredRef.current) return; // User left the game, don't show error
 
       console.error(result.error);
       displayErrorModal("En feil har skjedd med forbindelsen");

@@ -182,8 +182,17 @@ export class GameService {
         {},
         {
           headers: getHeaders(pseudo_id, null),
+          validateStatus: () => true, // Don't throw on any status code
         },
       );
+
+      if (response.status === 404) {
+        return err("Game not found");
+      }
+
+      if (response.status >= 400) {
+        return err("Failed to join game");
+      }
 
       const result: JoinGameResponse = response.data;
       return ok(result);

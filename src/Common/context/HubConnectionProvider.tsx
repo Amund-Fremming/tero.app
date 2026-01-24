@@ -4,13 +4,14 @@ import { useModalProvider } from "./ModalProvider";
 import { useNavigation } from "expo-router";
 import Screen from "../constants/Screen";
 import { ok, err, Result } from "../utils/result";
+import { SpinGameState } from "@/src/SpinGame/constants/SpinTypes";
 
 interface IHubConnectionContext {
   connect: (hubAddress: string) => Promise<Result<signalR.HubConnection>>;
   disconnect: () => Promise<Result>;
   debugDisconnect: () => Promise<void>;
   setListener: <T>(channel: string, fn: (item: T) => void) => Result;
-  invokeFunction: (functionName: string, ...params: any[]) => Promise<Result>;
+  invokeFunction: (functionName: string, ...params: any[]) => Promise<Result<any>>;
 }
 
 const defaultContextValue: IHubConnectionContext = {
@@ -42,7 +43,7 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
   useEffect(() => {
     const interval = setInterval(() => {
       // Only check if we think we should be connected
-      if (!connectedStateRef.current) return;
+      if (!connectionRef.current) return;
 
       // If we lost connection unexpectedly
       if (connectedStateRef.current && !connectionRef.current && !isReconnectingRef.current) {
@@ -143,7 +144,13 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
 
       await hubConnection.start();
       hubConnection.onclose(async () => {
-        clearValues();
+        // If we were connected and this close was unexpected, trigger reconnection
+        if (connectedStateRef.current && !isReconnectingRef.current) {
+          connectionRef.current = undefined;
+          await handleConnectionLost();
+        } else {
+          clearValues();
+        }
       });
 
       connectionRef.current = hubConnection;
@@ -185,8 +192,9 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
       }
 
       console.info("DEBUG: Forcing disconnect to test reconnection");
+      // Just stop the connection - this will trigger onclose handler
+      // which will detect it as unexpected and trigger reconnection
       await connectionRef.current.stop();
-      // Don't clear values - simulate unexpected disconnect
     } catch (error) {
       console.error("DEBUG: Failed to force disconnect", error);
     }
@@ -209,14 +217,14 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
     }
   }
 
-  async function invokeFunction(functionName: string, ...params: any[]): Promise<Result> {
+  async function invokeFunction(functionName: string, ...params: any[]): Promise<Result<any>> {
     try {
       if (!connectionRef?.current) {
         return err("Ingen tilkobling opprettet.");
       }
 
-      await connectionRef.current?.invoke(functionName, ...params);
-      return ok();
+      let state: any = await connectionRef.current?.invoke(functionName, ...params);
+      return ok(state);
     } catch (error) {
       console.error("invokeFunction", error);
       return err("Tilkoblingen ble butt");
