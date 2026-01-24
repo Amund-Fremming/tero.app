@@ -11,8 +11,8 @@ import { useAuthProvider } from "@/src/Common/context/AuthProvider";
 import { useSpinGameProvider } from "../../context/SpinGameProvider";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
-import Screen from "@/src/Common/constants/Screen";
 import { moderateScale } from "@/src/Common/utils/dimensions";
+import { resetToHomeScreen } from "@/src/Common/utils/navigation";
 
 export const GameScreen = () => {
   const navigation: any = useNavigation();
@@ -50,6 +50,7 @@ export const GameScreen = () => {
     clearGlobalSessionValues();
     clearSpinSessionValues();
     await disconnect();
+    resetToHomeScreen(navigation);
   };
 
   const setupListeners = async () => {
@@ -73,7 +74,9 @@ export const GameScreen = () => {
 
       if (state === SpinGameState.Finished) {
         await disconnect();
-        displayInfoModal("Spillet er ferdig", "Finito!", handleLeaveGame);
+        displayInfoModal("Spillet er ferdig", "Finito!", () => {
+          handleLeaveGame();
+        });
       }
     });
 
@@ -85,7 +88,9 @@ export const GameScreen = () => {
     });
 
     setListener("cancelled", (message: string) => {
-      displayInfoModal(message, "Spillet ble avsluttet", handleLeaveGame);
+      displayInfoModal(message, "Spillet ble avsluttet", () => {
+        handleLeaveGame();
+      });
     });
 
     setListener("selected", (batch: string[]) => {
@@ -150,7 +155,7 @@ export const GameScreen = () => {
     await disconnect();
     clearSpinSessionValues();
     clearGlobalSessionValues();
-    navigation.goBack();
+    resetToHomeScreen(navigation);
   };
 
   return (

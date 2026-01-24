@@ -1,14 +1,14 @@
 import { useModalProvider } from "@/src/Common/context/ModalProvider";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useHubConnectionProvider } from "@/src/Common/context/HubConnectionProvider";
 import { useGlobalSessionProvider } from "@/src/Common/context/GlobalSessionProvider";
-import Screen from "@/src/Common/constants/Screen";
 import { HubChannel } from "@/src/Common/constants/HubChannel";
 import { useQuizGameProvider } from "../../context/QuizGameProvider";
 import { QuizGameScreen, QuizSession } from "../../constants/quizTypes";
 import { useNavigation } from "expo-router";
 import SimpleInitScreen from "@/src/Common/screens/SimpleInitScreen/SimpleInitScreen";
 import Color from "@/src/Common/constants/Color";
+import { resetToHomeScreen } from "@/src/Common/utils/navigation";
 
 export const LobbyScreen = () => {
   const navigation: any = useNavigation();
@@ -49,7 +49,7 @@ export const LobbyScreen = () => {
 
     setListener(HubChannel.Error, (message: string) => {
       disconnect();
-      displayErrorModal(message, () => navigation.navigate(Screen.Home));
+      displayErrorModal(message, () => resetToHomeScreen(navigation));
     });
 
     setListener(HubChannel.Game, (game: QuizSession) => {
@@ -131,7 +131,10 @@ export const LobbyScreen = () => {
       createScreen={false}
       themeColor={Color.BuzzifyLavender}
       secondaryThemeColor={Color.BuzzifyLavenderLight}
-      onBackPressed={() => navigation.goBack()}
+      onBackPressed={() => {
+        disconnect();
+        resetToHomeScreen(navigation);
+      }}
       onInfoPressed={handleInfoPressed}
       headerText="asdasd"
       topButtonText="Legg til"
