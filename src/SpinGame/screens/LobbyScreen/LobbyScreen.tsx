@@ -63,7 +63,7 @@ export const LobbyScreen = () => {
       setScreen(SpinSessionScreen.Game);
     });
 
-    const groupResult = await invokeFunction("ConnectToGroup", gameKey, pseudoId);
+    const groupResult = await invokeFunction("ConnectToGroup", gameKey, pseudoId, false);
     if (groupResult.isError()) {
       console.error(groupResult.error);
       displayErrorModal("Klarte ikke koble til, forsøk å lukke appen og start på nytt");

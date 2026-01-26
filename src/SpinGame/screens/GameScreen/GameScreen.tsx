@@ -93,16 +93,15 @@ export const GameScreen = () => {
     });
 
     setListener("host", (hostId: string) => {
-      if (hostId == pseudoId) {
-        console.info("Received new host:", hostId);
-        setIsHost(hostId == pseudoId);
-      }
+      setIsHost(hostId == pseudoId);
     });
 
-    setListener("cancelled", (message: string) => {
+    setListener("cancelled", async (message: string) => {
       if (disconnectTriggeredRef.current) return;
+
+      await disconnect();
       displayInfoModal(message, "Spillet ble avsluttet", () => {
-        handleLeaveGame();
+        navigateHome();
       });
     });
 
