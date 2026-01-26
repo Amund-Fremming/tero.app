@@ -1,14 +1,14 @@
 import { StyleSheet } from "react-native";
-import Colors, { Color } from "../../../Common/constants/Color";
-import { horizontalScale, moderateScale, verticalScale } from "@/src/Common/utils/dimensions";
-import { Font } from "../../../Common/constants/Font";
+import Colors, { Color } from "../../../common/constants/Color";
+import { horizontalScale, moderateScale, verticalScale } from "@/src/common/utils/dimensions";
+import { Font } from "../../../common/constants/Font";
 
 export const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     height: "100%",
     backgroundColor: Colors.LightGray,
-    gap: verticalScale(20)
+    gap: verticalScale(20),
   },
 
   leadContainer: {
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   header: {
     color: Colors.Purple,
     fontSize: moderateScale(40),
-    fontFamily: Font.PassionOneBold
+    fontFamily: Font.PassionOneBold,
   },
 
   activeButton: {
@@ -43,7 +43,7 @@ export const styles = StyleSheet.create({
   popupText: {
     fontFamily: Font.SintonyBold,
     fontSize: moderateScale(19),
-    color: Color.Purple
+    color: Color.Purple,
   },
 
   popupButton: {
@@ -53,7 +53,7 @@ export const styles = StyleSheet.create({
     borderRadius: moderateScale(10),
     height: verticalScale(45),
     borderWidth: moderateScale(3),
-    borderColor: Color.Purple
+    borderColor: Color.Purple,
   },
 
   singleButton: {
@@ -64,7 +64,7 @@ export const styles = StyleSheet.create({
     borderRadius: moderateScale(10),
     height: verticalScale(45),
     borderWidth: moderateScale(3),
-    borderColor: Color.Purple
+    borderColor: Color.Purple,
   },
 
   healthCard: {
@@ -86,13 +86,13 @@ export const styles = StyleSheet.create({
   healthText: {
     fontFamily: Font.SintonyRegular,
     fontSize: moderateScale(20),
-    fontWeight: 400
+    fontWeight: 400,
   },
 
   errorLogTextBold: {
     fontFamily: Font.SintonyBold,
     fontSize: moderateScale(20),
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
 
   inputField: {
@@ -134,8 +134,8 @@ export const styles = StyleSheet.create({
   cancelText: {
     fontFamily: Font.SintonyBold,
     fontSize: moderateScale(19),
-    color: Color.Black
-  }
+    color: Color.Black,
+  },
 });
 
 export default styles;

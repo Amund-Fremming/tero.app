@@ -1,15 +1,15 @@
-import { useGlobalSessionProvider } from "@/src/Common/context/GlobalSessionProvider";
+import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
 import { useEffect, useState } from "react";
-import { useHubConnectionProvider } from "@/src/Common/context/HubConnectionProvider";
-import { HubChannel } from "@/src/Common/constants/HubChannel";
-import { useModalProvider } from "@/src/Common/context/ModalProvider";
-import { useAuthProvider } from "@/src/Common/context/AuthProvider";
+import { useHubConnectionProvider } from "@/src/common/context/HubConnectionProvider";
+import { HubChannel } from "@/src/common/constants/HubChannel";
+import { useModalProvider } from "@/src/common/context/ModalProvider";
+import { useAuthProvider } from "@/src/common/context/AuthProvider";
 import { SpinSessionScreen } from "../../constants/SpinTypes";
-import { useSpinGameProvider } from "../../context/SpinGameProvider";
+import { useSpinSessionProvider } from "../../context/SpinGameProvider";
 import { useNavigation } from "expo-router";
-import { GameType } from "@/src/Common/constants/Types";
-import SimpleInitScreen from "@/src/Common/screens/SimpleInitScreen/SimpleInitScreen";
-import { resetToHomeScreen } from "@/src/Common/utils/navigation";
+import { GameType } from "@/src/common/constants/Types";
+import SimpleInitScreen from "@/src/common/screens/SimpleInitScreen/SimpleInitScreen";
+import { resetToHomeScreen } from "@/src/common/utils/navigation";
 
 export const LobbyScreen = () => {
   const navigation: any = useNavigation();
@@ -17,7 +17,7 @@ export const LobbyScreen = () => {
   const { connect, setListener, invokeFunction, disconnect } = useHubConnectionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { gameKey, gameType, hubAddress, setIsHost, isHost, clearGlobalSessionValues } = useGlobalSessionProvider();
-  const { setScreen, themeColor, secondaryThemeColor, featherIcon, clearSpinSessionValues } = useSpinGameProvider();
+  const { setScreen, themeColor, secondaryThemeColor, featherIcon, clearSpinSessionValues } = useSpinSessionProvider();
 
   const [round, setRound] = useState<string>("");
   const [iterations, setIterations] = useState<number>(0);

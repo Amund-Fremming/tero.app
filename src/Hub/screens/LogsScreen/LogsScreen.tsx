@@ -1,13 +1,13 @@
 import { Pressable, ScrollView, Text, View } from "react-native";
 import styles from "./logsScreenStyles";
-import { useAuthProvider } from "@/src/Common/context/AuthProvider";
-import { useServiceProvider } from "@/src/Common/context/ServiceProvider";
+import { useAuthProvider } from "@/src/common/context/AuthProvider";
+import { useServiceProvider } from "@/src/common/context/ServiceProvider";
 import { useEffect, useState } from "react";
 import { useNavigation } from "expo-router";
-import { screenHeight, verticalScale } from "@/src/Common/utils/dimensions";
-import Color from "@/src/Common/constants/Color";
-import { useModalProvider } from "@/src/Common/context/ModalProvider";
-import { SystemLog, LogCeverity, PagedResponse } from "@/src/Common/constants/Types";
+import { screenHeight, verticalScale } from "@/src/common/utils/dimensions";
+import Color from "@/src/common/constants/Color";
+import { useModalProvider } from "@/src/common/context/ModalProvider";
+import { SystemLog, LogCeverity, PagedResponse } from "@/src/common/constants/Types";
 
 export const LogsScreen = () => {
   const navigation: any = useNavigation();
@@ -79,7 +79,7 @@ export const LogsScreen = () => {
       case LogCeverity.Info:
         return Color.Green;
       case LogCeverity.Warning:
-        return Color.Yellow;
+        return Color.BuzzifyYellow;
       case LogCeverity.Critical:
         return Color.Red;
       default:

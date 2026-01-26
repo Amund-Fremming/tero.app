@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import styles from "./startedScreenStyles";
-import AbsoluteHomeButton from "@/src/Common/components/AbsoluteHomeButton/AbsoluteHomeButton";
+import AbsoluteHomeButton from "@/src/common/components/AbsoluteHomeButton/AbsoluteHomeButton";
 
 export const StartedScreen = ({ navigation }: any) => {
   return (

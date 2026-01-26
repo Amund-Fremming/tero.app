@@ -1,16 +1,16 @@
 import { Pressable, Text, View } from "react-native";
 import styles from "./gameScreenStyles";
 import { useEffect, useState, useRef } from "react";
-import { useGlobalSessionProvider } from "@/src/Common/context/GlobalSessionProvider";
-import Color from "@/src/Common/constants/Color";
-import { useHubConnectionProvider } from "@/src/Common/context/HubConnectionProvider";
-import { useModalProvider } from "@/src/Common/context/ModalProvider";
-import { useAuthProvider } from "@/src/Common/context/AuthProvider";
+import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
+import Color from "@/src/common/constants/Color";
+import { useHubConnectionProvider } from "@/src/common/context/HubConnectionProvider";
+import { useModalProvider } from "@/src/common/context/ModalProvider";
+import { useAuthProvider } from "@/src/common/context/AuthProvider";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 import { ImposterGameState } from "../../constants/imposterTypes";
 import { useImposterSessionProvider } from "../../context/ImposterSessionProvider";
-import { resetToHomeScreen } from "@/src/Common/utils/navigation";
+import { resetToHomeScreen } from "@/src/common/utils/navigation";
 
 export const GameScreen = () => {
   const navigation: any = useNavigation();

@@ -1,19 +1,17 @@
-import { View, Text, Pressable, Button, Image } from "react-native";
-import Screen from "../../../Common/constants/Screen";
+import { View, Text, Pressable, Image } from "react-native";
+import Screen from "../../../common/constants/Screen";
 import styles from "./homeScreenStyles";
-import { useGlobalSessionProvider } from "../../../Common/context/GlobalSessionProvider";
+import { useGlobalSessionProvider } from "../../../common/context/GlobalSessionProvider";
 import { useEffect, useState } from "react";
-import { useServiceProvider } from "@/src/Common/context/ServiceProvider";
-import { useModalProvider } from "@/src/Common/context/ModalProvider";
-import DiagonalSplit from "../../../Common/components/BuzzifyShapes/DiagonalSplit";
-import ArcWithCircles from "../../../Common/components/BuzzifyShapes/ArcWithCircles";
-import ScatteredCircles from "../../../Common/components/BuzzifyShapes/ScatteredCircles";
-import { GameEntryMode } from "@/src/Common/constants/Types";
+import { useServiceProvider } from "@/src/common/context/ServiceProvider";
+import { useModalProvider } from "@/src/common/context/ModalProvider";
+import DiagonalSplit from "../../../common/components/Shapes/DiagonalSplit";
+import ArcWithCircles from "../../../common/components/Shapes/ArcWithCircles";
+import ScatteredCircles from "../../../common/components/Shapes/ScatteredCircles";
+import { GameEntryMode } from "@/src/common/constants/Types";
 
 import redFigure from "../../../Common/assets/images/red-figure.png";
 import { useNavigation } from "expo-router";
-import { useSpinGameProvider } from "@/src/SpinGame/context/SpinGameProvider";
-import { SpinSessionScreen } from "@/src/SpinGame/constants/SpinTypes";
 
 const subHeaderList = [
   "klar for en runde?",

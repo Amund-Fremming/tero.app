@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
-import Colors, { Color } from "../../../Common/constants/Color";
-import { verticalScale, moderateScale, horizontalScale } from "@/src/Common/utils/dimensions";
-import { Font } from "../../../Common/constants/Font";
+import Colors, { Color } from "../../../common/constants/Color";
+import { verticalScale, moderateScale, horizontalScale } from "@/src/common/utils/dimensions";
+import { Font } from "../../../common/constants/Font";
 
 export const styles = StyleSheet.create({
   container: {
@@ -22,14 +22,14 @@ export const styles = StyleSheet.create({
     paddingTop: verticalScale(50),
     width: "90%",
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
   },
 
   debugHeader: {
     fontSize: moderateScale(25),
     fontWeight: 700,
     paddingRight: "60%",
-    paddingBottom: verticalScale(15)
+    paddingBottom: verticalScale(15),
   },
 
   debugBox: {
@@ -39,7 +39,7 @@ export const styles = StyleSheet.create({
     paddingLeft: verticalScale(25),
     borderColor: Color.Red,
     borderWidth: moderateScale(6),
-    width: "90%"
+    width: "90%",
   },
 });
 

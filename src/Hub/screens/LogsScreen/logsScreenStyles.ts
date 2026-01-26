@@ -1,14 +1,14 @@
 import { StyleSheet } from "react-native";
-import Colors, { Color } from "../../../Common/constants/Color";
-import { horizontalScale, moderateScale, verticalScale } from "@/src/Common/utils/dimensions";
-import { Font } from "../../../Common/constants/Font";
+import Colors, { Color } from "../../../common/constants/Color";
+import { horizontalScale, moderateScale, verticalScale } from "@/src/common/utils/dimensions";
+import { Font } from "../../../common/constants/Font";
 
 export const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     height: "100%",
     backgroundColor: Colors.LightGray,
-    gap: verticalScale(20)
+    gap: verticalScale(20),
   },
 
   leadContainer: {
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   header: {
     color: Colors.Purple,
     fontSize: moderateScale(40),
-    fontFamily: Font.PassionOneBold
+    fontFamily: Font.PassionOneBold,
   },
 
   categoryBar: {
@@ -55,13 +55,13 @@ export const styles = StyleSheet.create({
   categoryText: {
     fontFamily: Font.SintonyBold,
     fontSize: moderateScale(16),
-    color: Color.Purple
+    color: Color.Purple,
   },
 
   categoryTextActive: {
     fontFamily: Font.SintonyBold,
     fontSize: moderateScale(16),
-    color: Color.White
+    color: Color.White,
   },
 
   logCard: {
@@ -78,26 +78,26 @@ export const styles = StyleSheet.create({
   logCategory: {
     fontFamily: Font.SintonyBold,
     fontSize: moderateScale(18),
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
 
   logMessage: {
     fontFamily: Font.SintonyRegular,
     fontSize: moderateScale(16),
-    color: Color.OffBlack
+    color: Color.OffBlack,
   },
 
   logTimestamp: {
     fontFamily: Font.SintonyRegular,
     fontSize: moderateScale(14),
-    color: Color.Gray
+    color: Color.Gray,
   },
 
   logSource: {
     fontFamily: Font.SintonyRegular,
     fontSize: moderateScale(14),
     color: Color.Gray,
-    fontStyle: "italic"
+    fontStyle: "italic",
   },
 
   navButtons: {
@@ -115,13 +115,13 @@ export const styles = StyleSheet.create({
     borderRadius: moderateScale(10),
     height: verticalScale(45),
     borderWidth: moderateScale(3),
-    borderColor: Color.Purple
+    borderColor: Color.Purple,
   },
 
   navButtonText: {
     fontFamily: Font.SintonyBold,
     fontSize: moderateScale(19),
-    color: Color.Purple
+    color: Color.Purple,
   },
 
   pageInfo: {
@@ -137,7 +137,7 @@ export const styles = StyleSheet.create({
     color: Color.Gray,
     textAlign: "center",
     marginTop: verticalScale(40),
-  }
+  },
 });
 
 export default styles;

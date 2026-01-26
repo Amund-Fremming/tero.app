@@ -1,17 +1,17 @@
 import { useCallback } from "react";
-import HubConnectionProvider from "@/src/Common/context/HubConnectionProvider";
-import GlobalGameProvider from "../src/Common/context/GlobalSessionProvider";
-import ModalProvider from "@/src/Common/context/ModalProvider";
-import Hub from "@/src/Hub/Hub";
-import AuthProvider from "../src/Common/context/AuthProvider";
-import ServiceProvider from "@/src/Common/context/ServiceProvider";
+import HubConnectionProvider from "@/src/common/context/HubConnectionProvider";
+import GlobalGameProvider from "../src/common/context/GlobalSessionProvider";
+import ModalProvider from "@/src/common/context/ModalProvider";
+import Hub from "@/src/hub/Hub";
+import AuthProvider from "../src/common/context/AuthProvider";
+import ServiceProvider from "@/src/common/context/ServiceProvider";
 import { View, StatusBar, Dimensions } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import QuizSessionProvider from "@/src/quizGame/context/QuizGameProvider";
-import SpinGameProvider from "@/src/SpinGame/context/SpinGameProvider";
+import SpinSessionProvider from "@/src/spinGame/context/SpinGameProvider";
 import ImposterSessionProvider from "@/src/imposter/context/ImposterSessionProvider";
-import "@/src/Common/utils/logConfig"; // Configure logging
+import "@/src/common/utils/logConfig"; // Configure logging
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,11 +26,11 @@ export default () => (
           <GlobalGameProvider>
             <HubConnectionProvider>
               <QuizSessionProvider>
-                <SpinGameProvider>
+                <SpinSessionProvider>
                   <ImposterSessionProvider>
                     <Hub />
                   </ImposterSessionProvider>
-                </SpinGameProvider>
+                </SpinSessionProvider>
               </QuizSessionProvider>
             </HubConnectionProvider>
           </GlobalGameProvider>

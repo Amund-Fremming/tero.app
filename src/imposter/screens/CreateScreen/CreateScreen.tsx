@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { CreateGameRequest, GameCategory, GameEntryMode } from "@/src/Common/constants/Types";
-import { useAuthProvider } from "@/src/Common/context/AuthProvider";
-import { useModalProvider } from "@/src/Common/context/ModalProvider";
-import { useGlobalSessionProvider } from "@/src/Common/context/GlobalSessionProvider";
-import { useServiceProvider } from "@/src/Common/context/ServiceProvider";
+import { CreateGameRequest, GameCategory, GameEntryMode } from "@/src/common/constants/Types";
+import { useAuthProvider } from "@/src/common/context/AuthProvider";
+import { useModalProvider } from "@/src/common/context/ModalProvider";
+import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
+import { useServiceProvider } from "@/src/common/context/ServiceProvider";
 import { useNavigation } from "expo-router";
-import SimpleInitScreen from "@/src/Common/screens/SimpleInitScreen/SimpleInitScreen";
+import SimpleInitScreen from "@/src/common/screens/SimpleInitScreen/SimpleInitScreen";
 import { useImposterSessionProvider } from "../../context/ImposterSessionProvider";
 import { ImposterSessionScreen } from "../../constants/imposterTypes";
-import Color from "@/src/Common/constants/Color";
+import Color from "@/src/common/constants/Color";
 
 export const CreateScreen = () => {
   const navigation: any = useNavigation();
@@ -17,6 +17,7 @@ export const CreateScreen = () => {
   const { gameService } = useServiceProvider();
   const { setGameKey, setGameEntryMode, setHubAddress, gameType } = useGlobalSessionProvider();
   const { setScreen } = useImposterSessionProvider();
+  const { isHost } = useGlobalSessionProvider();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [createRequest, setCreateRequest] = useState<CreateGameRequest>({
@@ -75,6 +76,7 @@ export const CreateScreen = () => {
 
   return (
     <SimpleInitScreen
+      isHost={isHost}
       createScreen={true}
       themeColor={Color.LightGreen}
       secondaryThemeColor={Color.DarkGreen}

@@ -3,16 +3,16 @@ import { View, Text, TouchableOpacity } from "react-native";
 import styles from "./joinScreenStyles";
 import { Pressable, TextInput } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
-import { useModalProvider } from "@/src/Common/context/ModalProvider";
-import { useAuthProvider } from "@/src/Common/context/AuthProvider";
-import { useGlobalSessionProvider } from "../../../Common/context/GlobalSessionProvider";
+import { useModalProvider } from "@/src/common/context/ModalProvider";
+import { useAuthProvider } from "@/src/common/context/AuthProvider";
+import { useGlobalSessionProvider } from "../../../common/context/GlobalSessionProvider";
 import { Feather } from "@expo/vector-icons";
-import Color from "@/src/Common/constants/Color";
-import { GameEntryMode, GameType } from "@/src/Common/constants/Types";
-import { useServiceProvider } from "@/src/Common/context/ServiceProvider";
+import Color from "@/src/common/constants/Color";
+import { GameEntryMode, GameType } from "@/src/common/constants/Types";
+import { useServiceProvider } from "@/src/common/context/ServiceProvider";
 import { useNavigation, useFocusEffect } from "expo-router";
-import Screen from "@/src/Common/constants/Screen";
-import { moderateScale } from "@/src/Common/utils/dimensions";
+import Screen from "@/src/common/constants/Screen";
+import { moderateScale } from "@/src/common/utils/dimensions";
 import { useCallback } from "react";
 
 export const JoinScreen = () => {

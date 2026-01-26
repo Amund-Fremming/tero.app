@@ -3,7 +3,7 @@ import VerticalScroll from "../../wrappers/VerticalScroll";
 import AbsoluteHomeButton from "../../components/AbsoluteHomeButton/AbsoluteHomeButton";
 import { useEffect, useState } from "react";
 import { useModalProvider } from "../../context/ModalProvider";
-import { useGlobalSessionProvider } from "@/src/Common/context/GlobalSessionProvider";
+import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
 import { useAuthProvider } from "../../context/AuthProvider";
 import { useNavigation } from "@react-navigation/native";
 import { useQuizGameProvider } from "@/src/quizGame/context/QuizGameProvider";

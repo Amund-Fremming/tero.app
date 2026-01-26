@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useGlobalSessionProvider } from "../Common/context/GlobalSessionProvider";
+import { useGlobalSessionProvider } from "../common/context/GlobalSessionProvider";
 import { ImposterSessionScreen } from "./constants/imposterTypes";
-import { GameEntryMode } from "../Common/constants/Types";
+import { GameEntryMode } from "../common/constants/Types";
 import { useImposterSessionProvider } from "./context/ImposterSessionProvider";
 import CreateScreen from "./screens/CreateScreen/CreateScreen";
 import { GameScreen } from "./screens/GameScreen/GameScreen";

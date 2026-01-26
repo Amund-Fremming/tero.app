@@ -1,7 +1,7 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import { SpinSessionScreen } from "../constants/SpinTypes";
-import Color from "@/src/Common/constants/Color";
-import { GameType } from "@/src/Common/constants/Types";
+import Color from "@/src/common/constants/Color";
+import { GameType } from "@/src/common/constants/Types";
 
 interface ISpinSessionContext {
   clearSpinSessionValues: () => void;
@@ -23,15 +23,15 @@ const defaultContextValue: ISpinSessionContext = {
   setThemeColors: () => {},
 };
 
-const SpinGameContext = createContext<ISpinSessionContext>(defaultContextValue);
+const SpinSessionContext = createContext<ISpinSessionContext>(defaultContextValue);
 
-export const useSpinGameProvider = () => useContext(SpinGameContext);
+export const useSpinSessionProvider = () => useContext(SpinSessionContext);
 
-interface SpinGameProviderProps {
+interface SpinSessionProviderProps {
   children: ReactNode;
 }
 
-export const SpinGameProvider = ({ children }: SpinGameProviderProps) => {
+export const SpinSessionProvider = ({ children }: SpinSessionProviderProps) => {
   const [screen, setScreen] = useState<SpinSessionScreen>(SpinSessionScreen.Create);
   const [themeColor, setThemeColor] = useState<string>(Color.BeigeLight);
   const [secondaryThemeColor, setSecondaryThemeColor] = useState<string>(Color.Beige);
@@ -66,7 +66,7 @@ export const SpinGameProvider = ({ children }: SpinGameProviderProps) => {
     setThemeColors,
   };
 
-  return <SpinGameContext.Provider value={value}>{children}</SpinGameContext.Provider>;
+  return <SpinSessionContext.Provider value={value}>{children}</SpinSessionContext.Provider>;
 };
 
-export default SpinGameProvider;
+export default SpinSessionProvider;

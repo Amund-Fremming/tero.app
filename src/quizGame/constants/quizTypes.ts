@@ -1,4 +1,4 @@
-import { GameCategory } from "@/src/Common/constants/Types";
+import { GameCategory } from "@/src/common/constants/Types";
 
 export enum QuizGameScreen {
   Create,

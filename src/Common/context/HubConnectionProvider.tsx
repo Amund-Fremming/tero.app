@@ -2,9 +2,7 @@ import * as signalR from "@microsoft/signalr";
 import React, { createContext, ReactNode, useContext, useEffect, useRef } from "react";
 import { useModalProvider } from "./ModalProvider";
 import { useNavigation } from "expo-router";
-import Screen from "../constants/Screen";
 import { ok, err, Result } from "../utils/result";
-import { SpinGameState } from "@/src/SpinGame/constants/SpinTypes";
 import { resetToHomeScreen } from "../utils/navigation";
 import { useAuthProvider } from "./AuthProvider";
 import { useGlobalSessionProvider } from "./GlobalSessionProvider";
@@ -36,12 +34,13 @@ interface HubConnectionProviderProps {
 export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) => {
   const connectionRef = useRef<signalR.HubConnection | undefined>(undefined);
   const connectedStateRef = useRef<boolean>(false);
+  const disconnectTriggeredRef = useRef<boolean>(false);
   const hubAddressRef = useRef<string | undefined>(undefined);
   const reconnectAttemptsRef = useRef(0);
   const isReconnectingRef = useRef(false);
-  const listenersRef = useRef<Map<string, (item: any) => void>>(new Map());
+  const listenersMapRef = useRef<Map<string, (item: any) => void>>(new Map());
 
-  const { gameKey, setIsHost } = useGlobalSessionProvider();
+  const { gameKey } = useGlobalSessionProvider();
   const { displayLoadingModal, closeLoadingModal } = useModalProvider();
   const { pseudoId } = useAuthProvider();
   const navigation: any = useNavigation();
@@ -60,39 +59,52 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
   }, []);
 
   const handleConnectionLost = async () => {
-    if (isReconnectingRef.current || !hubAddressRef.current) return;
+    if (disconnectTriggeredRef.current) {
+      console.debug("Skipping reconnect, user triggered disconnect");
+      return;
+    }
+
+    if (isReconnectingRef.current) {
+      console.debug("Already reconnecting");
+      return;
+    }
 
     isReconnectingRef.current = true;
     reconnectAttemptsRef.current = 0;
 
     displayLoadingModal(() => {
-      console.log("Manual closing triggered");
-      resetToHomeScreen(navigation);
+      closeLoadingModal();
       clearValues();
+      resetToHomeScreen(navigation);
     });
 
     const reconnected = await attemptReconnect();
 
-    if (reconnected) {
+    if (!reconnected) {
+      clearValues();
       closeLoadingModal();
-      connectedStateRef.current = true;
-      reconnectAttemptsRef.current = 0;
-      isReconnectingRef.current = false;
-
+      resetToHomeScreen(navigation);
       return;
     }
 
-    clearValues();
     closeLoadingModal();
-    resetToHomeScreen(navigation);
+    connectedStateRef.current = true;
+    reconnectAttemptsRef.current = 0;
+    isReconnectingRef.current = false;
+
+    reattachListeners();
+
+    let invokeResult = await invokeFunction("ConnectToGroup", gameKey, pseudoId, true);
+    if (invokeResult.isError()) {
+      console.error("Failed to invoke reconnect function:", invokeResult.error);
+      clearValues();
+      resetToHomeScreen(navigation);
+    }
   };
 
   const attemptReconnect = async (): Promise<boolean> => {
     const maxAttempts = 5;
     const baseDelay = 1000;
-
-    // TODO - this is a temp fix, should be handled on reconnect for the "host" listener in the game screen.
-    setIsHost(false);
 
     if (!hubAddressRef.current) {
       console.error("Failed to reconnect to hub. Address is undefined");
@@ -112,14 +124,9 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
         continue;
       }
 
-      let invokeResult = await invokeFunction("ConnectToGroup", gameKey, pseudoId, true);
-      if (invokeResult.isError()) {
-        console.error("Failed to invoke reconnect function:", invokeResult.error);
-        return false;
-      }
+      let connection = result.value;
+      connectionRef.current = connection;
 
-      connectionRef.current = result.value;
-      reattachListeners();
       console.info("Reconnected successfully");
       return true;
     }
@@ -133,7 +140,6 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
       hubAddressRef.current = hubAddress;
       if (connectionRef.current) {
         const curHubName = (connectionRef.current as any)._hubName;
-        const curHubId = (connectionRef.current as any)._hubId;
 
         if (curHubName !== hubAddress) {
           return err("Finnes allerede en åpen socket til feil hub. (HubConnectionProvider)");
@@ -151,13 +157,13 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
 
       await hubConnection.start();
       hubConnection.onclose(async () => {
-        // If we were connected and this close was unexpected, trigger reconnection
         if (connectedStateRef.current && !isReconnectingRef.current) {
           connectionRef.current = undefined;
           await handleConnectionLost();
-        } else {
-          clearValues();
+          return;
         }
+
+        clearValues();
       });
 
       connectionRef.current = hubConnection;
@@ -173,7 +179,8 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
 
   async function disconnect(): Promise<Result> {
     try {
-      connectedStateRef.current = false;
+      disconnectTriggeredRef.current = true;
+
       if (!connectionRef.current) {
         clearValues();
         return ok();
@@ -181,8 +188,6 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
 
       await connectionRef.current.stop();
       clearValues();
-
-      console.info("Manually disconnected user");
       return ok();
     } catch (error) {
       clearValues();
@@ -213,10 +218,7 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
         return err("Ingen tilkobling opprettet. (HubConnectionProvider)");
       }
 
-      // Store the listener for reconnection
-      listenersRef.current.set(channel, fn);
-
-      // Overwrite old listeners
+      listenersMapRef.current.set(channel, fn);
       connectionRef.current.off(channel);
       connectionRef.current.on(channel, fn);
 
@@ -247,8 +249,8 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
       return;
     }
 
-    console.info(`Reattaching ${listenersRef.current.size} listeners after reconnection`);
-    listenersRef.current.forEach((fn, channel) => {
+    console.info(`Reattaching ${listenersMapRef.current.size} listeners after reconnection`);
+    listenersMapRef.current.forEach((fn, channel) => {
       connectionRef.current!.off(channel);
       connectionRef.current!.on(channel, fn);
     });
@@ -260,7 +262,8 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
     isReconnectingRef.current = false;
     connectedStateRef.current = false;
     hubAddressRef.current = undefined;
-    listenersRef.current.clear();
+    listenersMapRef.current.clear();
+    disconnectTriggeredRef.current = false;
   };
 
   const value = {

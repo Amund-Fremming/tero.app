@@ -2,17 +2,17 @@ import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import styles from "./gameScreenStyles";
 import { useEffect, useState, useRef } from "react";
 import { SpinGameState } from "../../constants/SpinTypes";
-import { useGlobalSessionProvider } from "@/src/Common/context/GlobalSessionProvider";
-import Color from "@/src/Common/constants/Color";
-import { useHubConnectionProvider } from "@/src/Common/context/HubConnectionProvider";
-import { useModalProvider } from "@/src/Common/context/ModalProvider";
-import { HubChannel } from "@/src/Common/constants/HubChannel";
-import { useAuthProvider } from "@/src/Common/context/AuthProvider";
-import { useSpinGameProvider } from "../../context/SpinGameProvider";
+import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
+import Color from "@/src/common/constants/Color";
+import { useHubConnectionProvider } from "@/src/common/context/HubConnectionProvider";
+import { useModalProvider } from "@/src/common/context/ModalProvider";
+import { HubChannel } from "@/src/common/constants/HubChannel";
+import { useAuthProvider } from "@/src/common/context/AuthProvider";
+import { useSpinSessionProvider } from "../../context/SpinGameProvider";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
-import { moderateScale } from "@/src/Common/utils/dimensions";
-import { resetToHomeScreen } from "@/src/Common/utils/navigation";
+import { moderateScale } from "@/src/common/utils/dimensions";
+import { resetToHomeScreen } from "@/src/common/utils/navigation";
 
 export const GameScreen = () => {
   const navigation: any = useNavigation();
@@ -25,7 +25,7 @@ export const GameScreen = () => {
   const disconnectTriggeredRef = useRef<boolean>(false);
 
   const { isHost, setIsHost, clearGlobalSessionValues } = useGlobalSessionProvider();
-  const { clearSpinSessionValues, themeColor } = useSpinGameProvider();
+  const { clearSpinSessionValues, themeColor } = useSpinSessionProvider();
   const { disconnect, setListener, invokeFunction, debugDisconnect } = useHubConnectionProvider();
   const { gameKey } = useGlobalSessionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();

@@ -1,14 +1,14 @@
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { styles } from "./editProfileScreenStyles";
-import { useAuthProvider } from "@/src/Common/context/AuthProvider";
+import { useAuthProvider } from "@/src/common/context/AuthProvider";
 import { useEffect, useState } from "react";
-import { BaseUser, Gender, PatchUserRequest } from "@/src/Common/constants/Types";
-import { useServiceProvider } from "@/src/Common/context/ServiceProvider";
+import { BaseUser, Gender, PatchUserRequest } from "@/src/common/constants/Types";
+import { useServiceProvider } from "@/src/common/context/ServiceProvider";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
-import Color from "@/src/Common/constants/Color";
+import Color from "@/src/common/constants/Color";
 import { TextInput } from "react-native-gesture-handler";
-import { useModalProvider } from "@/src/Common/context/ModalProvider";
+import { useModalProvider } from "@/src/common/context/ModalProvider";
 
 export const EditProfileScreen = () => {
   const navigation: any = useNavigation();

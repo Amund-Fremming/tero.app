@@ -1,14 +1,14 @@
 import { View, Text, Pressable, ScrollView, Dimensions, TouchableOpacity } from "react-native";
 import { styles } from "./savedGameScreenStyles";
-import VerticalScroll from "@/src/Common/wrappers/VerticalScroll";
+import VerticalScroll from "@/src/common/wrappers/VerticalScroll";
 import { useEffect, useState } from "react";
-import { useServiceProvider } from "@/src/Common/context/ServiceProvider";
-import { useAuthProvider } from "@/src/Common/context/AuthProvider";
-import { useModalProvider } from "@/src/Common/context/ModalProvider";
-import { GameBase } from "@/src/Common/constants/Types";
+import { useServiceProvider } from "@/src/common/context/ServiceProvider";
+import { useAuthProvider } from "@/src/common/context/AuthProvider";
+import { useModalProvider } from "@/src/common/context/ModalProvider";
+import { GameBase } from "@/src/common/constants/Types";
 import { useNavigation } from "expo-router";
-import { screenHeight, verticalScale } from "@/src/Common/utils/dimensions";
-import Color from "@/src/Common/constants/Color";
+import { screenHeight, verticalScale } from "@/src/common/utils/dimensions";
+import Color from "@/src/common/constants/Color";
 import { Feather } from "@expo/vector-icons";
 
 export const SavedGamesScreen = () => {

@@ -1,14 +1,14 @@
 import { Image, Pressable, Text, View } from "react-native";
 import { styles } from "./profileScreenStyles";
-import { useAuthProvider } from "@/src/Common/context/AuthProvider";
+import { useAuthProvider } from "@/src/common/context/AuthProvider";
 import { useEffect, useState } from "react";
-import { BaseUser, UserRole } from "@/src/Common/constants/Types";
-import { useServiceProvider } from "@/src/Common/context/ServiceProvider";
+import { BaseUser, UserRole } from "@/src/common/constants/Types";
+import { useServiceProvider } from "@/src/common/context/ServiceProvider";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
-import Color from "@/src/Common/constants/Color";
-import Screen from "@/src/Common/constants/Screen";
-import { horizontalScale } from "@/src/Common/utils/dimensions";
+import Color from "@/src/common/constants/Color";
+import Screen from "@/src/common/constants/Screen";
+import { horizontalScale } from "@/src/common/utils/dimensions";
 
 export const ProfileScreen = () => {
   const navigation: any = useNavigation();
