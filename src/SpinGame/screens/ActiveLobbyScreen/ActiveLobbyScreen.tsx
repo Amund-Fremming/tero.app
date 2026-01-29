@@ -11,7 +11,7 @@ import { GameType } from "@/src/common/constants/Types";
 import SimpleInitScreen from "@/src/common/screens/SimpleInitScreen/SimpleInitScreen";
 import { resetToHomeScreen } from "@/src/common/utils/navigation";
 
-export const LobbyScreen = () => {
+export const ActiveLobbyScreen = () => {
   const navigation: any = useNavigation();
   const { pseudoId } = useAuthProvider();
   const { connect, setListener, invokeFunction, disconnect } = useHubConnectionProvider();
@@ -157,4 +157,4 @@ export const LobbyScreen = () => {
   );
 };
 
-export default LobbyScreen;
+export default ActiveLobbyScreen;
