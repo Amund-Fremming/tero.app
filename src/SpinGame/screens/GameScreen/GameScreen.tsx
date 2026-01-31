@@ -19,7 +19,6 @@ export const GameScreen = () => {
   const [state, setState] = useState<SpinGameState>(SpinGameState.RoundStarted);
   const [roundText, setRoundText] = useState<string>("");
   const [gameStarted, setGameStarted] = useState<boolean>(false);
-  const [hasStartedGame, setHasStartedGame] = useState<boolean>(false);
   const [bgColor, setBgColor] = useState<string>(Color.Gray);
 
   const disconnectTriggeredRef = useRef<boolean>(false);
@@ -34,11 +33,7 @@ export const GameScreen = () => {
   useFocusEffect(
     useCallback(() => {
       setBgColor(themeColor);
-      setupListeners().then(() => {
-        if (!hasStartedGame && isHost) {
-          handleStartGame();
-        }
-      });
+      setupListeners();
 
       return () => {
         clearSpinSessionValues();
@@ -118,22 +113,6 @@ export const GameScreen = () => {
         setBgColor(Color.Red);
       }
     });
-  };
-
-  const handleStartGame = async () => {
-    if (!gameKey || gameKey == "") {
-      displayErrorModal("Mangler spill nøkkel");
-      return;
-    }
-
-    const result = await invokeFunction("StartGame", gameKey);
-    if (result.isError()) {
-      console.error(result.error);
-      displayErrorModal("Klarte ikke starte spill, prøv igjen senere");
-      return;
-    }
-
-    setHasStartedGame(true);
   };
 
   const handleNextRound = async () => {
