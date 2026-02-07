@@ -76,7 +76,6 @@ export const CreateScreen = () => {
 
   return (
     <SimpleInitScreen
-      isHost={isHost}
       createScreen={true}
       themeColor={Color.LightGreen}
       secondaryThemeColor={Color.DarkGreen}

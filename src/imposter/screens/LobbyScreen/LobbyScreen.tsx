@@ -131,7 +131,6 @@ export const LobbyScreen = () => {
 
   return (
     <SimpleInitScreen
-      isHost={isHost}
       createScreen={false}
       themeColor={Color.LightGreen}
       secondaryThemeColor={Color.DarkGreen}

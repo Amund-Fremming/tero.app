@@ -15,7 +15,6 @@ const STATIC_STYLES = {
 };
 
 interface SimpleInitScreenProps {
-  isHost: boolean;
   createScreen: boolean;
   themeColor: string;
   secondaryThemeColor: string;
@@ -35,7 +34,6 @@ interface SimpleInitScreenProps {
 }
 
 export const SimpleInitScreen = ({
-  isHost,
   createScreen,
   topButtonOnChange,
   topButtonOnPress,
@@ -54,7 +52,7 @@ export const SimpleInitScreen = ({
   onInfoPressed,
 }: SimpleInitScreenProps) => {
   const navigation: any = useNavigation();
-  const { gameKey } = useGlobalSessionProvider();
+  const { gameKey, isHost } = useGlobalSessionProvider();
 
   const categoryData = [
     { label: "Alle", value: GameCategory.All },

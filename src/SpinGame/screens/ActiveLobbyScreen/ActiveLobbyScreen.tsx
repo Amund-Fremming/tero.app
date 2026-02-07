@@ -167,7 +167,6 @@ export const ActiveLobbyScreen = () => {
 
   return (
     <SimpleInitScreen
-      isHost={isHost}
       createScreen={false}
       themeColor={themeColor}
       secondaryThemeColor={secondaryThemeColor}
