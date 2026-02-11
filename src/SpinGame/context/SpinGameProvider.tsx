@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
-import { SpinSessionScreen } from "../constants/SpinTypes";
+import { SpinSessionScreen, SpinGameState } from "../constants/SpinTypes";
 import Color from "@/src/common/constants/Color";
 import { GameType } from "@/src/common/constants/Types";
 
@@ -11,6 +11,12 @@ interface ISpinSessionContext {
   secondaryThemeColor: string;
   featherIcon: "refresh-cw" | "rotate-cw";
   setThemeColors: (gameType: GameType) => void;
+  roundText: string;
+  setRoundText: React.Dispatch<React.SetStateAction<string>>;
+  selectedBatch: string[];
+  setSelectedBatch: React.Dispatch<React.SetStateAction<string[]>>;
+  gameState: SpinGameState;
+  setGameState: React.Dispatch<React.SetStateAction<SpinGameState>>;
 }
 
 const defaultContextValue: ISpinSessionContext = {
@@ -21,6 +27,12 @@ const defaultContextValue: ISpinSessionContext = {
   secondaryThemeColor: Color.Beige,
   featherIcon: "refresh-cw",
   setThemeColors: () => {},
+  roundText: "",
+  setRoundText: () => {},
+  selectedBatch: [],
+  setSelectedBatch: () => {},
+  gameState: SpinGameState.Initialized,
+  setGameState: () => {},
 };
 
 const SpinSessionContext = createContext<ISpinSessionContext>(defaultContextValue);
@@ -36,6 +48,9 @@ export const SpinSessionProvider = ({ children }: SpinSessionProviderProps) => {
   const [themeColor, setThemeColor] = useState<string>(Color.BeigeLight);
   const [secondaryThemeColor, setSecondaryThemeColor] = useState<string>(Color.Beige);
   const [featherIcon, setFeatherIcon] = useState<"refresh-cw" | "rotate-cw">("refresh-cw");
+  const [roundText, setRoundText] = useState<string>("");
+  const [selectedBatch, setSelectedBatch] = useState<string[]>([]);
+  const [gameState, setGameState] = useState<SpinGameState>(SpinGameState.Initialized);
 
   const setThemeColors = (gameType: GameType) => {
     switch (gameType) {
@@ -64,6 +79,12 @@ export const SpinSessionProvider = ({ children }: SpinSessionProviderProps) => {
     secondaryThemeColor,
     featherIcon,
     setThemeColors,
+    roundText,
+    setRoundText,
+    selectedBatch,
+    setSelectedBatch,
+    gameState,
+    setGameState,
   };
 
   return <SpinSessionContext.Provider value={value}>{children}</SpinSessionContext.Provider>;

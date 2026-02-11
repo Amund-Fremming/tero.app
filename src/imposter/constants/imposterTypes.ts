@@ -6,4 +6,7 @@ export const enum ImposterSessionScreen {
 
 export enum ImposterGameState {
   Initialized = "Initialized",
+  Created = "Created",
+  Started = "Started",
+  Finished = "Finished",
 }

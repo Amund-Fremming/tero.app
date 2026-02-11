@@ -16,15 +16,22 @@ import { resetToHomeScreen } from "@/src/common/utils/navigation";
 
 export const GameScreen = () => {
   const navigation: any = useNavigation();
-  const [state, setState] = useState<SpinGameState>(SpinGameState.RoundStarted);
-  const [roundText, setRoundText] = useState<string>("");
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [bgColor, setBgColor] = useState<string>(Color.Gray);
 
   const disconnectTriggeredRef = useRef<boolean>(false);
 
   const { isHost, setIsHost, clearGlobalSessionValues, hubAddress } = useGlobalSessionProvider();
-  const { clearSpinSessionValues, themeColor } = useSpinSessionProvider();
+  const {
+    clearSpinSessionValues,
+    themeColor,
+    roundText,
+    setRoundText,
+    selectedBatch,
+    setSelectedBatch,
+    gameState,
+    setGameState,
+  } = useSpinSessionProvider();
   const { disconnect, setListener, invokeFunction, debugDisconnect, connect } = useHubConnectionProvider();
   const { gameKey } = useGlobalSessionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
@@ -81,7 +88,7 @@ export const GameScreen = () => {
     });
 
     setListener(HubChannel.State, async (state: SpinGameState) => {
-      setState(state);
+      setGameState(state);
 
       if (state == SpinGameState.Finished) {
         setBgColor(Color.Gray);
@@ -107,6 +114,7 @@ export const GameScreen = () => {
     });
 
     setListener("selected", (batch: string[]) => {
+      setSelectedBatch(batch);
       if (pseudoId && batch.includes(pseudoId)) {
         setBgColor(Color.Green);
       } else {
@@ -129,7 +137,7 @@ export const GameScreen = () => {
     if (state === SpinGameState.Finished) {
       console.debug("Host received game finished");
       setBgColor(Color.Gray);
-      setState(state);
+      setGameState(state);
       await handleGameFinshed();
     }
   };
@@ -173,25 +181,25 @@ export const GameScreen = () => {
       </View>
 
       <Text style={{ ...styles.text }}>
-        {state === SpinGameState.RoundStarted && isHost && roundText}
-        {state === SpinGameState.RoundStarted && !isHost && "Gjør deg klar!"}
-        {state === SpinGameState.RoundFinished && "Venter på ny runde"}
-        {state === SpinGameState.Finished && "Spillet er ferdig!"}
+        {gameState === SpinGameState.RoundStarted && isHost && roundText}
+        {gameState === SpinGameState.RoundStarted && !isHost && "Gjør deg klar!"}
+        {gameState === SpinGameState.RoundFinished && "Venter på ny runde"}
+        {gameState === SpinGameState.Finished && "Spillet er ferdig!"}
       </Text>
 
-      {state === SpinGameState.RoundStarted && isHost && (
+      {gameState === SpinGameState.RoundStarted && isHost && (
         <Pressable onPress={handleStartRound} style={styles.button}>
           <Text style={styles.buttonText}>Start spin</Text>
         </Pressable>
       )}
 
-      {state === SpinGameState.RoundFinished && isHost && (
+      {gameState === SpinGameState.RoundFinished && isHost && (
         <Pressable style={styles.button} onPress={handleNextRound}>
           <Text style={styles.buttonText}>Ny runde</Text>
         </Pressable>
       )}
 
-      {state === SpinGameState.Finished && (
+      {gameState === SpinGameState.Finished && (
         <Pressable style={styles.button} onPress={navigateHome}>
           <Text style={styles.buttonText}>Hjem</Text>
         </Pressable>

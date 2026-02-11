@@ -4,12 +4,13 @@ import { useHubConnectionProvider } from "@/src/common/context/HubConnectionProv
 import { HubChannel } from "@/src/common/constants/HubChannel";
 import { useModalProvider } from "@/src/common/context/ModalProvider";
 import { useAuthProvider } from "@/src/common/context/AuthProvider";
-import { SpinSessionScreen } from "../../constants/SpinTypes";
+import { SpinSessionScreen, SpinGameState } from "../../constants/SpinTypes";
 import { useSpinSessionProvider } from "../../context/SpinGameProvider";
 import { useNavigation } from "expo-router";
 import { GameType } from "@/src/common/constants/Types";
 import SimpleInitScreen from "@/src/common/screens/SimpleInitScreen/SimpleInitScreen";
 import { resetToHomeScreen } from "@/src/common/utils/navigation";
+import Color from "@/src/common/constants/Color";
 
 export const ActiveLobbyScreen = () => {
   const navigation: any = useNavigation();
@@ -17,7 +18,19 @@ export const ActiveLobbyScreen = () => {
   const { connect, setListener, invokeFunction, disconnect } = useHubConnectionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { gameKey, gameType, hubAddress, setIsHost, isHost, clearGlobalSessionValues } = useGlobalSessionProvider();
-  const { setScreen, themeColor, secondaryThemeColor, featherIcon, clearSpinSessionValues } = useSpinSessionProvider();
+  const {
+    setScreen,
+    themeColor,
+    secondaryThemeColor,
+    featherIcon,
+    clearSpinSessionValues,
+    roundText,
+    setRoundText,
+    selectedBatch,
+    setSelectedBatch,
+    gameState,
+    setGameState,
+  } = useSpinSessionProvider();
 
   const [startGameTriggered, setStartGameTriggered] = useState<boolean>(false);
   const [round, setRound] = useState<string>("");
@@ -48,8 +61,24 @@ export const ActiveLobbyScreen = () => {
       }
     });
 
+    setListener("signal_start", (_value: boolean) => {
+      setScreen(SpinSessionScreen.Game);
+    });
+
+    setListener(HubChannel.State, async (state: SpinGameState) => {
+      setGameState(state);
+    });
+
+    setListener("selected", (batch: string[]) => {
+      setSelectedBatch(batch);
+    });
+
     setListener("players_count", (players: number) => {
       setPlayers(players);
+    });
+
+    setListener("round_text", (roundText: string) => {
+      setRoundText(roundText);
     });
 
     setListener(HubChannel.Error, (message: string) => {
@@ -58,10 +87,6 @@ export const ActiveLobbyScreen = () => {
 
     setListener(HubChannel.Iterations, (iterations: number) => {
       setIterations(iterations);
-    });
-
-    setListener("signal_start", (_value: boolean) => {
-      setScreen(SpinSessionScreen.Game);
     });
 
     const groupResult = await invokeFunction("ConnectToGroup", gameKey, pseudoId, false);

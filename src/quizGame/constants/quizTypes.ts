@@ -8,5 +8,5 @@ export enum QuizGameScreen {
 export interface QuizSession {
   game_id: string;
   current_iteration: number;
-  questions: string[];
+  rounds: string[];
 }
