@@ -17,6 +17,10 @@ interface ISpinSessionContext {
   setSelectedBatch: React.Dispatch<React.SetStateAction<string[]>>;
   gameState: SpinGameState;
   setGameState: React.Dispatch<React.SetStateAction<SpinGameState>>;
+  iterations: number;
+  setIterations: React.Dispatch<React.SetStateAction<number>>;
+  players: number;
+  setPlayers: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const defaultContextValue: ISpinSessionContext = {
@@ -33,6 +37,10 @@ const defaultContextValue: ISpinSessionContext = {
   setSelectedBatch: () => {},
   gameState: SpinGameState.Initialized,
   setGameState: () => {},
+  iterations: 0,
+  setIterations: () => {},
+  players: 0,
+  setPlayers: () => {},
 };
 
 const SpinSessionContext = createContext<ISpinSessionContext>(defaultContextValue);
@@ -51,6 +59,8 @@ export const SpinSessionProvider = ({ children }: SpinSessionProviderProps) => {
   const [roundText, setRoundText] = useState<string>("");
   const [selectedBatch, setSelectedBatch] = useState<string[]>([]);
   const [gameState, setGameState] = useState<SpinGameState>(SpinGameState.Initialized);
+  const [iterations, setIterations] = useState<number>(0);
+  const [players, setPlayers] = useState<number>(0);
 
   const setThemeColors = (gameType: GameType) => {
     switch (gameType) {
@@ -85,6 +95,10 @@ export const SpinSessionProvider = ({ children }: SpinSessionProviderProps) => {
     setSelectedBatch,
     gameState,
     setGameState,
+    iterations,
+    setIterations,
+    players,
+    setPlayers,
   };
 
   return <SpinSessionContext.Provider value={value}>{children}</SpinSessionContext.Provider>;

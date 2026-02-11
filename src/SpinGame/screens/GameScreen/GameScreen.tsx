@@ -21,26 +21,17 @@ export const GameScreen = () => {
 
   const disconnectTriggeredRef = useRef<boolean>(false);
 
-  const { isHost, setIsHost, clearGlobalSessionValues, hubAddress } = useGlobalSessionProvider();
-  const {
-    clearSpinSessionValues,
-    themeColor,
-    roundText,
-    setRoundText,
-    selectedBatch,
-    setSelectedBatch,
-    gameState,
-    setGameState,
-  } = useSpinSessionProvider();
-  const { disconnect, setListener, invokeFunction, debugDisconnect, connect } = useHubConnectionProvider();
-  const { gameKey } = useGlobalSessionProvider();
+  const { isHost, clearGlobalSessionValues, gameKey } = useGlobalSessionProvider();
+  const { clearSpinSessionValues, themeColor, roundText, selectedBatch, gameState, setGameState } =
+    useSpinSessionProvider();
+  const { disconnect, setListener, invokeFunction, debugDisconnect } = useHubConnectionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { pseudoId } = useAuthProvider();
 
   useFocusEffect(
     useCallback(() => {
       setBgColor(themeColor);
-      setupListeners();
+      setupScreenListeners();
 
       return () => {
         clearSpinSessionValues();
@@ -49,6 +40,25 @@ export const GameScreen = () => {
       };
     }, []),
   );
+
+  useEffect(() => {
+    if (gameState === SpinGameState.Finished) {
+      setBgColor(Color.Gray);
+      handleGameFinshed();
+    } else if (gameState === SpinGameState.RoundStarted) {
+      setBgColor(themeColor);
+    }
+  }, [gameState]);
+
+  useEffect(() => {
+    if (selectedBatch.length > 0) {
+      if (pseudoId && selectedBatch.includes(pseudoId)) {
+        setBgColor(Color.Green);
+      } else {
+        setBgColor(Color.Red);
+      }
+    }
+  }, [selectedBatch]);
 
   const handleLeaveGame = async () => {
     clearGlobalSessionValues();
@@ -70,40 +80,7 @@ export const GameScreen = () => {
     resetToHomeScreen(navigation);
   };
 
-  const setupListeners = async () => {
-    let connectResult = await connect(hubAddress);
-    if (connectResult.isError()) {
-      displayErrorModal("Klarte ikke opprette tilkobling", () => {
-        handleBackPressed();
-      });
-    }
-
-    setListener(HubChannel.Error, (message: string) => {
-      displayErrorModal(message);
-      handleLeaveGame();
-    });
-
-    setListener("round_text", (roundText: string) => {
-      setRoundText(roundText);
-    });
-
-    setListener(HubChannel.State, async (state: SpinGameState) => {
-      setGameState(state);
-
-      if (state == SpinGameState.Finished) {
-        setBgColor(Color.Gray);
-        await handleGameFinshed();
-      }
-
-      if (state == SpinGameState.RoundStarted) {
-        setBgColor(themeColor);
-      }
-    });
-
-    setListener("host", (hostId: string) => {
-      setIsHost(hostId == pseudoId);
-    });
-
+  const setupScreenListeners = () => {
     setListener("cancelled", async (message: string) => {
       if (disconnectTriggeredRef.current) return;
 
@@ -111,15 +88,6 @@ export const GameScreen = () => {
       displayInfoModal(message, "Spillet ble avsluttet", () => {
         navigateHome();
       });
-    });
-
-    setListener("selected", (batch: string[]) => {
-      setSelectedBatch(batch);
-      if (pseudoId && batch.includes(pseudoId)) {
-        setBgColor(Color.Green);
-      } else {
-        setBgColor(Color.Red);
-      }
     });
   };
 

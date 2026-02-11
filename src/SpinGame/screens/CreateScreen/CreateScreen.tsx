@@ -9,7 +9,11 @@ import { SpinSessionScreen } from "../../constants/SpinTypes";
 import { useSpinSessionProvider } from "../../context/SpinGameProvider";
 import SimpleInitScreen from "@/src/common/screens/SimpleInitScreen/SimpleInitScreen";
 
-export const CreateScreen = () => {
+export const CreateScreen = ({
+  onGameCreated,
+}: {
+  onGameCreated: (hubAddress: string, gameKey: string) => Promise<void>;
+}) => {
   const navigation: any = useNavigation();
   const { pseudoId } = useAuthProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
@@ -75,7 +79,7 @@ export const CreateScreen = () => {
     setGameKey(result.value.key);
     setHubAddress(result.value.hub_address);
     setGameEntryMode(GameEntryMode.Creator);
-    setScreen(SpinSessionScreen.ActiveLobby);
+    await onGameCreated(result.value.hub_address, result.value.key);
     setLoading(false);
   };
 

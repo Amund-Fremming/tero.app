@@ -1,100 +1,30 @@
 import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useHubConnectionProvider } from "@/src/common/context/HubConnectionProvider";
-import { HubChannel } from "@/src/common/constants/HubChannel";
 import { useModalProvider } from "@/src/common/context/ModalProvider";
 import { useAuthProvider } from "@/src/common/context/AuthProvider";
-import { SpinSessionScreen, SpinGameState } from "../../constants/SpinTypes";
+import { SpinSessionScreen } from "../../constants/SpinTypes";
 import { useSpinSessionProvider } from "../../context/SpinGameProvider";
 import { useNavigation } from "expo-router";
 import { GameType } from "@/src/common/constants/Types";
 import SimpleInitScreen from "@/src/common/screens/SimpleInitScreen/SimpleInitScreen";
 import { resetToHomeScreen } from "@/src/common/utils/navigation";
-import Color from "@/src/common/constants/Color";
 
 export const ActiveLobbyScreen = () => {
   const navigation: any = useNavigation();
   const { pseudoId } = useAuthProvider();
-  const { connect, setListener, invokeFunction, disconnect } = useHubConnectionProvider();
+  const { invokeFunction, disconnect } = useHubConnectionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
-  const { gameKey, gameType, hubAddress, setIsHost, isHost, clearGlobalSessionValues } = useGlobalSessionProvider();
-  const {
-    setScreen,
-    themeColor,
-    secondaryThemeColor,
-    featherIcon,
-    clearSpinSessionValues,
-    roundText,
-    setRoundText,
-    selectedBatch,
-    setSelectedBatch,
-    gameState,
-    setGameState,
-  } = useSpinSessionProvider();
+  const { gameKey, gameType, isHost, clearGlobalSessionValues } = useGlobalSessionProvider();
+  const { setScreen, themeColor, secondaryThemeColor, featherIcon, clearSpinSessionValues, iterations, players } =
+    useSpinSessionProvider();
 
   const [startGameTriggered, setStartGameTriggered] = useState<boolean>(false);
   const [round, setRound] = useState<string>("");
-  const [iterations, setIterations] = useState<number>(0);
-  const [players, setPlayers] = useState<number>(0);
   const [isAddingRound, setIsAddingRound] = useState<boolean>(false);
-
-  useEffect(() => {
-    createHubConnecion();
-  }, []);
 
   const handleSetRound = (value: string) => {
     setRound(value);
-  };
-
-  const createHubConnecion = async () => {
-    const result = await connect(hubAddress);
-    if (result.isError()) {
-      console.error(result.error);
-      displayErrorModal("En feil har skjedd, forsøk å gå ut og inn av spillet");
-      return;
-    }
-
-    setListener("host", (hostId: string) => {
-      if (hostId == pseudoId) {
-        console.debug("New host elected:", hostId);
-        setIsHost(pseudoId === hostId);
-      }
-    });
-
-    setListener("signal_start", (_value: boolean) => {
-      setScreen(SpinSessionScreen.Game);
-    });
-
-    setListener(HubChannel.State, async (state: SpinGameState) => {
-      setGameState(state);
-    });
-
-    setListener("selected", (batch: string[]) => {
-      setSelectedBatch(batch);
-    });
-
-    setListener("players_count", (players: number) => {
-      setPlayers(players);
-    });
-
-    setListener("round_text", (roundText: string) => {
-      setRoundText(roundText);
-    });
-
-    setListener(HubChannel.Error, (message: string) => {
-      displayErrorModal(message);
-    });
-
-    setListener(HubChannel.Iterations, (iterations: number) => {
-      setIterations(iterations);
-    });
-
-    const groupResult = await invokeFunction("ConnectToGroup", gameKey, pseudoId, false);
-    if (groupResult.isError()) {
-      console.error(groupResult.error);
-      displayErrorModal("Klarte ikke koble til, forsøk å lukke appen og start på nytt");
-      return;
-    }
   };
 
   const handleAddRound = async () => {

@@ -1,21 +1,99 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
 import { GameEntryMode } from "../common/constants/Types";
 import CreateScreen from "./screens/CreateScreen/CreateScreen";
 import { GameScreen } from "./screens/GameScreen/GameScreen";
 import ActiveLobbyScreen from "./screens/ActiveLobbyScreen/ActiveLobbyScreen";
 import PassiveLobbyScreen from "./screens/PassiveLobbyScreen/PassiveLobbyScreen";
-import { SpinSessionScreen } from "./constants/SpinTypes";
+import { SpinSessionScreen, SpinGameState } from "./constants/SpinTypes";
 import { useSpinSessionProvider } from "./context/SpinGameProvider";
+import { useHubConnectionProvider } from "../common/context/HubConnectionProvider";
+import { useModalProvider } from "../common/context/ModalProvider";
+import { useAuthProvider } from "../common/context/AuthProvider";
+import { HubChannel } from "../common/constants/HubChannel";
+import { View, ActivityIndicator } from "react-native";
 
 export const SpinGame = () => {
-  const { gameEntryMode } = useGlobalSessionProvider();
-  const { screen, setScreen } = useSpinSessionProvider();
+  const { gameEntryMode, hubAddress, gameKey, setIsHost } = useGlobalSessionProvider();
+  const { screen, setScreen, setRoundText, setSelectedBatch, setGameState, setIterations, setPlayers } = useSpinSessionProvider();
+  const { connect, setListener, disconnect, invokeFunction } = useHubConnectionProvider();
+  const { displayErrorModal } = useModalProvider();
+  const { pseudoId } = useAuthProvider();
+
+  const [hubReady, setHubReady] = useState<boolean>(false);
 
   useEffect(() => {
     const initScreen = getInitialScreen();
     setScreen(initScreen);
+
+    if (initScreen === SpinSessionScreen.Create) {
+      return;
+    }
+
+    initializeHub(hubAddress, gameKey);
+
+    return () => {
+      disconnect();
+    };
   }, []);
+
+  const initializeHub = async (address: string, key: string) => {
+    const result = await connect(address);
+    if (result.isError()) {
+      console.error(result.error);
+      displayErrorModal("En feil har skjedd, forsøk å gå ut og inn av spillet");
+      return;
+    }
+
+    setupListeners();
+
+    const groupResult = await invokeFunction("ConnectToGroup", key, pseudoId, false);
+    if (groupResult.isError()) {
+      console.error(groupResult.error);
+      displayErrorModal("Klarte ikke koble til, forsøk å lukke appen og start på nytt");
+      return;
+    }
+
+    setHubReady(true);
+    setScreen(SpinSessionScreen.ActiveLobby);
+  };
+
+  const setupListeners = () => {
+    setListener("host", (hostId: string) => {
+      if (hostId == pseudoId) {
+        console.debug("New host elected:", hostId);
+      }
+      setIsHost(pseudoId === hostId);
+    });
+
+    setListener("signal_start", (_value: boolean) => {
+      setScreen(SpinSessionScreen.Game);
+    });
+
+    setListener(HubChannel.State, (state: SpinGameState) => {
+      setGameState(state);
+    });
+
+    setListener("selected", (batch: string[]) => {
+      setSelectedBatch(batch);
+    });
+
+    setListener("round_text", (roundText: string) => {
+      setRoundText(roundText);
+    });
+
+    setListener(HubChannel.Error, (message: string) => {
+      displayErrorModal(message);
+    });
+
+    setListener("players_count", (count: number) => {
+      setPlayers(count);
+    });
+
+    setListener(HubChannel.Iterations, (count: number) => {
+      setIterations(count);
+    });
+  };
 
   const getInitialScreen = (): SpinSessionScreen => {
     switch (gameEntryMode) {
@@ -33,16 +111,22 @@ export const SpinGame = () => {
 
   switch (screen) {
     case SpinSessionScreen.Create:
-      return <CreateScreen />;
+      return <CreateScreen onGameCreated={(address, key) => initializeHub(address, key)} />;
     case SpinSessionScreen.Game:
-      return <GameScreen />;
+      return hubReady ? <GameScreen /> : <LoadingView />;
     case SpinSessionScreen.ActiveLobby:
-      return <ActiveLobbyScreen />;
+      return hubReady ? <ActiveLobbyScreen /> : <LoadingView />;
     case SpinSessionScreen.PassiveLobby:
-      return <PassiveLobbyScreen />;
+      return hubReady ? <PassiveLobbyScreen /> : <LoadingView />;
     default:
-      return <ActiveLobbyScreen />;
+      return hubReady ? <ActiveLobbyScreen /> : <LoadingView />;
   }
 };
+
+const LoadingView = () => (
+  <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <ActivityIndicator size="large" />
+  </View>
+);
 
 export default SpinGame;

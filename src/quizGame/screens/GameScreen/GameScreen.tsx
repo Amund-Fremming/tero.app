@@ -37,14 +37,14 @@ export const GameScreen = () => {
   };
 
   const handleNextPressed = () => {
-    if ((quiz?.current_iteration ?? 0) + 1 === (quiz?.questions.length ?? 0)) {
+    if ((quiz?.current_iteration ?? 0) + 1 === (quiz?.rounds.length ?? 0)) {
       console.log("Tried getting next when at max iteration");
       return;
     }
 
     setQuiz((prev) => {
       if (!prev) return prev;
-      if (prev.current_iteration == prev.questions.length - 1) return prev;
+      if (prev.current_iteration == prev.rounds.length - 1) return prev;
       return { ...prev, current_iteration: prev.current_iteration + 1 };
     });
   };
@@ -66,14 +66,14 @@ export const GameScreen = () => {
           <Feather name="chevron-left" size={moderateScale(45)} />
         </TouchableOpacity>
         <Text style={styles.header}>
-          {(quiz?.current_iteration ?? 0) + 1} / {quiz?.questions.length ?? 1}
+          {(quiz?.current_iteration ?? 0) + 1} / {quiz?.rounds.length ?? 1}
         </Text>
         <TouchableOpacity onPress={handleInfoPressed} style={styles.iconWrapper}>
           <Text style={styles.textIcon}>?</Text>
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.question}>{quiz?.questions[quiz.current_iteration]}</Text>
+      <Text style={styles.question}>{quiz?.rounds[quiz.current_iteration]}</Text>
 
       <View style={styles.buttonWrapper}>
         <TouchableOpacity style={styles.nextButton} onPress={handleNextPressed}>
