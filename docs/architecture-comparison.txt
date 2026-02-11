@@ -1,0 +1,208 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    GAME HANDLER ARKITEKTUR SAMMENLIGNING
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          NÅVÆRENDE TILNÆRMING                               │
+│                         (State-basert Routing)                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Hub Stack Navigator
+│
+├─ SpinGame (wrapper med switch statement)
+│  │
+│  ├─ screen === Create ? CreateScreen : ...
+│  │  └─ [Ingen handlers]
+│  │
+│  ├─ screen === ActiveLobby ? ActiveLobbyScreen : ...
+│  │  └─ useEffect(() => {
+│  │      ⚠️  connect()              // Oppretter connection
+│  │      ⚠️  setListener("host")    // Setup handlers
+│  │      ⚠️  setListener("state")   
+│  │      ⚠️  setListener("signal_start")
+│  │     })
+│  │
+│  └─ screen === Game ? GameScreen : ...
+│     └─ useFocusEffect(() => {
+│         ⚠️  connect()              // Oppretter connection IGJEN
+│         ⚠️  setListener("host")    // Setup handlers IGJEN (duplicate)
+│         ⚠️  setListener("state")   // Setup handlers IGJEN (duplicate)
+│         ⚠️  setListener("selected")
+│         ⚠️  setListener("cancelled")
+│         return () => disconnect() // ⚠️ Når skjer dette egentlig?
+│        })
+
+PROBLEMER:
+❌ Handlers settes opp flere ganger (waste resources)
+❌ Duplicate listeners kan motta samme event flere ganger
+❌ Uklar lifecycle - disconnect() kan skje for tidlig eller sent
+❌ Race conditions ved rask navigasjon
+❌ Vanskelig å debugge - hvor er problemet?
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         ANBEFALT TILNÆRMING                                 │
+│                   (Dedikert Stack Navigator per Spill)                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Hub Stack Navigator
+│
+├─ SpinGame (wrapper med egen Stack Navigator)
+   │
+   │ useEffect(() => {
+   │   ✅ connect()              // Setup ÉN gang
+   │   ✅ setListener("host")    // Alle handlers her
+   │   ✅ setListener("state")   
+   │   ✅ setListener("selected")
+   │   ✅ setListener("cancelled")
+   │   ✅ setListener("signal_start")
+   │   
+   │   return () => {
+   │     ✅ disconnect()         // Cleanup når HELE spillet lukkes
+   │   }
+   │ }, [])
+   │
+   └─ Stack Navigator
+      │
+      ├─ CreateScreen
+      │  └─ [Ren UI - ingen connection logic]
+      │
+      ├─ ActiveLobbyScreen  
+      │  └─ [Ren UI - bruker context for state]
+      │     navigation.navigate("Game") når klar
+      │
+      └─ GameScreen
+         └─ [Ren UI - bruker context for state]
+            Mottar state updates via context ↑
+
+FORDELER:
+✅ Handlers settes opp ÉN gang - ingen duplicates
+✅ Klar lifecycle - setup ved start, cleanup ved slutt
+✅ Ingen race conditions
+✅ Screens er rene UI komponenter (separation of concerns)
+✅ Lettere å teste
+✅ Lettere å debugge
+✅ Følger React Navigation best practices
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                              HANDLER FLYT
+═══════════════════════════════════════════════════════════════════════════════
+
+NÅVÆRENDE (Problematisk):
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Tidslinje:                                                                  │
+│                                                                             │
+│ T0: Navigate til SpinGame                                                   │
+│     └─ Render ActiveLobbyScreen                                            │
+│        └─ useEffect: connect() + setup handlers (A)                        │
+│                                                                             │
+│ T1: Start game knapp trykkes                                                │
+│     └─ setScreen(Game)                                                      │
+│        └─ React unmounter ActiveLobbyScreen... kanskje? når?              │
+│        └─ React mounter GameScreen                                         │
+│           └─ useFocusEffect: connect() + setup handlers (B)                │
+│                                                                             │
+│ ⚠️  PROBLEM: Nå har vi potensielt to sett med handlers!                    │
+│     - Handlers (A) fra ActiveLobby er kanskje ikke fjernet enda           │
+│     - Handlers (B) fra GameScreen er nå aktive                            │
+│     - Begge kan motta samme events → duplikate actions                     │
+│                                                                             │
+│ T2: Backend sender "state" event                                            │
+│     └─ Handler (A): setGameState(newState) ← hvis ikke unmounted enda     │
+│     └─ Handler (B): setGameState(newState) ← definitely aktiv             │
+│     └─ ⚠️ State setter kjøres to ganger!                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+ANBEFALT (Trygt):
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Tidslinje:                                                                  │
+│                                                                             │
+│ T0: Navigate til SpinGame                                                   │
+│     └─ SpinGame useEffect: connect() + setup ALL handlers                  │
+│     └─ Stack Navigator render initial screen (ActiveLobby)                 │
+│        └─ [ActiveLobby er ren UI - ingen handler setup]                   │
+│                                                                             │
+│ T1: Start game knapp trykkes                                                │
+│     └─ navigation.navigate("Game")                                          │
+│        └─ Stack Navigator navigerer til GameScreen                         │
+│           └─ [GameScreen er ren UI - ingen handler setup]                 │
+│                                                                             │
+│ ✅ RESULTAT: Ett sett handlers, hele tiden                                 │
+│     - Handlers lever i wrapper (SpinGame)                                  │
+│     - State distribueres via context til aktiv screen                      │
+│     - Ingen duplicates, ingen race conditions                              │
+│                                                                             │
+│ T2: Backend sender "state" event                                            │
+│     └─ Handler i wrapper: setGameState(newState)                           │
+│     └─ Context oppdateres                                                  │
+│     └─ GameScreen re-rendrer med ny state                                  │
+│     └─ ✅ State setter kjøres ÉN gang!                                     │
+│                                                                             │
+│ T3: Navigate ut av spillet (back til Home)                                  │
+│     └─ resetToHomeScreen(navigation)                                        │
+│     └─ SpinGame unmounter                                                   │
+│     └─ useEffect cleanup: disconnect()                                     │
+│     └─ ✅ All cleanup skjer én gang, garantert                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                              KODE STRUKTUR
+═══════════════════════════════════════════════════════════════════════════════
+
+NÅVÆRENDE (Blandet ansvar):
+┌──────────────────────────────┐
+│     GameScreen.tsx           │  ← Screen har BÅDE:
+│  ┌────────────────────────┐  │     - Connection management
+│  │ Connection Logic       │  │     - State management
+│  │ - connect()           │  │     - UI rendering
+│  │ - setListener()       │  │     
+│  │ - disconnect()        │  │     Alt i én fil!
+│  └────────────────────────┘  │     Vanskelig å teste!
+│  ┌────────────────────────┐  │     Vanskelig å vedlikeholde!
+│  │ State Management      │  │
+│  │ - useState()          │  │
+│  │ - useEffect()         │  │
+│  └────────────────────────┘  │
+│  ┌────────────────────────┐  │
+│  │ UI Rendering          │  │
+│  │ - JSX                 │  │
+│  │ - Styles              │  │
+│  └────────────────────────┘  │
+└──────────────────────────────┘
+
+ANBEFALT (Separation of concerns):
+┌──────────────────────────────┐
+│     SpinGame.tsx             │  ← Wrapper har:
+│  ┌────────────────────────┐  │     - Connection management
+│  │ Connection Logic       │  │     - Handler setup
+│  │ - connect()           │  │     - State distribution
+│  │ - setListener()       │  │     
+│  │ - disconnect()        │  │     Én ansvar!
+│  └────────────────────────┘  │     Lett å teste!
+│  ┌────────────────────────┐  │
+│  │ State Distribution    │  │
+│  │ - Context Provider    │  │
+│  │ - State propagation   │  │
+│  └────────────────────────┘  │
+│           │                  │
+│           └─────────┐        │
+└─────────────────────┼────────┘
+                      │
+         ┌────────────┴────────────┐
+         │                         │
+         ▼                         ▼
+┌──────────────────┐      ┌──────────────────┐
+│ GameScreen.tsx   │      │ LobbyScreen.tsx  │  ← Screens har:
+│  ┌────────────┐  │      │  ┌────────────┐  │     - UI rendering
+│  │ UI Only    │  │      │  │ UI Only    │  │     - Event handlers
+│  │ - JSX      │  │      │  │ - JSX      │  │     - Styles
+│  │ - Styles   │  │      │  │ - Styles   │  │     
+│  │ - Events   │  │      │  │ - Events   │  │     Lett å teste!
+│  └────────────┘  │      │  └────────────┘  │     Lett å vedlikeholde!
+└──────────────────┘      └──────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════
