@@ -4,6 +4,7 @@ export enum Font {
   SpaceMonoRegular = "SpaceMono-Regular",
   SintonyRegular = "Sintony-Regular",
   SintonyBold = "Sintony-Bold",
+  ArchivoBlackRegular = "ArchivoBlack-Regular",
 }
 
 export default Font;

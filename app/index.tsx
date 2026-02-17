@@ -47,6 +47,7 @@ const FontLoader = ({ children }: { children: React.ReactNode }) => {
     "SpaceMono-Regular": require("../src/common/assets/fonts/SpaceMono-Regular.ttf"),
     "Sintony-Regular": require("../src/common/assets/fonts/Sintony-Regular.ttf"),
     "Sintony-Bold": require("../src/common/assets/fonts/Sintony-Bold.ttf"),
+    "ArchivoBlack-Regular": require("../src/common/assets/fonts/ArchivoBlack-Regular.ttf"),
   });
 
   const onLayoutRootView = useCallback(async () => {

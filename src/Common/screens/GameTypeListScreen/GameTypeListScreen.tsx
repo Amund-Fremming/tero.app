@@ -13,6 +13,14 @@ import ScreenHeader from "../../components/ScreenHeader/ScreenHeader";
 
 const { height } = Dimensions.get("window");
 
+const iconMap: { [key: string]: any } = {
+  "quiz.webp": require("../../assets/images/quiz.webp"),
+  "roulette.webp": require("../../assets/images/roulette.webp"),
+  "duel.webp": require("../../assets/images/duel.webp"),
+  "imposter.webp": require("../../assets/images/imposter.webp"),
+  "dice.webp": require("../../assets/images/dice.webp"),
+};
+
 export const GameTypeListScreen = () => {
   const navigation: any = useNavigation();
   const { setGameType, gameEntryMode } = useGlobalSessionProvider();
@@ -63,11 +71,11 @@ export const GameTypeListScreen = () => {
         {data &&
           data.map((item, index) => (
             <Pressable key={index} style={styles.card} onPress={() => handlePress(item.screen)}>
-              <View style={styles.imagePlaceholder}></View>
-              <Text style={styles.cardHeader}>{item.name}</Text>
+              <Image source={iconMap[item.icon]} style={styles.cardImage} />
+              <Text style={{ ...styles.cardHeader, color: item.color }}>{item.name}</Text>
             </Pressable>
           ))}
-        <Pressable key={100} style={styles.card} onPress={() => navigation.navigate(Screen.TipsUs)}>
+        <Pressable key={100} style={styles.cardAdd} onPress={() => navigation.navigate(Screen.TipsUs)}>
           <View style={styles.imagePlaceholder}></View>
           <Text style={styles.cardHeader}>Ditt spill?</Text>
           <Text style={styles.cardSubheader}>Send inn forslag til nye spill</Text>

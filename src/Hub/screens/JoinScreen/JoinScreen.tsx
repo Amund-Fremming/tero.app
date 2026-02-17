@@ -14,6 +14,7 @@ import { useNavigation, useFocusEffect } from "expo-router";
 import Screen from "@/src/common/constants/Screen";
 import { moderateScale } from "@/src/common/utils/dimensions";
 import { useCallback } from "react";
+import ScreenHeader from "@/src/common/components/ScreenHeader/ScreenHeader";
 
 export const JoinScreen = () => {
   const navigation: any = useNavigation();
@@ -76,15 +77,12 @@ export const JoinScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerWrapper}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconWrapper}>
-          <Feather name="chevron-left" size={moderateScale(45)} />
-        </TouchableOpacity>
-        <Text style={styles.header}>Bli med</Text>
-        <TouchableOpacity onPress={handleInfoPressed} style={styles.iconWrapper}>
-          <Text style={styles.textIcon}>?</Text>
-        </TouchableOpacity>
-      </View>
+      <ScreenHeader
+        title="Bli med"
+        onBackPressed={() => navigation.goBack()}
+        onInfoPress={handleInfoPressed}
+        backgroundColor={Color.BuzzifyLavender}
+      />
       <View style={styles.cardWrapper}>
         <Image source={require("@/src/common/assets/images/tero.webp")} style={styles.mascot} resizeMode="contain" />
         <View style={styles.card}>

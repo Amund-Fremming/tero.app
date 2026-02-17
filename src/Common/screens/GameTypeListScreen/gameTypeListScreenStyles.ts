@@ -22,13 +22,31 @@ export const styles = StyleSheet.create({
     borderRadius: moderateScale(20),
     justifyContent: "center",
     alignItems: "center",
+    overflow: "hidden",
+  },
+
+  cardImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+    position: "absolute",
+  },
+
+  cardAdd: {
+    backgroundColor: Color.Purple,
+    borderWidth: moderateScale(6.3),
+    borderColor: Color.OffBlack,
+    height: verticalScale(210),
+    width: "45%",
+    borderRadius: moderateScale(20),
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   cardHeader: {
     position: "absolute",
     fontWeight: 800,
-    fontSize: moderateScale(28),
-    color: Color.White,
+    fontSize: moderateScale(30),
     bottom: moderateScale(5),
     left: moderateScale(15),
     display: "flex",
