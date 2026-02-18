@@ -9,6 +9,7 @@ import { Feather } from "@expo/vector-icons";
 import Color from "@/src/common/constants/Color";
 import Screen from "@/src/common/constants/Screen";
 import { horizontalScale } from "@/src/common/utils/dimensions";
+import ScreenHeader from "@/src/common/components/ScreenHeader/ScreenHeader";
 
 export const ProfileScreen = () => {
   const navigation: any = useNavigation();
@@ -78,23 +79,18 @@ export const ProfileScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.iconsBar}>
-        <Pressable onPress={() => navigation.goBack()}>
-          <Feather name="chevron-left" size={32} color={Color.Black} />
+      <ScreenHeader
+        title="Profil"
+        onBackPressed={() => navigation.goBack()}
+        onInfoPress={handleLogout}
+        infoIconOverride="log-out"
+      />
+
+      {isAdmin && (
+        <Pressable onPress={() => navigation.navigate(Screen.Admin)} style={styles.adminButton}>
+          <Text style={styles.adminText}>dashboard</Text>
         </Pressable>
-
-        {isAdmin && (
-          <Pressable onPress={() => navigation.navigate(Screen.Admin)} style={styles.adminButton}>
-            <Text style={styles.adminText}>dashboard</Text>
-          </Pressable>
-        )}
-
-        {isLoggedIn && (
-          <Pressable onPress={handleLogout}>
-            <Feather name="log-out" size={26} color={Color.Black} />
-          </Pressable>
-        )}
-      </View>
+      )}
 
       <View style={styles.loggedIn}>
         <View style={styles.imageCard}>

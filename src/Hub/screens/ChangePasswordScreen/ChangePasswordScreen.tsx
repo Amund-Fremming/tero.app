@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View, TouchableOpacity } from "react-native";
 import { styles } from "./changePasswordScreenStyles";
 import { useAuthProvider } from "@/src/common/context/AuthProvider";
 import { useState } from "react";
@@ -8,6 +8,8 @@ import { Feather } from "@expo/vector-icons";
 import Color from "@/src/common/constants/Color";
 import { TextInput } from "react-native-gesture-handler";
 import { useModalProvider } from "@/src/common/context/ModalProvider";
+import ScreenHeader from "@/src/common/components/ScreenHeader/ScreenHeader";
+import { moderateScale } from "@/src/common/utils/dimensions";
 
 export const ChangePasswordScreen = () => {
   const navigation: any = useNavigation();
@@ -45,67 +47,89 @@ export const ChangePasswordScreen = () => {
     navigation.goBack();
   };
 
+  const handleInfoPressed = () => {
+    console.log("Info pressed");
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.iconsBar}>
-        <Pressable onPress={() => navigation.goBack()}>
-          <Feather name="chevron-left" size={32} color={Color.Black} />
-        </Pressable>
-      </View>
+      <ScreenHeader
+        title="Passord"
+        backgroundColor={Color.LightGray}
+        onBackPressed={() => navigation.goBack()}
+        onInfoPress={handleInfoPressed}
+      />
 
-      <View style={styles.content}>
-        <Text style={styles.header}>Bytt passord</Text>
-        <Text style={styles.username}></Text>
-
-        <View style={styles.layverPasswordEdit}>
-          <ScrollView
-            style={styles.layoverEditScroll}
-            contentContainerStyle={styles.layoverEditContent}
-            showsVerticalScrollIndicator={false}
-          >
-            <View style={styles.inputWrapper}>
-              <Text style={styles.inputLabel}>Gammelt passord</Text>
-              <TextInput
-                onChangeText={setOldPassword}
-                style={styles.input}
-                value={oldPassword}
-                placeholder="Skriv inn gammelt passord"
-                secureTextEntry={true}
-              />
-            </View>
-
-            <View style={styles.inputWrapper}>
-              <Text style={styles.inputLabel}>Nytt passord</Text>
-              <TextInput
-                onChangeText={setNewPassword}
-                style={styles.input}
-                value={newPassword}
-                placeholder="Skriv inn nytt passord"
-                secureTextEntry={true}
-              />
-            </View>
-
-            <View style={styles.inputWrapper}>
-              <Text style={styles.inputLabel}>Bekreft nytt passord</Text>
-              <TextInput
-                onChangeText={setConfirmPassword}
-                style={styles.input}
-                value={confirmPassword}
-                placeholder="Skriv inn nytt passord igjen"
-                secureTextEntry={true}
-              />
-            </View>
-          </ScrollView>
-
-          <View style={styles.buttonWrapperPassword}>
-            <Pressable style={styles.cancelButtonPassword} onPress={() => navigation.goBack()}>
-              <Text style={styles.cancelButtonText}>avbryt</Text>
-            </Pressable>
-            <Pressable onPress={handleChangePassword} style={styles.saveButtonPassword}>
-              <Text style={styles.saveButtonText}>lagre</Text>
-            </Pressable>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.inputWrapper}>
+          <View style={styles.inputContainer}>
+            <Feather
+              style={{ paddingLeft: moderateScale(15), paddingRight: moderateScale(10) }}
+              name="lock"
+              size={24}
+              color={Color.OffBlack}
+            />
+            <TextInput
+              onChangeText={setOldPassword}
+              style={styles.input}
+              value={oldPassword}
+              placeholder="Gammelt passord"
+              placeholderTextColor={Color.DarkerGray}
+              secureTextEntry={true}
+            />
           </View>
         </View>
+
+        <View style={styles.inputWrapper}>
+          <View style={styles.inputContainer}>
+            <Feather
+              style={{ paddingLeft: moderateScale(15), paddingRight: moderateScale(10) }}
+              name="lock"
+              size={24}
+              color={Color.OffBlack}
+            />
+            <TextInput
+              onChangeText={setNewPassword}
+              style={styles.input}
+              value={newPassword}
+              placeholder="Nytt passord"
+              placeholderTextColor={Color.DarkerGray}
+              secureTextEntry={true}
+            />
+          </View>
+        </View>
+
+        <View style={styles.inputWrapper}>
+          <View style={styles.inputContainer}>
+            <Feather
+              style={{ paddingLeft: moderateScale(15), paddingRight: moderateScale(10) }}
+              name="lock"
+              size={24}
+              color={Color.OffBlack}
+            />
+            <TextInput
+              onChangeText={setConfirmPassword}
+              style={styles.input}
+              value={confirmPassword}
+              placeholder="Bekreft nytt passord"
+              placeholderTextColor={Color.DarkerGray}
+              secureTextEntry={true}
+            />
+          </View>
+        </View>
+      </ScrollView>
+
+      <View style={styles.buttonWrapper}>
+        <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()}>
+          <Text style={styles.cancelButtonText}>Avbryt</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleChangePassword} style={styles.saveButton}>
+          <Text style={styles.saveButtonText}>Lagre</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

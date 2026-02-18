@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View, TouchableOpacity } from "react-native";
 import { styles } from "./editProfileScreenStyles";
 import { useAuthProvider } from "@/src/common/context/AuthProvider";
 import { useEffect, useState } from "react";
@@ -9,6 +9,8 @@ import { Feather } from "@expo/vector-icons";
 import Color from "@/src/common/constants/Color";
 import { TextInput } from "react-native-gesture-handler";
 import { useModalProvider } from "@/src/common/context/ModalProvider";
+import ScreenHeader from "@/src/common/components/ScreenHeader/ScreenHeader";
+import { moderateScale } from "@/src/common/utils/dimensions";
 
 export const EditProfileScreen = () => {
   const navigation: any = useNavigation();
@@ -114,121 +116,153 @@ export const EditProfileScreen = () => {
     navigation.goBack();
   };
 
+  const handleInfoPressed = () => {
+    console.log("Info pressed");
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.iconsBar}>
-        <Pressable onPress={() => navigation.goBack()}>
-          <Feather name="chevron-left" size={32} color={Color.Black} />
-        </Pressable>
-      </View>
+      <ScreenHeader
+        title="Rediger"
+        backgroundColor={Color.LightGray}
+        onBackPressed={() => navigation.goBack()}
+        onInfoPress={handleInfoPressed}
+      />
 
-      <View style={styles.content}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.email}>{userData?.email}</Text>
-        <Text style={styles.username}></Text>
 
-        <View style={styles.layoverEdit}>
-          <ScrollView
-            style={styles.layoverEditScroll}
-            contentContainerStyle={styles.layoverEditContent}
-            showsVerticalScrollIndicator={false}
-          >
-            <View style={styles.inputWrapper}>
-              <Text style={styles.inputLabel}>Fornavn</Text>
-              <TextInput
-                onChangeText={(input) => setPatchRequest((prev) => ({ ...prev, given_name: input }))}
-                style={styles.input}
-                value={patchRequest.given_name}
-                placeholder="Skriv inn fornavn"
-              />
-            </View>
-
-            <View style={styles.inputWrapper}>
-              <Text style={styles.inputLabel}>Etternavn</Text>
-              <TextInput
-                onChangeText={(input) => setPatchRequest((prev) => ({ ...prev, family_name: input }))}
-                style={styles.input}
-                value={patchRequest.family_name}
-                placeholder="Skriv inn etternavn"
-              />
-            </View>
-
-            <View style={styles.inputWrapper}>
-              <Text style={styles.inputLabel}>Brukernavn</Text>
-              <TextInput
-                onChangeText={(input) => setPatchRequest((prev) => ({ ...prev, username: input }))}
-                style={styles.input}
-                value={patchRequest.username}
-                placeholder="Velg brukernavn"
-              />
-            </View>
-
-            <View style={styles.inputWrapper}>
-              <Text style={styles.inputLabel}>Fødselsdato</Text>
-              <TextInput
-                style={styles.input}
-                value={birthDateDisplay}
-                onChangeText={handleBirthDateChangeIso}
-                placeholder="YYYY-MM-DD"
-                keyboardType="numeric"
-                maxLength={10}
-              />
-            </View>
-
-            <View style={styles.inputWrapper}>
-              <Text style={styles.inputLabel}>Kjønn</Text>
-              <View style={styles.genderButtonContainer}>
-                <Pressable
-                  style={[styles.genderButton, patchRequest?.gender === Gender.Male && styles.genderButtonSelected]}
-                  onPress={() => setPatchRequest((prev) => ({ ...prev, gender: Gender.Male }))}
-                >
-                  <Text
-                    style={[
-                      styles.genderButtonText,
-                      patchRequest?.gender === Gender.Male && styles.genderButtonTextSelected,
-                    ]}
-                  >
-                    Mann
-                  </Text>
-                </Pressable>
-                <Pressable
-                  style={[styles.genderButton, patchRequest?.gender === Gender.Female && styles.genderButtonSelected]}
-                  onPress={() => setPatchRequest((prev) => ({ ...prev, gender: Gender.Female }))}
-                >
-                  <Text
-                    style={[
-                      styles.genderButtonText,
-                      patchRequest?.gender === Gender.Female && styles.genderButtonTextSelected,
-                    ]}
-                  >
-                    Kvinne
-                  </Text>
-                </Pressable>
-                <Pressable
-                  style={[styles.genderButton, patchRequest?.gender === Gender.Unknown && styles.genderButtonSelected]}
-                  onPress={() => setPatchRequest((prev) => ({ ...prev, gender: Gender.Unknown }))}
-                >
-                  <Text
-                    style={[
-                      styles.genderButtonText,
-                      (userData == undefined || userData?.gender === Gender.Unknown) && styles.genderButtonTextSelected,
-                    ]}
-                  >
-                    Annet
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-
-            <View style={styles.buttonWrapper}>
-              <Pressable style={styles.cancelButton} onPress={() => navigation.goBack()}>
-                <Text style={styles.cancelButtonText}>avbryt</Text>
-              </Pressable>
-              <Pressable onPress={handlePatchUser} style={styles.saveButton}>
-                <Text style={styles.saveButtonText}>lagre</Text>
-              </Pressable>
-            </View>
-          </ScrollView>
+        <View style={styles.inputWrapper}>
+          <View style={styles.inputContainer}>
+            <Feather
+              style={{ paddingLeft: moderateScale(15), paddingRight: moderateScale(10) }}
+              name="user"
+              size={24}
+              color={Color.OffBlack}
+            />
+            <TextInput
+              onChangeText={(input) => setPatchRequest((prev) => ({ ...prev, given_name: input }))}
+              style={styles.input}
+              value={patchRequest.given_name}
+              placeholder="Fornavn"
+              placeholderTextColor={Color.DarkerGray}
+            />
+          </View>
         </View>
+
+        <View style={styles.inputWrapper}>
+          <View style={styles.inputContainer}>
+            <Feather
+              style={{ paddingLeft: moderateScale(15), paddingRight: moderateScale(10) }}
+              name="user"
+              size={24}
+              color={Color.OffBlack}
+            />
+            <TextInput
+              onChangeText={(input) => setPatchRequest((prev) => ({ ...prev, family_name: input }))}
+              style={styles.input}
+              value={patchRequest.family_name}
+              placeholder="Etternavn"
+              placeholderTextColor={Color.DarkerGray}
+            />
+          </View>
+        </View>
+
+        <View style={styles.inputWrapper}>
+          <View style={styles.inputContainer}>
+            <Feather
+              style={{ paddingLeft: moderateScale(15), paddingRight: moderateScale(10) }}
+              name="at-sign"
+              size={24}
+              color={Color.OffBlack}
+            />
+            <TextInput
+              onChangeText={(input) => setPatchRequest((prev) => ({ ...prev, username: input }))}
+              style={styles.input}
+              value={patchRequest.username}
+              placeholder="Brukernavn"
+              placeholderTextColor={Color.DarkerGray}
+            />
+          </View>
+        </View>
+
+        <View style={styles.inputWrapper}>
+          <View style={styles.inputContainer}>
+            <Feather
+              style={{ paddingLeft: moderateScale(15), paddingRight: moderateScale(10) }}
+              name="calendar"
+              size={24}
+              color={Color.OffBlack}
+            />
+            <TextInput
+              style={styles.input}
+              value={birthDateDisplay}
+              onChangeText={handleBirthDateChangeIso}
+              placeholder="YYYY-MM-DD"
+              placeholderTextColor={Color.DarkerGray}
+              keyboardType="numeric"
+              maxLength={10}
+            />
+          </View>
+        </View>
+
+        <View style={styles.inputWrapper}>
+          <Text style={styles.genderLabel}>Kjønn</Text>
+          <View style={styles.genderButtonContainer}>
+            <Pressable
+              style={[styles.genderButton, patchRequest?.gender === Gender.Male && styles.genderButtonSelected]}
+              onPress={() => setPatchRequest((prev) => ({ ...prev, gender: Gender.Male }))}
+            >
+              <Text
+                style={[
+                  styles.genderButtonText,
+                  patchRequest?.gender === Gender.Male && styles.genderButtonTextSelected,
+                ]}
+              >
+                Mann
+              </Text>
+            </Pressable>
+            <Pressable
+              style={[styles.genderButton, patchRequest?.gender === Gender.Female && styles.genderButtonSelected]}
+              onPress={() => setPatchRequest((prev) => ({ ...prev, gender: Gender.Female }))}
+            >
+              <Text
+                style={[
+                  styles.genderButtonText,
+                  patchRequest?.gender === Gender.Female && styles.genderButtonTextSelected,
+                ]}
+              >
+                Kvinne
+              </Text>
+            </Pressable>
+            <Pressable
+              style={[styles.genderButton, patchRequest?.gender === Gender.Unknown && styles.genderButtonSelected]}
+              onPress={() => setPatchRequest((prev) => ({ ...prev, gender: Gender.Unknown }))}
+            >
+              <Text
+                style={[
+                  styles.genderButtonText,
+                  (userData == undefined || userData?.gender === Gender.Unknown) && styles.genderButtonTextSelected,
+                ]}
+              >
+                Annet
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </ScrollView>
+
+      <View style={styles.buttonWrapper}>
+        <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.goBack()}>
+          <Text style={styles.cancelButtonText}>Avbryt</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handlePatchUser} style={styles.saveButton}>
+          <Text style={styles.saveButtonText}>Lagre</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

@@ -89,16 +89,16 @@ export const styles = StyleSheet.create({
   },
 
   image: {
-    width: horizontalScale(100),
-    height: verticalScale(100),
+    width: horizontalScale(120),
+    height: verticalScale(120),
   },
 
   imageCard: {
     marginTop: verticalScale(30),
     justifyContent: "flex-end",
     alignItems: "center",
-    width: horizontalScale(120),
-    height: verticalScale(120),
+    width: horizontalScale(140),
+    height: verticalScale(140),
     borderRadius: moderateScale(28),
     backgroundColor: Color.Blue,
   },
@@ -156,7 +156,7 @@ export const styles = StyleSheet.create({
 
   layover: {
     width: "100%",
-    height: "55%",
+    height: "65%",
     backgroundColor: Color.LightGray,
     borderTopLeftRadius: moderateScale(50),
     borderTopRightRadius: moderateScale(50),

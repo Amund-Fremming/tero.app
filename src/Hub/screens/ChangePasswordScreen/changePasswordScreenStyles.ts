@@ -1,130 +1,90 @@
 import Color from "@/src/common/constants/Color";
 import { horizontalScale, moderateScale, verticalScale } from "@/src/common/utils/dimensions";
+import { Font } from "@/src/common/constants/Font";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
+    backgroundColor: Color.LightGray,
+    height: "100%",
+    width: "100%",
+    position: "relative",
+  },
+
+  scrollView: {
     flex: 1,
-    justifyContent: "flex-end",
+    width: "100%",
+  },
+
+  scrollContent: {
     alignItems: "center",
-    width: "100%",
-    minHeight: "100%",
-    backgroundColor: Color.White,
-    borderRadius: moderateScale(10),
-  },
-
-  header: {
-    paddingTop: verticalScale(15),
-    fontWeight: 600,
-    fontSize: moderateScale(22),
-  },
-
-  layoverEditScroll: {
-    width: "100%",
-  },
-
-  input: {
-    width: "86%",
-    backgroundColor: Color.White,
-    height: verticalScale(50),
-    paddingLeft: horizontalScale(20),
-    padding: moderateScale(5),
-    borderRadius: moderateScale(10),
-    fontWeight: 100,
-    fontSize: moderateScale(20),
+    gap: verticalScale(25),
+    paddingTop: verticalScale(120),
+    paddingBottom: verticalScale(200),
   },
 
   inputWrapper: {
     width: "100%",
     alignItems: "center",
-    gap: verticalScale(8),
   },
 
-  inputLabel: {
-    paddingTop: verticalScale(20),
-    width: "86%",
-    fontSize: moderateScale(16),
-    fontWeight: 500,
-    color: Color.Black,
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Color.White,
+    borderRadius: moderateScale(15),
+    width: "90%",
+    paddingVertical: verticalScale(12),
+    height: verticalScale(65),
   },
 
-  content: {
+  input: {
     flex: 1,
-    width: "100%",
-    justifyContent: "flex-end",
-    alignItems: "center",
+    fontSize: moderateScale(20),
+    color: Color.OffBlack,
+    paddingRight: moderateScale(20),
   },
 
-  username: {
-    paddingTop: verticalScale(5),
-    fontSize: moderateScale(18),
-  },
-
-  layverPasswordEdit: {
-    width: "100%",
-    height: "55%",
-    backgroundColor: Color.LightGray,
-    borderTopLeftRadius: moderateScale(50),
-    borderTopRightRadius: moderateScale(50),
-    marginTop: verticalScale(20),
-  },
-
-  layoverEditContent: {
-    alignItems: "center",
-    justifyContent: "flex-start",
-    paddingBottom: verticalScale(40),
-  },
-
-  iconsBar: {
+  buttonWrapper: {
     position: "absolute",
-    top: verticalScale(60),
-    width: "95%",
-    justifyContent: "space-between",
-    display: "flex",
-    flexDirection: "row",
+    bottom: verticalScale(20),
+    width: "100%",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: verticalScale(15),
+    paddingHorizontal: "5%",
   },
 
-  buttonWrapperPassword: {
-    gap: verticalScale(10),
-    position: "absolute",
-    bottom: verticalScale(40),
-    paddingTop: verticalScale(25),
-    width: "100%",
-    flexDirection: "row",
+  cancelButton: {
+    width: "90%",
+    height: verticalScale(69),
+    backgroundColor: Color.White,
+    borderRadius: moderateScale(15),
+    borderWidth: moderateScale(4),
+    borderColor: Color.BuzzifyLavender,
     justifyContent: "center",
     alignItems: "center",
   },
 
   cancelButtonText: {
-    fontSize: moderateScale(22),
-    color: Color.Purple,
-    fontWeight: 600,
+    fontSize: moderateScale(28),
+    fontFamily: Font.PassionOneBold,
+    color: Color.BuzzifyLavender,
   },
 
-  cancelButtonPassword: {
-    width: "43%",
-    height: verticalScale(45),
-    backgroundColor: Color.White,
-    borderRadius: moderateScale(10),
-    borderWidth: moderateScale(3),
-    borderColor: Color.Purple,
+  saveButton: {
+    width: "90%",
+    height: verticalScale(69),
+    backgroundColor: Color.BuzzifyLavender,
+    borderRadius: moderateScale(15),
     justifyContent: "center",
     alignItems: "center",
   },
 
   saveButtonText: {
-    fontSize: moderateScale(22),
+    fontSize: moderateScale(28),
+    fontFamily: Font.PassionOneBold,
     color: Color.White,
-    fontWeight: 600,
-  },
-
-  saveButtonPassword: {
-    width: "43%",
-    height: verticalScale(45),
-    backgroundColor: Color.Purple,
-    borderRadius: moderateScale(10),
-    borderColor: Color.White,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });

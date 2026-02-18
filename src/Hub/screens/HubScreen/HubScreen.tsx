@@ -39,6 +39,7 @@ export const HubScreen = () => {
   }, [accessToken, navigation]);
 
   const handleProfilePressed = () => {
+    console.debug("Profile pressed");
     if (accessToken) {
       navigation.navigate(Screen.Profile);
       return;

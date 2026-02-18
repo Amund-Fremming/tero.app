@@ -7,7 +7,7 @@ interface ScreenHeaderProps {
   title: string;
   onBackPressed: () => void;
   onInfoPress: () => void;
-  infoIconOverride?: "?" | "user";
+  infoIconOverride?: "?" | "user" | "log-out";
   showBorder?: boolean;
   backgroundColor?: string;
   miniHeader?: string;
@@ -47,7 +47,7 @@ export const ScreenHeader = ({
         )}
 
         {infoIconOverride != "?" && (
-          <TouchableOpacity onPress={onBackPressed} style={styles.iconWrapper}>
+          <TouchableOpacity onPress={onInfoPress} style={styles.iconWrapper}>
             <Feather name={infoIconOverride} size={moderateScale(35)} />
           </TouchableOpacity>
         )}
