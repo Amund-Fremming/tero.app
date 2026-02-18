@@ -75,10 +75,9 @@ export const GameTypeListScreen = () => {
               <Text style={{ ...styles.cardHeader, color: item.color }}>{item.name}</Text>
             </Pressable>
           ))}
-        <Pressable key={100} style={styles.cardAdd} onPress={() => navigation.navigate(Screen.TipsUs)}>
-          <View style={styles.imagePlaceholder}></View>
-          <Text style={styles.cardHeader}>Ditt spill?</Text>
-          <Text style={styles.cardSubheader}>Send inn forslag til nye spill</Text>
+        <Pressable key={100} style={styles.card} onPress={() => navigation.navigate(Screen.TipsUs)}>
+          <Image source={require("../../assets/images/finger.jpg")} style={styles.cardImage} />
+          <Text style={{ ...styles.cardHeader, color: Color.White }}>Ditt spill?</Text>
         </Pressable>
       </ScrollView>
     </View>

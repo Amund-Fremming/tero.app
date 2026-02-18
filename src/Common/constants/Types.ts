@@ -119,6 +119,7 @@ export enum GameType {
   Roulette = "Roulette",
   Duel = "Duel",
   Imposter = "Imposter",
+  Dice = "Dice",
 }
 
 export interface CreateGameRequest {

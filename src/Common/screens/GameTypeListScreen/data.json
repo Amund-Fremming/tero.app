@@ -1,21 +1,21 @@
 [
   {
-    "name": "Quiz",
-    "icon": "quiz.webp",
-    "screen": "Quiz",
-    "color": "#1B263B"
-  },
-  {
     "name": "Rulett",
     "icon": "roulette.webp",
     "screen": "Roulette",
-    "color": "black"
+    "color": "white"
+  },
+  {
+    "name": "Quiz",
+    "icon": "quiz.webp",
+    "screen": "Quiz",
+    "color": "#befbff"
   },
   {
     "name": "Duel",
     "icon": "duel.webp",
     "screen": "Duel",
-    "color": "#FEECA9"
+    "color": "#befbff"
   },
   {
     "name": "Imposter",
@@ -26,7 +26,7 @@
   {
     "name": "Terning",
     "icon": "dice.webp",
-    "screen": "Home",
+    "screen": "Dice",
     "color": "white"
   }
 ]

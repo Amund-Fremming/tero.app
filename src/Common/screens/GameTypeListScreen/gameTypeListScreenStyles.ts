@@ -51,6 +51,9 @@ export const styles = StyleSheet.create({
     left: moderateScale(15),
     display: "flex",
     paddingBottom: verticalScale(5),
+    textShadowColor: "rgba(0, 0, 0, 0.75)",
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 6,
   },
 
   cardSubheader: {
@@ -62,6 +65,9 @@ export const styles = StyleSheet.create({
     left: moderateScale(15),
     display: "flex",
     paddingBottom: verticalScale(5),
+    textShadowColor: "rgba(0, 0, 0, 0.75)",
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 6,
   },
 
   paragraph: {

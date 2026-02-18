@@ -1,77 +1,91 @@
 import { StyleSheet } from "react-native";
 import { Color } from "../../constants/Color";
 import { horizontalScale, moderateScale, verticalScale } from "../../utils/dimensions";
+import { Font } from "../../constants/Font";
 
 export const styles = StyleSheet.create({
-    container: {
-        paddingLeft: horizontalScale(20),
-        height: "100%",
-        width: "100%",
-        gap: verticalScale(15)
-    },
+  container: {
+    backgroundColor: Color.LightGray,
+    height: "100%",
+    width: "100%",
+    position: "relative",
+  },
 
+  scrollView: {
+    flex: 1,
+    width: "100%",
+  },
 
-    iconWrapper: {
-        backgroundColor: Color.White,
-        borderRadius: moderateScale(10),
-        justifyContent: "center",
-        alignItems: "center",
-        height: verticalScale(40),
-        width: horizontalScale(40)
-    },
+  scrollContent: {
+    alignItems: "center",
+    gap: verticalScale(25),
+    paddingTop: verticalScale(20),
+    paddingBottom: verticalScale(100),
+  },
 
-    header: {
-        fontSize: moderateScale(28),
-        fontWeight: 600,
-        color: Color.Black
-    },
+  subHeader: {
+    fontFamily: Font.SintonyRegular,
+    fontSize: moderateScale(24),
+    color: Color.OffBlack,
+    fontWeight: "600",
+    marginTop: verticalScale(20),
+  },
 
+  inputWrapper: {
+    width: "100%",
+    alignItems: "center",
+  },
 
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Color.White,
+    borderRadius: moderateScale(15),
+    width: "90%",
+    paddingVertical: verticalScale(12),
+    height: verticalScale(65),
+  },
 
-    subHeader: {
-        fontSize: moderateScale(20),
-        color: Color.Black
-    },
+  input: {
+    flex: 1,
+    fontSize: moderateScale(22),
+    color: Color.OffBlack,
+    paddingRight: moderateScale(20),
+  },
 
-    inputWrapper: {
-        gap: verticalScale(4)
-    },
+  multilineContainer: {
+    flexDirection: "row",
+    backgroundColor: Color.White,
+    borderRadius: moderateScale(15),
+    width: "90%",
+    paddingVertical: verticalScale(10),
+    height: verticalScale(300),
+  },
 
-    input: {
-        paddingLeft: verticalScale(4),
-        height: verticalScale(36),
-        fontSize: moderateScale(17),
-        borderWidth: moderateScale(2.5),
-        borderRadius: moderateScale(5),
-        borderColor: Color.Gray,
-        width: "90%",
-    },
+  multiline: {
+    flex: 1,
+    fontSize: moderateScale(20),
+    color: Color.OffBlack,
+    paddingRight: moderateScale(20),
+    paddingTop: moderateScale(5),
+    maxHeight: verticalScale(280),
+  },
 
-    label: {
-        fontSize: moderateScale(16)
-    },
+  button: {
+    position: "absolute",
+    bottom: verticalScale(40),
+    left: "5%",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "90%",
+    borderRadius: moderateScale(15),
+    height: verticalScale(69),
+    backgroundColor: Color.HomeRed,
+  },
 
-    multiline: {
-        fontSize: moderateScale(17),
-        borderRadius: moderateScale(5),
-        height: verticalScale(300),
-        width: "90%",
-        borderWidth: moderateScale(2.5),
-        borderColor: Color.Gray,
-    },
-
-    button: {
-        justifyContent: "center",
-        alignItems: "center",
-        width: "90%",
-        height: verticalScale(50),
-        borderRadius: moderateScale(10),
-        backgroundColor: Color.Purple
-    },
-
-    buttonText: {
-        fontSize: moderateScale(22),
-        color: Color.White,
-        fontWeight: 700
-    }
+  buttonText: {
+    color: Color.White,
+    fontFamily: Font.PassionOneBold,
+    fontSize: moderateScale(35),
+  },
 });

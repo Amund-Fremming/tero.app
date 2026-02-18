@@ -5,6 +5,7 @@ export enum Screen {
   Games = "Games",
   Spin = "Spin",
   Quiz = "Quiz",
+  Dice = "Dice",
   Imposter = "Imposter",
   GameTypeList = "GameTypeList",
   GameList = "GameList",
