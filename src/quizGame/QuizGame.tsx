@@ -6,11 +6,11 @@ import { GameEntryMode } from "../common/constants/Types";
 import { useEffect } from "react";
 import { QuizGameScreen } from "./constants/quizTypes";
 import { CreateScreen } from "./screens/CreateScreen/CreateScreen";
-import { useQuizGameProvider } from "./context/QuizGameProvider";
+import { useQuizSessionProvider } from "./context/QuizGameProvider";
 
 export const QuizGame = () => {
   const { gameEntryMode } = useGlobalSessionProvider();
-  const { screen, setScreen } = useQuizGameProvider();
+  const { screen, setScreen } = useQuizSessionProvider();
 
   useEffect(() => {
     const initScreen = getInitialScreen();
@@ -24,7 +24,8 @@ export const QuizGame = () => {
         return QuizGameScreen.Create;
       case GameEntryMode.Host:
         return QuizGameScreen.Game;
-      case GameEntryMode.Participant || GameEntryMode.Member:
+      case GameEntryMode.Participant:
+      case GameEntryMode.Member:
         return QuizGameScreen.Lobby;
       default:
         return QuizGameScreen.Lobby;

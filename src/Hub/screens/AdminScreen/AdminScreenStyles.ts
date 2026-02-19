@@ -11,16 +11,16 @@ export const styles = StyleSheet.create({
     gap: verticalScale(20),
   },
 
+  uri: {
+    color: Color.Burgunde,
+    fontFamily: Font.SintonyBold,
+    fontSize: moderateScale(18),
+  },
+
   leadContainer: {
     paddingTop: verticalScale(50),
     width: "90%",
     justifyContent: "center",
-  },
-
-  header: {
-    color: Colors.Purple,
-    fontSize: moderateScale(40),
-    fontFamily: Font.PassionOneBold,
   },
 
   activeButton: {
@@ -69,13 +69,16 @@ export const styles = StyleSheet.create({
 
   healthCard: {
     borderRadius: moderateScale(10),
-    backgroundColor: Color.White,
-    width: "90%",
-    paddingLeft: horizontalScale(20),
-    paddingRight: horizontalScale(20),
+    width: "85%",
     gap: verticalScale(10),
     paddingVertical: verticalScale(20),
-    position: "relative",
+  },
+
+  separator: {
+    backgroundColor: Color.LightGray,
+    height: verticalScale(5),
+    width: "90%",
+    borderRadius: moderateScale(20),
   },
 
   healthWrapper: {

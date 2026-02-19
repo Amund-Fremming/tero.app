@@ -5,10 +5,17 @@ import { useModalProvider } from "../../context/ModalProvider";
 import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
 import { useAuthProvider } from "../../context/AuthProvider";
 import { useNavigation } from "@react-navigation/native";
-import { useQuizGameProvider } from "@/src/quizGame/context/QuizGameProvider";
+import { useQuizSessionProvider } from "@/src/quizGame/context/QuizGameProvider";
 import styles from "./gameListScreenStyles";
 import { useServiceProvider } from "../../context/ServiceProvider";
-import { GameBase, GameCategory, GameEntryMode, PagedRequest, GameType, PagedResponse } from "../../constants/Types";
+import {
+  GameBase,
+  GameCategory,
+  GameEntryMode,
+  GamePagedRequest,
+  GameType,
+  PagedResponse,
+} from "../../constants/Types";
 import Screen from "../../constants/Screen";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import Color from "../../constants/Color";
@@ -34,18 +41,20 @@ const CATEGORY_ICONS: Record<GameCategory, any> = {
 export const GameListScreen = () => {
   const navigation: any = useNavigation();
 
-  const { setQuizSession } = useQuizGameProvider();
+  const { setQuizSession } = useQuizSessionProvider();
   const { setGameEntryMode } = useGlobalSessionProvider();
   const { displayErrorModal, displayActionModal } = useModalProvider();
   const { pseudoId, accessToken, triggerLogin } = useAuthProvider();
-  const { gameType, setGameKey, setHubAddress, setIsHost } = useGlobalSessionProvider();
+  const { gameType, setGameKey, setHubAddress, setIsHost, setIsDraft } = useGlobalSessionProvider();
   const { gameService } = useServiceProvider();
 
-  const [hasPrev, setHasPrev] = useState<boolean>(false);
-  const [hasNext, setHasNext] = useState<boolean>(false);
-  const [pageNum, setPageNum] = useState<number>(0);
+  const [pagedResponse, setPagedResponse] = useState<PagedResponse<GameBase>>({
+    items: [],
+    has_next: false,
+    has_prev: false,
+    page_num: 1,
+  });
   const [category, setCategory] = useState<GameCategory | null>(null);
-  const [games, setGames] = useState<GameBase[]>([]);
   const [headerBg, setHeaderBg] = useState<string>("white");
   const scrollRef = useRef<ScrollView>(null);
 
@@ -74,33 +83,24 @@ export const GameListScreen = () => {
   };
 
   const handleNextPage = async () => {
-    if (!hasNext) {
+    if (!pagedResponse.has_next) {
       return;
     }
 
-    const page = pageNum + 1;
-    setPageNum(page);
-    setHasPrev(true);
-    await getPage(page);
+    await getPage(pagedResponse.page_num + 1);
     scrollRef.current?.scrollTo({ y: 0, animated: false });
   };
 
   const handlePrevPage = async () => {
-    if (pageNum == 0) {
+    if (!pagedResponse.has_prev) {
       return;
     }
 
-    if (pageNum == 1) {
-      setHasPrev(false);
-    }
-
-    const page = pageNum - 1;
-    setPageNum(page);
-    await getPage(page);
+    await getPage(pagedResponse.page_num - 1);
     scrollRef.current?.scrollTo({ y: 0, animated: false });
   };
 
-  const createPageQuery = (pageNum: number): PagedRequest => {
+  const createPageQuery = (pageNum: number): GamePagedRequest => {
     return {
       page_num: pageNum,
       game_type: gameType,
@@ -122,11 +122,7 @@ export const GameListScreen = () => {
       return;
     }
 
-    const pagedResponse: PagedResponse<GameBase> = result.value;
-
-    console.log("has next:", pagedResponse.has_next);
-    setGames(pagedResponse.items);
-    setHasNext(pagedResponse.has_next);
+    setPagedResponse(result.value);
   };
 
   const handleSaveGame = async (gameId: string) => {
@@ -158,6 +154,7 @@ export const GameListScreen = () => {
 
     switch (gameType) {
       case GameType.Quiz:
+        setGameEntryMode(GameEntryMode.Host);
         const qResult = await gameService().initiateStaticGame<QuizSession>(gameType, gameId, pseudoId);
         if (qResult.isError()) {
           displayErrorModal("Klarte ikke hente spillet, prøv igjen senere");
@@ -165,25 +162,37 @@ export const GameListScreen = () => {
         }
 
         setQuizSession(qResult.value);
-        setGameEntryMode(GameEntryMode.Host);
         navigation.navigate(Screen.Quiz);
         break;
       case GameType.Roulette:
+        setIsHost(true);
+        setGameEntryMode(GameEntryMode.Host);
+
         const rResult = await gameService().initiateSessionGame(pseudoId, gameType, gameId);
         if (rResult.isError()) {
           displayErrorModal("Klarte ikke hente spillet, prøv igjen senere");
           return;
         }
 
-        setIsHost(true);
         let roulette = rResult.value;
+        setIsDraft(roulette.is_draft);
         setGameKey(roulette.key);
         setHubAddress(roulette.hub_address);
-        setGameEntryMode(GameEntryMode.Host);
         navigation.navigate(Screen.Spin);
         break;
       case GameType.Duel:
-        // TODO HANDLE
+        setIsHost(true);
+        setGameEntryMode(GameEntryMode.Host);
+        const dResult = await gameService().initiateSessionGame(pseudoId, gameType, gameId);
+        if (dResult.isError()) {
+          displayErrorModal("Klarte ikke hente spillet, prøv igjen senere");
+          return;
+        }
+
+        let duel = dResult.value;
+        setGameKey(duel.key);
+        setHubAddress(duel.hub_address);
+        navigation.navigate(Screen.Spin);
         break;
       default:
         console.error("Oh yes this is bad. Game had unsupported type");
@@ -204,9 +213,11 @@ export const GameListScreen = () => {
           backgroundColor={headerBg}
         />
 
-        {games.length === 0 && <Text style={styles.noGames}>Det finnes ingen spill av denne typen enda</Text>}
+        {pagedResponse.items.length === 0 && (
+          <Text style={styles.noGames}>Det finnes ingen spill av denne typen enda</Text>
+        )}
 
-        {games.map((game) => (
+        {pagedResponse.items.map((game) => (
           <>
             <TouchableOpacity
               onPress={() => handleGamePressed(game.id, game.game_type)}
@@ -235,15 +246,15 @@ export const GameListScreen = () => {
         ))}
 
         <View style={styles.pagination}>
-          <Text style={styles.paragraph}>Side {pageNum}</Text>
+          <Text style={styles.paragraph}>Side {pagedResponse.page_num}</Text>
           <View style={styles.navButtons}>
-            {hasPrev && (
-              <Pressable style={styles.button} onPress={handlePrevPage}>
+            {pagedResponse.has_prev && (
+              <Pressable style={pagedResponse.has_next ? styles.button : styles.buttonSingle} onPress={handlePrevPage}>
                 <Text style={styles.buttonLabel}>Forrige</Text>
               </Pressable>
             )}
-            {hasNext && (
-              <Pressable style={styles.button} onPress={handleNextPage}>
+            {pagedResponse.has_next && (
+              <Pressable style={pagedResponse.has_prev ? styles.button : styles.buttonSingle} onPress={handleNextPage}>
                 <Text style={styles.buttonLabel}>Neste</Text>
               </Pressable>
             )}

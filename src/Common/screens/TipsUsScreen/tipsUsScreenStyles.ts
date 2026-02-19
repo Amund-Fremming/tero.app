@@ -71,6 +71,15 @@ export const styles = StyleSheet.create({
     maxHeight: verticalScale(280),
   },
 
+  charCounter: {
+    fontFamily: Font.SintonyRegular,
+    fontSize: moderateScale(16),
+    color: Color.DarkerGray,
+    alignSelf: "flex-end",
+    marginRight: "5%",
+    marginTop: verticalScale(5),
+  },
+
   button: {
     position: "absolute",
     bottom: verticalScale(40),

@@ -2,84 +2,138 @@ import Color from "@/src/common/constants/Color";
 import { horizontalScale, moderateScale, verticalScale } from "@/src/common/utils/dimensions";
 import { StyleSheet } from "react-native";
 import { Font } from "../../../common/constants/Font";
-import { handleUrlParams } from "expo-router/build/fork/getStateFromPath-forks";
 
 export const styles = StyleSheet.create({
-  card: {
-    height: verticalScale(110),
-    width: "90%",
+  container: {
+    flex: 1,
     backgroundColor: Color.White,
-    justifyContent: "center",
+  },
+  gameTypeScroll: {
+    width: "100%",
+    backgroundColor: Color.White,
+    paddingVertical: verticalScale(10),
+  },
+  gameTypeScrollContent: {
+    paddingHorizontal: moderateScale(15),
+    gap: moderateScale(10),
+  },
+  gameTypeButton: {
+    flexDirection: "row",
     alignItems: "center",
-    borderRadius: moderateScale(10),
+    paddingHorizontal: moderateScale(15),
+    paddingVertical: verticalScale(8),
+    borderRadius: moderateScale(20),
+    borderWidth: 2,
+    borderColor: Color.Gray,
+    backgroundColor: Color.White,
   },
-
-  header: {
-    color: Color.Purple,
-    fontFamily: Font.PassionOneBold,
-    fontSize: moderateScale(50),
+  gameTypeButtonActive: {
+    backgroundColor: Color.BuzzifyLavender,
+    borderColor: Color.BuzzifyLavender,
   },
-
-  topWrapper: {
+  gameTypeText: {
+    fontFamily: Font.PassionOneRegular,
+    fontSize: moderateScale(18),
+    color: Color.Gray,
+  },
+  gameTypeTextActive: {
+    color: Color.White,
+  },
+  card: {
+    width: "90%",
+    alignSelf: "center",
+    paddingVertical: verticalScale(15),
+    flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: verticalScale(50),
-    width: "90%",
-    display: "flex",
-    flexDirection: "row",
   },
-
   innerCard: {
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    height: verticalScale(90),
-    width: "90%",
     flexDirection: "row",
-  },
-
-  iconCardInner: {
-    height: verticalScale(81),
-    width: horizontalScale(56),
-    borderRadius: moderateScale(8),
-    backgroundColor: Color.Purple,
-  },
-
-  iconCardOuter: {
-    backgroundColor: Color.Black,
-    height: verticalScale(90),
-    width: horizontalScale(65),
-    borderRadius: moderateScale(8),
-    justifyContent: "center",
     alignItems: "center",
+    gap: moderateScale(15),
+    flex: 1,
   },
-
-  iconCardText: {
-    position: "absolute",
-    left: verticalScale(6),
-    bottom: verticalScale(2),
-    color: Color.White,
-    fontFamily: Font.PassionOneRegular,
-    fontSize: moderateScale(20),
-  },
-
   textWrapper: {
-    paddingLeft: horizontalScale(20),
-    paddingRight: horizontalScale(40),
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    flex: 1,
   },
-
-  cardHeader: {
-    fontFamily: Font.PassionOneRegular,
-    fontSize: moderateScale(22),
-  },
-
-  cardParagraph: {
+  cardCategory: {
     fontFamily: Font.SintonyRegular,
     fontSize: moderateScale(14),
+    color: Color.Gray,
   },
-
-  icon: {
-    position: "absolute",
-    right: horizontalScale(10),
-    top: verticalScale(10),
+  cardHeader: {
+    fontFamily: Font.PassionOneRegular,
+    fontSize: moderateScale(24),
+    color: Color.BuzzifyLavender,
+    letterSpacing: 1,
+  },
+  cardDescription: {
+    fontFamily: Font.SintonyRegular,
+    fontSize: moderateScale(14),
+    color: Color.Gray,
+  },
+  saveIcon: {
+    padding: moderateScale(8),
+  },
+  separator: {
+    width: "90%",
+    height: verticalScale(5),
+    backgroundColor: Color.LightGray,
+    alignSelf: "center",
+    marginVertical: verticalScale(10),
+    borderRadius: moderateScale(20),
+  },
+  noGames: {
+    fontFamily: Font.PassionOneRegular,
+    fontSize: moderateScale(20),
+    color: Color.Gray,
+    textAlign: "center",
+    marginTop: verticalScale(40),
+  },
+  pagination: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: verticalScale(20),
+  },
+  paragraph: {
+    color: Color.OffBlack,
+    fontSize: moderateScale(20),
+    fontFamily: Font.SintonyBold,
+    paddingVertical: verticalScale(10),
+  },
+  navButtons: {
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    width: "90%",
+    gap: horizontalScale(15),
+    paddingTop: verticalScale(15),
+  },
+  button: {
+    backgroundColor: Color.BuzzifyLavender,
+    flex: 1,
+    maxWidth: horizontalScale(160),
+    height: verticalScale(55),
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: moderateScale(12),
+  },
+  buttonSingle: {
+    backgroundColor: Color.BuzzifyLavender,
+    width: "60%",
+    height: verticalScale(55),
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: moderateScale(12),
+  },
+  buttonLabel: {
+    color: Color.White,
+    fontSize: moderateScale(28),
+    fontFamily: Font.PassionOneRegular,
+    fontWeight: "600",
   },
 });

@@ -25,8 +25,8 @@ export const ActionModal = ({ message, onLeftClick, onRightClick }: ActionModalP
           <Pressable onPress={handleLeftPressed} style={styles.button}>
             <Text style={styles.buttonText}>Ja</Text>
           </Pressable>
-          <Pressable onPress={handleRightPressed} style={styles.button}>
-            <Text style={styles.buttonText}>Nei</Text>
+          <Pressable onPress={handleRightPressed} style={styles.buttonInverted}>
+            <Text style={styles.buttonInvertedText}>Nei</Text>
           </Pressable>
         </View>
       </View>

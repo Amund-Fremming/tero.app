@@ -9,6 +9,7 @@ import Color from "@/src/common/constants/Color";
 import { useModalProvider } from "@/src/common/context/ModalProvider";
 import { ActivityStats, ClientPopup, LogCategoryCount, SystemHealth } from "@/src/common/constants/Types";
 import Screen from "@/src/common/constants/Screen";
+import ScreenHeader from "@/src/common/components/ScreenHeader/ScreenHeader";
 
 export const AdminScreen = () => {
   const navigation: any = useNavigation();
@@ -113,13 +114,17 @@ export const AdminScreen = () => {
     navigation.navigate(Screen.Logs);
   };
 
+  const handleInfoPressed = () => {
+    //
+  };
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
       scrollEnabled={true}
       style={{
         width: "100%",
-        backgroundColor: Color.LightGray,
+        backgroundColor: Color.White,
         height: screenHeight(),
       }}
       contentContainerStyle={{
@@ -128,13 +133,16 @@ export const AdminScreen = () => {
         paddingBottom: verticalScale(200),
       }}
     >
-      <View style={styles.leadContainer}>
-        <Pressable onPress={() => navigation.goBack()}>
-          <Text style={styles.header}>Admin</Text>
-        </Pressable>
-      </View>
+      <ScreenHeader
+        title="Admin"
+        onInfoPress={handleInfoPressed}
+        onBackPressed={() => navigation.goBack()}
+        backgroundColor={Color.LightGray}
+      />
 
-      <Text>Redirect uri: {redirectUri}</Text>
+      <Text style={styles.uri}>Redirect uri: {redirectUri}</Text>
+
+      <View style={styles.separator} />
 
       <Pressable onPress={handleErrorLogCardClick} style={styles.healthCard}>
         <View style={styles.healthWrapper}>
@@ -151,6 +159,8 @@ export const AdminScreen = () => {
         </View>
       </Pressable>
 
+      <View style={styles.separator} />
+
       <View style={styles.healthCard}>
         <View style={styles.healthWrapper}>
           <Text style={styles.healthText}>Platform</Text>
@@ -165,6 +175,9 @@ export const AdminScreen = () => {
           <Text style={styles.healthText}>{systemHealth.session ? "✅" : "❌"}</Text>
         </View>
       </View>
+
+      <View style={styles.separator} />
+
       {!stats && (
         // TODO - load again button
         <View style={styles.healthCard}>
@@ -188,6 +201,9 @@ export const AdminScreen = () => {
           </View>
         </View>
       )}
+
+      <View style={styles.separator} />
+
       {stats && (
         <View style={styles.healthCard}>
           <Text>Brukere</Text>
@@ -209,6 +225,8 @@ export const AdminScreen = () => {
           </View>
         </View>
       )}
+
+      <View style={styles.separator} />
 
       {!popup && (
         // TODO - load again button

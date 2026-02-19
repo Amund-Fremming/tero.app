@@ -6,7 +6,7 @@ import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProv
 import { useServiceProvider } from "@/src/common/context/ServiceProvider";
 import { useNavigation } from "expo-router";
 import { QuizGameScreen as QuizSessionScreen } from "../../constants/quizTypes";
-import { useQuizGameProvider } from "../../context/QuizGameProvider";
+import { useQuizSessionProvider } from "../../context/QuizGameProvider";
 import Color from "@/src/common/constants/Color";
 import SimpleInitScreen from "@/src/common/screens/SimpleInitScreen/SimpleInitScreen";
 
@@ -16,7 +16,7 @@ export const CreateScreen = () => {
   const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { gameService } = useServiceProvider();
   const { setGameKey, setGameEntryMode, setHubAddress, isHost, setIsHost } = useGlobalSessionProvider();
-  const { setScreen } = useQuizGameProvider();
+  const { setScreen } = useQuizSessionProvider();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [createRequest, setCreateRequest] = useState<CreateGameRequest>({

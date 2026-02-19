@@ -13,10 +13,10 @@ export const styles = StyleSheet.create({
   },
 
   paragraph: {
-    color: Color.Black,
-    fontSize: moderateScale(16),
-    fontFamily: Font.SintonyRegular,
-    paddingVertical: verticalScale(15),
+    color: Color.OffBlack,
+    fontSize: moderateScale(20),
+    fontFamily: Font.SintonyBold,
+    paddingVertical: verticalScale(10),
   },
 
   navButtons: {
@@ -25,22 +25,33 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     width: "90%",
     gap: horizontalScale(15),
-    paddingTop: verticalScale(20),
+    paddingTop: verticalScale(15),
   },
 
   buttonLabel: {
     color: Color.White,
-    fontSize: moderateScale(18),
+    fontSize: moderateScale(28),
     fontFamily: Font.PassionOneRegular,
+    fontWeight: "600",
   },
 
   button: {
-    backgroundColor: Color.Purple,
-    width: horizontalScale(120),
-    height: verticalScale(45),
+    backgroundColor: Color.BuzzifyLavender,
+    flex: 1,
+    maxWidth: horizontalScale(160),
+    height: verticalScale(55),
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: moderateScale(8),
+    borderRadius: moderateScale(12),
+  },
+
+  buttonSingle: {
+    backgroundColor: Color.BuzzifyLavender,
+    width: "60%",
+    height: verticalScale(55),
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: moderateScale(12),
   },
 
   card: {

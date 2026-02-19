@@ -18,7 +18,8 @@ import { useRef } from "react";
 
 export const SpinGame = () => {
   const navigation: any = useNavigation();
-  const { gameEntryMode, hubAddress, gameKey, setIsHost, clearGlobalSessionValues } = useGlobalSessionProvider();
+  const { gameEntryMode, hubAddress, gameKey, setIsHost, clearGlobalSessionValues, isDraft } =
+    useGlobalSessionProvider();
   const { screen, setScreen, setRoundText, setSelectedBatch, setGameState, setIterations, setPlayers } =
     useSpinSessionProvider();
   const { connect, setListener, disconnect, invokeFunction } = useHubConnectionProvider();
@@ -37,14 +38,14 @@ export const SpinGame = () => {
       return;
     }
 
-    initializeHub(hubAddress, gameKey);
+    initializeHub(hubAddress, gameKey, initScreen);
 
     return () => {
       disconnect();
     };
   }, []);
 
-  const initializeHub = async (address: string, key: string) => {
+  const initializeHub = async (address: string, key: string, initialScreen: SpinSessionScreen) => {
     const result = await connect(address);
     if (result.isError()) {
       console.error(result.error);
@@ -62,7 +63,7 @@ export const SpinGame = () => {
     }
 
     setHubReady(true);
-    setScreen(SpinSessionScreen.ActiveLobby);
+    setScreen(initialScreen);
   };
 
   const setupListeners = async () => {
@@ -108,13 +109,17 @@ export const SpinGame = () => {
   };
 
   const getInitialScreen = (): SpinSessionScreen => {
+    if (!isDraft) {
+      return SpinSessionScreen.PassiveLobby;
+    }
+
     switch (gameEntryMode) {
       case GameEntryMode.Creator:
         return SpinSessionScreen.Create;
       case GameEntryMode.Host:
-        return SpinSessionScreen.Game;
-      case GameEntryMode.Participant || GameEntryMode.Member:
-        // TODO: Initially render PassiveLobbyScreen, then redirect to ActiveLobbyScreen
+        return SpinSessionScreen.PassiveLobby;
+      case GameEntryMode.Participant:
+      case GameEntryMode.Member:
         return SpinSessionScreen.ActiveLobby;
       default:
         return SpinSessionScreen.ActiveLobby;
@@ -123,7 +128,9 @@ export const SpinGame = () => {
 
   switch (screen) {
     case SpinSessionScreen.Create:
-      return <CreateScreen onGameCreated={(address, key) => initializeHub(address, key)} />;
+      return (
+        <CreateScreen onGameCreated={(address, key) => initializeHub(address, key, SpinSessionScreen.PassiveLobby)} />
+      );
     case SpinSessionScreen.Game:
       return hubReady ? <GameScreen /> : <LoadingView />;
     case SpinSessionScreen.ActiveLobby:

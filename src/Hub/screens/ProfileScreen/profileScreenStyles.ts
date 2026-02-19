@@ -163,6 +163,7 @@ export const styles = StyleSheet.create({
     marginTop: verticalScale(20),
     justifyContent: "flex-start",
     alignItems: "center",
+    paddingBottom: verticalScale(40),
   },
 
   iconsBar: {

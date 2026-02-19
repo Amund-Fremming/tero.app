@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useHubConnectionProvider } from "@/src/common/context/HubConnectionProvider";
 import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
 import { HubChannel } from "@/src/common/constants/HubChannel";
-import { useQuizGameProvider } from "../../context/QuizGameProvider";
+import { useQuizSessionProvider } from "../../context/QuizGameProvider";
 import { QuizGameScreen, QuizSession } from "../../constants/quizTypes";
 import { useNavigation } from "expo-router";
 import SimpleInitScreen from "@/src/common/screens/SimpleInitScreen/SimpleInitScreen";
@@ -17,10 +17,10 @@ export const LobbyScreen = () => {
   const [iterations, setIterations] = useState<number>(0);
   const [isAddingQuestion, setIsAddingQuestion] = useState<boolean>(false);
 
-  const { gameKey, hubAddress, isHost } = useGlobalSessionProvider();
+  const { gameKey, hubAddress } = useGlobalSessionProvider();
   const { connect, disconnect, setListener, invokeFunction } = useHubConnectionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
-  const { setQuizSession, setScreen } = useQuizGameProvider();
+  const { setQuizSession, setScreen } = useQuizSessionProvider();
 
   useEffect(() => {
     if (gameKey) {

@@ -13,6 +13,8 @@ interface IGlobalSessionContext {
   isHost: boolean;
   setIsHost: React.Dispatch<React.SetStateAction<boolean>>;
   clearGlobalSessionValues: () => void;
+  isDraft: boolean;
+  setIsDraft: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const defaultContextValue: IGlobalSessionContext = {
@@ -26,6 +28,8 @@ const defaultContextValue: IGlobalSessionContext = {
   setHubAddress: () => {},
   isHost: false,
   setIsHost: () => {},
+  isDraft: false,
+  setIsDraft: () => {},
   clearGlobalSessionValues: () => {},
 };
 
@@ -43,6 +47,7 @@ export const GlobalGameProvider = ({ children }: GlobalSessionProviderProps) => 
   const [gameKey, setGameKey] = useState<string>("");
   const [hubAddress, setHubAddress] = useState<string>("");
   const [isHost, setIsHost] = useState<boolean>(false);
+  const [isDraft, setIsDraft] = useState<boolean>(false);
 
   useEffect(() => {}, [isHost]);
 
@@ -66,6 +71,8 @@ export const GlobalGameProvider = ({ children }: GlobalSessionProviderProps) => 
     setHubAddress,
     isHost,
     setIsHost,
+    isDraft,
+    setIsDraft,
   };
 
   return <GlobalSessionContext.Provider value={value}>{children}</GlobalSessionContext.Provider>;

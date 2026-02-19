@@ -7,7 +7,7 @@ interface ScreenHeaderProps {
   title: string;
   onBackPressed: () => void;
   onInfoPress: () => void;
-  infoIconOverride?: "?" | "user" | "log-out";
+  infoIconOverride?: "?" | "user" | "log-out" | "x";
   showBorder?: boolean;
   backgroundColor?: string;
   miniHeader?: string;

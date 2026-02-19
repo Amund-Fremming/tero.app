@@ -7,12 +7,21 @@ import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProv
 import { useSpinSessionProvider } from "../../context/SpinGameProvider";
 import { resetToHomeScreen } from "@/src/common/utils/navigation";
 import { useHubConnectionProvider } from "@/src/common/context/HubConnectionProvider";
+import { useAuthProvider } from "@/src/common/context/AuthProvider";
+import { useModalProvider } from "@/src/common/context/ModalProvider";
+import { GameType } from "@/src/common/constants/Types";
+import { SpinSessionScreen } from "../../constants/SpinTypes";
+import { useState } from "react";
 
 export const PassiveLobbyScreen = () => {
   const navigation: any = useNavigation();
-  const { gameKey, clearGlobalSessionValues } = useGlobalSessionProvider();
-  const { themeColor, clearSpinSessionValues } = useSpinSessionProvider();
-  const { disconnect } = useHubConnectionProvider();
+  const { gameKey, clearGlobalSessionValues, isHost, gameType } = useGlobalSessionProvider();
+  const { themeColor, clearSpinSessionValues, players, iterations, setScreen } = useSpinSessionProvider();
+  const { disconnect, invokeFunction } = useHubConnectionProvider();
+  const { pseudoId } = useAuthProvider();
+  const { displayErrorModal, displayInfoModal } = useModalProvider();
+
+  const [startGameTriggered, setStartGameTriggered] = useState(false);
 
   const handleBackPressed = async () => {
     await disconnect();
@@ -23,6 +32,64 @@ export const PassiveLobbyScreen = () => {
 
   const handleInfoPressed = () => {
     console.log("Info pressed");
+  };
+
+  const handleStartGame = async () => {
+    if (startGameTriggered) {
+      return;
+    }
+
+    setStartGameTriggered(true);
+    if (!isHost) {
+      console.error("Only hosts can start a game");
+      setStartGameTriggered(false);
+      return;
+    }
+
+    if (!pseudoId) {
+      console.error("No pseudo id present");
+      displayErrorModal("En feil har skjedd");
+      setStartGameTriggered(false);
+      return;
+    }
+
+    if (!gameKey || gameKey == "") {
+      displayErrorModal("En feil har skjedd, fosøk å opprette spillet på nytt");
+      setStartGameTriggered(false);
+      return;
+    }
+
+    let minPlayers = gameType == GameType.Roulette ? 2 : 3;
+
+    if (players < minPlayers) {
+      displayInfoModal(`Minimum ${minPlayers} spillere for å starte, du har: ${players}`);
+      setStartGameTriggered(false);
+      return;
+    }
+
+    if (iterations < 1) {
+      // TODO set to 10!
+      displayInfoModal("Minimum 10 runder for å starte spillet");
+      setStartGameTriggered(false);
+      return;
+    }
+
+    const startResult = await invokeFunction("StartGame", gameKey);
+    if (startResult.isError()) {
+      console.log(startResult.error);
+      displayErrorModal("En feil skjedde når spillet skulle starte");
+      setStartGameTriggered(false);
+      return;
+    }
+
+    const gameReady = startResult.value;
+    if (!gameReady) {
+      console.log("Game not ready");
+      setStartGameTriggered(false);
+      return;
+    }
+
+    setScreen(SpinSessionScreen.Game);
   };
 
   return (
@@ -40,7 +107,18 @@ export const PassiveLobbyScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.centerText}>venter på at sjefen starter spillet</Text>
+      {!isHost && <Text style={styles.centerText}>venter på at sjefen starter spillet</Text>}
+
+      {isHost && (
+        <>
+          <Text style={styles.players}>
+            {players} {players > 1 ? "Spillere" : "Spiller"}
+          </Text>
+          <TouchableOpacity onPress={handleStartGame} style={styles.button}>
+            <Text style={styles.buttonText}>Start spill</Text>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 };

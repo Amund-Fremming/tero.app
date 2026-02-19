@@ -22,6 +22,7 @@ import { ErrorScreen } from "./screens/ErrorScreen/ErrorScreen";
 import { ProblemScreen } from "./screens/ProblemScreen/ProblemScreen";
 import ImposterGame from "../imposter/ImposterGame";
 import DiceGame from "../diceGame/DiceGame";
+import { InfoScreen } from "../common/screens/InfoScreen/InfoScreen";
 
 const Stack = createStackNavigator();
 
@@ -53,6 +54,7 @@ export const Hub = () => {
       <Stack.Screen name={Screen.TipsUs} component={TipsUsScreen} />
       <Stack.Screen name={Screen.Error} component={ErrorScreen} />
       <Stack.Screen name={Screen.Problem} component={ProblemScreen} />
+      <Stack.Screen name={Screen.Info} component={InfoScreen} />
     </Stack.Navigator>
   );
 };

@@ -1,7 +1,7 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import { QuizGameScreen as QuizSessionScreen, QuizSession } from "../constants/quizTypes";
 
-interface IQuizGameContext {
+interface IQuizSessionContext {
   clearQuizGameValues: () => void;
   quizSession: QuizSession | undefined;
   setQuizSession: React.Dispatch<React.SetStateAction<QuizSession | undefined>>;
@@ -9,7 +9,7 @@ interface IQuizGameContext {
   setScreen: React.Dispatch<React.SetStateAction<QuizSessionScreen>>;
 }
 
-const defaultContextValue: IQuizGameContext = {
+const defaultContextValue: IQuizSessionContext = {
   clearQuizGameValues: () => {},
   quizSession: undefined,
   setQuizSession: () => {},
@@ -17,15 +17,15 @@ const defaultContextValue: IQuizGameContext = {
   setScreen: () => {},
 };
 
-const QuizGameContext = createContext<IQuizGameContext>(defaultContextValue);
+const QuizSessionContext = createContext<IQuizSessionContext>(defaultContextValue);
 
-export const useQuizGameProvider = () => useContext(QuizGameContext);
+export const useQuizSessionProvider = () => useContext(QuizSessionContext);
 
-interface QuizGameProviderProps {
+interface QuizSessionProviderProps {
   children: ReactNode;
 }
 
-export const QuizSessionProvider = ({ children }: QuizGameProviderProps) => {
+export const QuizSessionProvider = ({ children }: QuizSessionProviderProps) => {
   const [quizSession, setQuizSession] = useState<QuizSession | undefined>(undefined);
   const [screen, setScreen] = useState<QuizSessionScreen>(QuizSessionScreen.Create);
 
@@ -41,7 +41,7 @@ export const QuizSessionProvider = ({ children }: QuizGameProviderProps) => {
     setScreen,
   };
 
-  return <QuizGameContext.Provider value={value}>{children}</QuizGameContext.Provider>;
+  return <QuizSessionContext.Provider value={value}>{children}</QuizSessionContext.Provider>;
 };
 
 export default QuizSessionProvider;

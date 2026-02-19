@@ -20,7 +20,8 @@ export const JoinScreen = () => {
   const navigation: any = useNavigation();
   const { pseudoId } = useAuthProvider();
   const { displayInfoModal } = useModalProvider();
-  const { setGameEntryMode, setGameKey, setHubAddress, setGameType, setIsHost, isHost } = useGlobalSessionProvider();
+  const { setGameEntryMode, setGameKey, setHubAddress, setGameType, setIsHost, setIsDraft } =
+    useGlobalSessionProvider();
   const { gameService } = useServiceProvider();
 
   const [userInput, setUserInput] = useState<string>("");
@@ -58,11 +59,12 @@ export const JoinScreen = () => {
     console.debug(response);
     setGameEntryMode(GameEntryMode.Participant);
 
+    console.debug(response);
+    setIsDraft(response.is_draft);
     setHubAddress(response.hub_address);
     setGameKey(response.game_key);
     setGameType(response.game_type);
 
-    console.debug("JoinGameScreen, ishost:", isHost);
     if ([GameType.Duel, GameType.Roulette].includes(response.game_type)) {
       navigation.navigate(Screen.Spin);
       return;
@@ -81,7 +83,7 @@ export const JoinScreen = () => {
         title="Bli med"
         onBackPressed={() => navigation.goBack()}
         onInfoPress={handleInfoPressed}
-        backgroundColor={Color.BuzzifyLavender}
+        backgroundColor={Color.HomeRed}
       />
       <View style={styles.cardWrapper}>
         <Image source={require("@/src/common/assets/images/tero.webp")} style={styles.mascot} resizeMode="contain" />

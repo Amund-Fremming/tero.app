@@ -12,6 +12,30 @@ export const styles = StyleSheet.create({
     gap: 10,
   },
 
+  players: {
+    paddingTop: verticalScale(20),
+    fontSize: moderateScale(32),
+    fontFamily: Font.PassionOneRegular,
+    color: Color.White,
+  },
+
+  button: {
+    position: "absolute",
+    bottom: verticalScale(40),
+    justifyContent: "center",
+    alignItems: "center",
+    width: "86%",
+    borderRadius: moderateScale(10),
+    height: verticalScale(69),
+    backgroundColor: Color.Black,
+  },
+
+  buttonText: {
+    color: Color.White,
+    fontFamily: Font.PassionOneBold,
+    fontSize: moderateScale(35),
+  },
+
   headerWrapper: {
     width: "90%",
     flexDirection: "row",

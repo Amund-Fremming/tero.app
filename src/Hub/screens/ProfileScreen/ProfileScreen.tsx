@@ -2,7 +2,7 @@ import { Image, Pressable, Text, View } from "react-native";
 import { styles } from "./profileScreenStyles";
 import { useAuthProvider } from "@/src/common/context/AuthProvider";
 import { useEffect, useState } from "react";
-import { BaseUser, UserRole } from "@/src/common/constants/Types";
+import { UserRole } from "@/src/common/constants/Types";
 import { useServiceProvider } from "@/src/common/context/ServiceProvider";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
@@ -10,6 +10,7 @@ import Color from "@/src/common/constants/Color";
 import Screen from "@/src/common/constants/Screen";
 import { horizontalScale } from "@/src/common/utils/dimensions";
 import ScreenHeader from "@/src/common/components/ScreenHeader/ScreenHeader";
+import VerticalScroll from "@/src/common/wrappers/VerticalScroll";
 
 export const ProfileScreen = () => {
   const navigation: any = useNavigation();
@@ -79,60 +80,90 @@ export const ProfileScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ScreenHeader
-        title="Profil"
-        onBackPressed={() => navigation.goBack()}
-        onInfoPress={handleLogout}
-        infoIconOverride="log-out"
-      />
+      <VerticalScroll>
+        <ScreenHeader
+          title="Profil"
+          onBackPressed={() => navigation.goBack()}
+          onInfoPress={handleLogout}
+          infoIconOverride="log-out"
+        />
 
-      {isAdmin && (
-        <Pressable onPress={() => navigation.navigate(Screen.Admin)} style={styles.adminButton}>
-          <Text style={styles.adminText}>dashboard</Text>
-        </Pressable>
-      )}
+        <View style={styles.loggedIn}>
+          <View style={styles.imageCard}>
+            {isAdmin && <Image source={crown} style={styles.crown} />}
+            <Image source={{ uri: avatar }} style={styles.image} />
+          </View>
+          <Text style={styles.name}>
+            {userData?.given_name} {userData?.family_name}
+          </Text>
+          <Text style={styles.username}>@{userData?.username}</Text>
 
-      <View style={styles.loggedIn}>
-        <View style={styles.imageCard}>
-          {isAdmin && <Image source={crown} style={styles.crown} />}
-          <Image source={{ uri: avatar }} style={styles.image} />
+          <View style={styles.layover}>
+            <Pressable onPress={() => navigation.navigate(Screen.EditProfile)} style={styles.bigButton}>
+              <View style={styles.iconGuard}>
+                <Feather name="edit" size={30} color={Color.Black} />
+              </View>
+              <Text style={styles.buttonText}>Rediger profil</Text>
+              <Feather
+                name="chevron-right"
+                size={35}
+                color={Color.Black}
+                style={{ marginRight: horizontalScale(10) }}
+              />
+            </Pressable>
+            <Pressable onPress={() => navigation.navigate(Screen.ChangePassword)} style={styles.bigButton}>
+              <View style={styles.iconGuard}>
+                <Feather name="lock" size={30} color={Color.Black} />
+              </View>
+              <Text style={styles.buttonText}>Bytt passord</Text>
+              <Feather
+                name="chevron-right"
+                size={35}
+                color={Color.Black}
+                style={{ marginRight: horizontalScale(10) }}
+              />
+            </Pressable>
+            <Pressable onPress={() => navigation.navigate(Screen.TipsUs)} style={styles.bigButton}>
+              <View style={styles.iconGuard}>
+                <Feather name="sun" size={30} color={Color.Black} />
+              </View>
+              <Text style={styles.buttonText}>Tips oss</Text>
+              <Feather
+                name="chevron-right"
+                size={35}
+                color={Color.Black}
+                style={{ marginRight: horizontalScale(10) }}
+              />
+            </Pressable>
+            <Pressable onPress={() => navigation.navigate(Screen.SavedGames)} style={styles.bigButton}>
+              <View style={styles.iconGuard}>
+                <Feather name="play" size={30} color={Color.Black} />
+              </View>
+              <Text style={styles.buttonText}>Dine spill</Text>
+              <Feather
+                name="chevron-right"
+                size={35}
+                color={Color.Black}
+                style={{ marginRight: horizontalScale(10) }}
+              />
+            </Pressable>
+            {isAdmin && (
+              <Pressable onPress={() => navigation.navigate(Screen.Admin)} style={styles.bigButton}>
+                <View style={styles.iconGuard}>
+                  <Feather name="shield" size={30} color={Color.Black} />
+                </View>
+                <Text style={styles.buttonText}>Admin</Text>
+                <Feather
+                  name="chevron-right"
+                  size={35}
+                  color={Color.Black}
+                  style={{ marginRight: horizontalScale(10) }}
+                />
+              </Pressable>
+            )}
+          </View>
         </View>
-        <Text style={styles.name}>
-          {userData?.given_name} {userData?.family_name}
-        </Text>
-        <Text style={styles.username}>@{userData?.username}</Text>
-
-        <View style={styles.layover}>
-          <Pressable onPress={() => navigation.navigate(Screen.EditProfile)} style={styles.bigButton}>
-            <View style={styles.iconGuard}>
-              <Feather name="edit" size={30} color={Color.Black} />
-            </View>
-            <Text style={styles.buttonText}>Rediger profil</Text>
-            <Feather name="chevron-right" size={32} color={Color.Black} style={{ marginRight: horizontalScale(10) }} />
-          </Pressable>
-          <Pressable onPress={() => navigation.navigate(Screen.ChangePassword)} style={styles.bigButton}>
-            <View style={styles.iconGuard}>
-              <Feather name="lock" size={28} color={Color.Black} />
-            </View>
-            <Text style={styles.buttonText}>Bytt passord</Text>
-            <Feather name="chevron-right" size={32} color={Color.Black} style={{ marginRight: horizontalScale(10) }} />
-          </Pressable>
-          <Pressable onPress={() => navigation.navigate(Screen.TipsUs)} style={styles.bigButton}>
-            <View style={styles.iconGuard}>
-              <Feather name="sun" size={28} color={Color.Black} />
-            </View>
-            <Text style={styles.buttonText}>Tips oss</Text>
-            <Feather name="chevron-right" size={32} color={Color.Black} style={{ marginRight: horizontalScale(10) }} />
-          </Pressable>
-          <Pressable onPress={() => navigation.navigate(Screen.SavedGames)} style={styles.bigButton}>
-            <View style={styles.iconGuard}>
-              <Feather name="play" size={28} color={Color.Black} />
-            </View>
-            <Text style={styles.buttonText}>Dine spill</Text>
-            <Feather name="chevron-right" size={32} color={Color.Black} style={{ marginRight: horizontalScale(10) }} />
-          </Pressable>
-        </View>
-      </View>
+      </VerticalScroll>
     </View>
   );
 };

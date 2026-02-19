@@ -3,8 +3,9 @@ import { err, ok, Result } from "../utils/result";
 import { getHeaders } from "./utils";
 import {
   CreateGameRequest,
+  CreateGameTipRequest,
   GameBase,
-  GamePageQuery,
+  GamePagedRequest,
   GameType,
   InteractiveGameResponse,
   JoinGameResponse,
@@ -16,6 +17,18 @@ export class GameService {
 
   constructor(urlBase: string) {
     this.urlBase = urlBase;
+  }
+
+  async createGameTip(request: CreateGameTipRequest): Promise<Result> {
+    try {
+      const response = await axios.post<InteractiveGameResponse>(`${this.urlBase}/tips`, request);
+
+      let result: InteractiveGameResponse = response.data;
+      return ok();
+    } catch (error) {
+      console.error("createInteractiveGame:", error);
+      return err("Klarte ikke opprette spill");
+    }
   }
 
   async createInteractiveGame(
@@ -109,9 +122,24 @@ export class GameService {
     }
   }
 
-  async getSavedGames(token: string, page_num: number): Promise<Result<PagedResponse<GameBase>>> {
+  async getSavedGames(
+    token: string,
+    page_num: number,
+    game_type?: GameType | null,
+  ): Promise<Result<PagedResponse<GameBase>>> {
     try {
-      const response = await axios.get(`${this.urlBase}/games/general/saved?page_num=${page_num}`, {
+      const params: Record<string, string | number> = {};
+      params.page_num = page_num;
+      if (game_type != null) {
+        params.game_type = game_type;
+      }
+
+      const queryString = Object.entries(params)
+        .map(([key, value]) => `${key}=${value}`)
+        .join("&");
+
+      console.debug("URL: ", `${this.urlBase}/games/general/saved?${queryString}`);
+      const response = await axios.get(`${this.urlBase}/games/general/saved?${queryString}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -124,9 +152,15 @@ export class GameService {
     }
   }
 
-  async getGamePage<T>(guest_id: string, request: GamePageQuery): Promise<Result<PagedResponse<T>>> {
+  async getGamePage<T>(guest_id: string, request: GamePagedRequest): Promise<Result<PagedResponse<T>>> {
     try {
-      const response = await axios.post(`${this.urlBase}/games/general/page`, request, {
+      const params: Record<string, string | number> = {};
+      if (request.page_num != null) params.page_num = request.page_num;
+      if (request.game_type != null) params.game_type = request.game_type;
+      if (request.category != null) params.category = request.category;
+
+      const response = await axios.get(`${this.urlBase}/games/general/page`, {
+        params,
         headers: getHeaders(guest_id, null),
       });
 

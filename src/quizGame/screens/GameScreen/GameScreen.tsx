@@ -1,5 +1,5 @@
 import { Pressable, Text, TouchableOpacity, View } from "react-native";
-import { useQuizGameProvider } from "../../context/QuizGameProvider";
+import { useQuizSessionProvider } from "../../context/QuizGameProvider";
 import styles from "./gameScreenStyles";
 import { useEffect, useState } from "react";
 import { useNavigation } from "expo-router";
@@ -12,10 +12,9 @@ import { resetToHomeScreen } from "@/src/common/utils/navigation";
 
 export const GameScreen = () => {
   const navigation: any = useNavigation();
-  const { quizSession } = useQuizGameProvider();
-  const { displayErrorModal } = useModalProvider();
+  const { quizSession } = useQuizSessionProvider();
   const { clearGlobalSessionValues } = useGlobalSessionProvider();
-  const { clearQuizGameValues } = useQuizGameProvider();
+  const { clearQuizGameValues } = useQuizSessionProvider();
 
   const [quiz, setQuiz] = useState<QuizSession | undefined>(quizSession);
 

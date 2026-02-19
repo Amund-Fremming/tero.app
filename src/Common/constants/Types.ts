@@ -122,6 +122,12 @@ export enum GameType {
   Dice = "Dice",
 }
 
+export interface CreateGameTipRequest {
+  header: string;
+  mobile_phone: string;
+  description: string;
+}
+
 export interface CreateGameRequest {
   name: string;
   category: GameCategory;
@@ -137,12 +143,14 @@ export enum GameCategory {
 export interface InteractiveGameResponse {
   key: string;
   hub_address: string;
+  is_draft: boolean;
 }
 
 export interface JoinGameResponse {
   game_key: string;
   hub_address: string;
   game_type: GameType;
+  is_draft: boolean;
 }
 
 export enum GameEntryMode {
@@ -159,14 +167,10 @@ export interface PagedResponse<T> {
   has_prev: boolean;
 }
 
-export interface PagedRequest {
-  page_num: number;
-  game_type: GameType;
+export interface GamePagedRequest {
+  page_num: number | null;
+  game_type: GameType | null;
   category: GameCategory | null;
-}
-
-export interface SavedGamesPageQuery {
-  page_num: number;
 }
 
 export interface GameBase {

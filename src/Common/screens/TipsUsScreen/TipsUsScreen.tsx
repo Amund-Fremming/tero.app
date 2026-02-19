@@ -8,29 +8,70 @@ import Color from "../../constants/Color";
 import ScreenHeader from "../../components/ScreenHeader/ScreenHeader";
 import { moderateScale } from "../../utils/dimensions";
 import { useState } from "react";
+import { useServiceProvider } from "../../context/ServiceProvider";
+import { CreateGameTipRequest } from "../../constants/Types";
 
 export const TipsUsScreen = () => {
   const navigation: any = useNavigation();
-  const { displayInfoModal } = useModalProvider();
-  const [ideaText, setIdeaText] = useState<string>("");
+  const { displayInfoModal, displayErrorModal } = useModalProvider();
+  const { gameService } = useServiceProvider();
 
-  const handleIdeaTextChange = (text: string) => {
-    const wordCount = text
-      .trim()
-      .split(/\s+/)
-      .filter((word) => word.length > 0).length;
+  const [createRequest, setCreateRequest] = useState<CreateGameTipRequest>({
+    header: "",
+    mobile_phone: "",
+    description: "",
+  });
 
-    if (wordCount > 500) {
-      displayInfoModal("Du har nådd maks grensen på 500 ord", "Oops");
+  const handleCreateTip = async () => {
+    // Validate name/header (3-30 chars)
+    if (!createRequest.header || createRequest.header.trim().length === 0) {
+      displayErrorModal("Vennligst fyll inn navn");
       return;
     }
 
-    setIdeaText(text);
-  };
+    if (createRequest.header.trim().length < 3) {
+      displayErrorModal("Navn må være minst 3 tegn");
+      return;
+    }
 
-  const handleSend = () => {
-    console.warn("NOT IMPLEMENTED");
+    if (createRequest.header.length > 30) {
+      displayErrorModal("Navn kan ikke være mer enn 30 tegn");
+      return;
+    }
 
+    // Validate phone number (1-20 chars)
+    if (!createRequest.mobile_phone || createRequest.mobile_phone.trim().length === 0) {
+      displayErrorModal("Vennligst fyll inn mobilnummer");
+      return;
+    }
+
+    if (createRequest.mobile_phone.length > 20) {
+      displayErrorModal("Mobilnummer kan ikke være mer enn 20 tegn");
+      return;
+    }
+
+    // Validate description (8-300 chars)
+    if (!createRequest.description || createRequest.description.trim().length === 0) {
+      displayErrorModal("Vennligst beskriv din ide");
+      return;
+    }
+
+    if (createRequest.description.length < 8) {
+      displayErrorModal("Din ide må være minst 8 tegn");
+      return;
+    }
+
+    if (createRequest.description.length > 300) {
+      displayErrorModal("Din ide kan ikke være mer enn 300 tegn");
+      return;
+    }
+
+    const result = await gameService().createGameTip(createRequest);
+    if (result.isError()) {
+      console.error("Create tip failed: ", result.error);
+      displayErrorModal("Klarte ikke sende inn tips, prøv igjen senere");
+      return;
+    }
     displayInfoModal("Takk for tipset!", "Danke", () => navigation.goBack());
   };
 
@@ -62,7 +103,14 @@ export const TipsUsScreen = () => {
               size={24}
               color={Color.OffBlack}
             />
-            <TextInput style={styles.input} placeholder="Navn" placeholderTextColor={Color.DarkerGray} />
+            <TextInput
+              style={styles.input}
+              placeholder="Navn"
+              maxLength={30}
+              value={createRequest.header}
+              onChangeText={(input) => setCreateRequest((prev) => ({ ...prev, header: input }))}
+              placeholderTextColor={Color.DarkerGray}
+            />
           </View>
         </View>
 
@@ -79,6 +127,9 @@ export const TipsUsScreen = () => {
               placeholder="Mobil"
               placeholderTextColor={Color.DarkerGray}
               keyboardType="phone-pad"
+              maxLength={20}
+              value={createRequest.mobile_phone}
+              onChangeText={(input) => setCreateRequest((prev) => ({ ...prev, mobile_phone: input }))}
             />
           </View>
         </View>
@@ -98,14 +149,16 @@ export const TipsUsScreen = () => {
               multiline={true}
               textAlignVertical="top"
               scrollEnabled={true}
-              value={ideaText}
-              onChangeText={handleIdeaTextChange}
+              maxLength={300}
+              value={createRequest.description}
+              onChangeText={(input) => setCreateRequest((prev) => ({ ...prev, description: input }))}
             />
           </View>
+          <Text style={styles.charCounter}>{createRequest.description.length}/300</Text>
         </View>
       </ScrollView>
 
-      <TouchableOpacity style={styles.button} onPress={handleSend}>
+      <TouchableOpacity style={styles.button} onPress={handleCreateTip}>
         <Text style={styles.buttonText}>Send</Text>
       </TouchableOpacity>
     </View>
