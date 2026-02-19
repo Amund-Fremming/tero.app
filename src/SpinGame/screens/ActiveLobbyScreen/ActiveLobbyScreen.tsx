@@ -91,7 +91,7 @@ export const ActiveLobbyScreen = () => {
       return;
     }
 
-    const startResult = await invokeFunction("StartGame", gameKey);
+    const startResult = await invokeFunction("StartGame", gameKey, true); // isDraft = true
     if (startResult.isError()) {
       console.log(startResult.error);
       displayErrorModal("En feil skjedde når spillet skulle starte");

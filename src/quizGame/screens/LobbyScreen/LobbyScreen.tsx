@@ -109,7 +109,7 @@ export const LobbyScreen = () => {
     setStarted(true);
 
     console.log("🎮 STARTING GAME: Calling StartGame for key:", gameKey);
-    const result = await invokeFunction("StartGame", gameKey);
+    const result = await invokeFunction("StartGame", gameKey, true); // isDraft = true
 
     if (result.isError()) {
       displayErrorModal("Klarte ikke starte spill");

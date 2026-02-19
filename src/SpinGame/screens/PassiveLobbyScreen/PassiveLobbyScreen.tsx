@@ -11,7 +11,7 @@ import { useAuthProvider } from "@/src/common/context/AuthProvider";
 import { useModalProvider } from "@/src/common/context/ModalProvider";
 import { GameType } from "@/src/common/constants/Types";
 import { SpinSessionScreen } from "../../constants/SpinTypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const PassiveLobbyScreen = () => {
   const navigation: any = useNavigation();
@@ -74,7 +74,7 @@ export const PassiveLobbyScreen = () => {
       return;
     }
 
-    const startResult = await invokeFunction("StartGame", gameKey);
+    const startResult = await invokeFunction("StartGame", gameKey, false); // isDraft = false
     if (startResult.isError()) {
       console.log(startResult.error);
       displayErrorModal("En feil skjedde når spillet skulle starte");

@@ -105,7 +105,7 @@ export const ActiveLobbyScreen = () => {
     }
 
     setStarted(true);
-    const result = await invokeFunction("StartGame", gameKey);
+    const result = await invokeFunction("StartGame", gameKey, true); // isDraft = true
 
     if (result.isError()) {
       console.error(result.error);

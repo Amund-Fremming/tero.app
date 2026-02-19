@@ -55,7 +55,7 @@ export const GameScreen = () => {
     }
     console.debug("Game key:", gameKey);
 
-    const result = await invokeFunction("StartGame", gameKey);
+    const result = await invokeFunction("StartGame", gameKey, true); // isDraft = true
     if (result.isError()) {
       console.error(result.error);
       displayErrorModal("Klarte ikke starte spill, prøv igjen senere");
