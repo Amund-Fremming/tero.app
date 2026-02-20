@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import HubConnectionProvider from "@/src/common/context/HubConnectionProvider";
 import GlobalGameProvider from "../src/common/context/GlobalSessionProvider";
 import ModalProvider from "@/src/common/context/ModalProvider";
@@ -6,14 +5,11 @@ import Hub from "@/src/hub/Hub";
 import AuthProvider from "../src/common/context/AuthProvider";
 import ServiceProvider from "@/src/common/context/ServiceProvider";
 import { View, StatusBar, Dimensions } from "react-native";
-import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import QuizSessionProvider from "@/src/quizGame/context/QuizGameProvider";
 import SpinSessionProvider from "@/src/spinGame/context/SpinGameProvider";
 import ImposterSessionProvider from "@/src/imposter/context/ImposterSessionProvider";
 import "@/src/common/utils/logConfig"; // Configure logging
-
-SplashScreen.preventAutoHideAsync();
 
 const { width, height } = Dimensions.get("window");
 
@@ -50,19 +46,9 @@ const FontLoader = ({ children }: { children: React.ReactNode }) => {
     "ArchivoBlack-Regular": require("../src/common/assets/fonts/ArchivoBlack-Regular.ttf"),
   });
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
   if (!fontsLoaded) {
     return null;
   }
 
-  return (
-    <View style={{ width, height, position: "absolute", top: 0, left: 0 }} onLayout={onLayoutRootView}>
-      {children}
-    </View>
-  );
+  return <View style={{ width, height, position: "absolute", top: 0, left: 0 }}>{children}</View>;
 };

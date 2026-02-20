@@ -7,7 +7,6 @@ import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProv
 import { useSpinSessionProvider } from "../../context/SpinGameProvider";
 import { resetToHomeScreen } from "@/src/common/utils/navigation";
 import { useHubConnectionProvider } from "@/src/common/context/HubConnectionProvider";
-import { useAuthProvider } from "@/src/common/context/AuthProvider";
 import { useModalProvider } from "@/src/common/context/ModalProvider";
 import { GameType } from "@/src/common/constants/Types";
 import { SpinSessionScreen } from "../../constants/SpinTypes";
@@ -18,7 +17,6 @@ export const PassiveLobbyScreen = () => {
   const { gameKey, clearGlobalSessionValues, isHost, gameType } = useGlobalSessionProvider();
   const { themeColor, clearSpinSessionValues, players, iterations, setScreen } = useSpinSessionProvider();
   const { disconnect, invokeFunction } = useHubConnectionProvider();
-  const { pseudoId } = useAuthProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
 
   const [startGameTriggered, setStartGameTriggered] = useState(false);
@@ -42,13 +40,6 @@ export const PassiveLobbyScreen = () => {
     setStartGameTriggered(true);
     if (!isHost) {
       console.error("Only hosts can start a game");
-      setStartGameTriggered(false);
-      return;
-    }
-
-    if (!pseudoId) {
-      console.error("No pseudo id present");
-      displayErrorModal("Noe gikk galt.");
       setStartGameTriggered(false);
       return;
     }

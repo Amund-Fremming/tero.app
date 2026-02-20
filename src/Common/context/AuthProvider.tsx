@@ -14,8 +14,9 @@ const REFRESH_TOKEN_KEY = "refresh_token";
 
 interface IAuthContext {
   redirectUri: string;
-  pseudoId: string | null;
-  setPseudoId: React.Dispatch<React.SetStateAction<string | null>>;
+  pseudoId: string;
+  setPseudoId: React.Dispatch<React.SetStateAction<string>>;
+  ensurePseudoId: () => Promise<Result<string>>;
   accessToken: string | null;
   callUpdateUserActivity: () => Promise<void>;
   triggerLogin: () => void;
@@ -32,8 +33,9 @@ interface IAuthContext {
 
 const defaultContextValue: IAuthContext = {
   redirectUri: "[NOT_SET]",
-  pseudoId: null,
+  pseudoId: "",
   setPseudoId: () => {},
+  ensurePseudoId: async () => err("Pseudo id could not be created"),
   accessToken: null,
   callUpdateUserActivity: async () => {},
   triggerLogin: () => {},
@@ -60,7 +62,7 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [redirectUri, setRedirectUri] = useState<string>("[NOT_SET]");
-  const [pseudoId, setPseudoId] = useState<string | null>(null);
+  const [pseudoId, setPseudoId] = useState<string>("");
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [userData, setUserData] = useState<BaseUser | null>(null);
 
@@ -70,18 +72,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     if (pseudoId && pseudoId !== "") {
-      SecureStore.setItem("pseudo_id", pseudoId);
+      SecureStore.setItemAsync("pseudo_id", pseudoId);
     }
   }, [pseudoId]);
 
   useEffect(() => {
-    handleAuth();
+    const initAuth = async () => {
+      await rotateTokens();
+      await ensurePseudoId();
+    };
+
+    initAuth();
     setRedirectUri(Auth0Config.redirectUri);
   }, []);
 
-  const handleAuth = async (): Promise<Result<string>> => {
+  const ensurePseudoId = async (): Promise<Result<string>> => {
     const storedPseudoId = await SecureStore.getItemAsync("pseudo_id");
-    await rotateTokens();
 
     const result = await userService().ensurePseudoId(storedPseudoId);
     if (result.isError()) {
@@ -97,7 +103,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const callUpdateUserActivity = async () => {
-    if (!pseudoId) {
+    if (pseudoId === "") {
       console.error("No pseudo id!");
       navigation.navigate(Screen.Problem);
       return;
@@ -118,7 +124,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       usePKCE: true,
       extraParams: {
         audience: Auth0Config.audience,
-        pseudo_id: pseudoId ?? "unknown",
+          pseudo_id: pseudoId || "unknown",
       },
     },
     Auth0Config.discovery,
@@ -297,6 +303,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     callUpdateUserActivity,
     pseudoId,
     setPseudoId,
+    ensurePseudoId,
     accessToken,
     triggerLogin,
     triggerLogout,

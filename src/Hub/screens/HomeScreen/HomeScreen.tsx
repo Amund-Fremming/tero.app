@@ -5,10 +5,12 @@ import { useGlobalSessionProvider } from "../../../common/context/GlobalSessionP
 import { useEffect, useState } from "react";
 import { useServiceProvider } from "@/src/common/context/ServiceProvider";
 import { useModalProvider } from "@/src/common/context/ModalProvider";
+import { useAuthProvider } from "@/src/common/context/AuthProvider";
 import DiagonalSplit from "../../../common/components/Shapes/DiagonalSplit";
 import ArcWithCircles from "../../../common/components/Shapes/ArcWithCircles";
 import ScatteredCircles from "../../../common/components/Shapes/ScatteredCircles";
 import { GameEntryMode } from "@/src/common/constants/Types";
+import * as SecureStore from "expo-secure-store";
 
 import redFigure from "../../../common/assets/images/red-figure.png";
 import { useNavigation } from "expo-router";
@@ -25,18 +27,65 @@ const subHeaderList = [
 
 export const HomeScreen = () => {
   const navigation: any = useNavigation();
+  const { pseudoId, setPseudoId, ensurePseudoId } = useAuthProvider();
   const { setGameEntryMode } = useGlobalSessionProvider();
   const { commonService, userService } = useServiceProvider();
-  const { displayInfoModal } = useModalProvider();
+  const { displayInfoModal, displayLoadingModal, closeLoadingModal } = useModalProvider();
 
   const [subHeader, setSubheader] = useState<string>("");
   const [popupCloseCount, setPopupCloseCount] = useState<number>(0);
+  const [isPseudoReady, setIsPseudoReady] = useState<boolean>(false);
 
   useEffect(() => {
     setSubHeader();
-    systemHealth();
-    getClientPopup();
+    initializeScreen();
   }, []);
+
+  const initializeScreen = async () => {
+    const success = await ensurePseudoIdReady();
+    if (!success) {
+      return;
+    }
+
+    await systemHealth();
+    await getClientPopup();
+  };
+
+  const ensurePseudoIdReady = async (): Promise<boolean> => {
+    if (pseudoId !== "") {
+      setIsPseudoReady(true);
+      return true;
+    }
+
+    const maxAttempts = 5;
+    const baseDelay = 1000;
+    displayLoadingModal(
+      () => {
+        closeLoadingModal();
+        navigation.navigate(Screen.Problem);
+      },
+      "Trying to reconnect.",
+    );
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      const result = await ensurePseudoId();
+
+      if (!result.isError() && result.value !== "") {
+        setPseudoId(result.value);
+        await SecureStore.setItemAsync("pseudo_id", result.value);
+        closeLoadingModal();
+        setIsPseudoReady(true);
+        return true;
+      }
+
+      const delay = baseDelay * Math.pow(2, attempt);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+
+    closeLoadingModal();
+    navigation.navigate(Screen.Problem);
+    return false;
+  };
 
   const getClientPopup = async () => {
     if (popupCloseCount >= 2) {
@@ -73,6 +122,10 @@ export const HomeScreen = () => {
   };
 
   const handlePress = (gameEntryMode: GameEntryMode, destination: Screen) => {
+    if (!isPseudoReady) {
+      return;
+    }
+
     setGameEntryMode(gameEntryMode);
     navigation.navigate(destination);
   };
@@ -86,6 +139,7 @@ export const HomeScreen = () => {
       <View style={styles.buttonContainer}>
         <Pressable
           style={{ ...styles.buttonBase, ...styles.topLeft }}
+          disabled={!isPseudoReady}
           onPress={() => handlePress(GameEntryMode.Creator, Screen.GameTypeList)}
         >
           <Image style={styles.image} source={redFigure} />
@@ -96,6 +150,7 @@ export const HomeScreen = () => {
         </Pressable>
         <Pressable
           style={{ ...styles.buttonBase, ...styles.topRight }}
+          disabled={!isPseudoReady}
           onPress={() => handlePress(GameEntryMode.Host, Screen.GameTypeList)}
         >
           <DiagonalSplit />
@@ -106,6 +161,7 @@ export const HomeScreen = () => {
         </Pressable>
         <Pressable
           style={{ ...styles.buttonBase, ...styles.bottomLeft }}
+          disabled={!isPseudoReady}
           onPress={() => navigation.navigate(Screen.Hub)}
         >
           <ArcWithCircles />
@@ -116,6 +172,7 @@ export const HomeScreen = () => {
         </Pressable>
         <Pressable
           style={{ ...styles.buttonBase, ...styles.bottomRight }}
+          disabled={!isPseudoReady}
           onPress={() => handlePress(GameEntryMode.Participant, Screen.Join)}
         >
           <ScatteredCircles />

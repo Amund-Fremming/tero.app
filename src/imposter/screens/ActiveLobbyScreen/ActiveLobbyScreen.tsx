@@ -91,12 +91,6 @@ export const ActiveLobbyScreen = () => {
       return;
     }
 
-    if (!pseudoId) {
-      console.error("No pseudo id present");
-      displayErrorModal("Noe gikk galt.");
-      return;
-    }
-
     const minPlayers = gameType == GameType.Roulette ? 2 : 3;
 
     if (players < minPlayers) {

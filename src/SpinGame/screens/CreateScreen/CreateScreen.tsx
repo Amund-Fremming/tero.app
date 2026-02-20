@@ -65,13 +65,6 @@ export const CreateScreen = ({
       return;
     }
 
-    if (!pseudoId) {
-      // TODO - handle
-      console.error("No pseudo id present");
-      displayErrorModal("Mangler bruker. Start appen på nytt.");
-      return;
-    }
-
     setLoading(true);
     const result = await gameService().createInteractiveGame(pseudoId, gameType, { ...createRequest, name: gameName });
 

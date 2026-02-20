@@ -109,12 +109,6 @@ export const GameListScreen = () => {
   };
 
   const getPage = async (pageNum: number) => {
-    if (!pseudoId) {
-      // TODO handle
-      console.error("No user id");
-      return;
-    }
-
     const request = createPageQuery(pageNum);
     const result = await gameService().getGamePage<GameBase>(pseudoId, request);
     if (result.isError()) {
@@ -146,12 +140,6 @@ export const GameListScreen = () => {
   };
 
   const handleGamePressed = async (gameId: string, gameType: GameType) => {
-    if (!pseudoId) {
-      // TODO handle
-      console.error("Pseudo id was not present");
-      return;
-    }
-
     switch (gameType) {
       case GameType.Quiz:
         setGameEntryMode(GameEntryMode.Host);

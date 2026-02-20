@@ -119,12 +119,6 @@ export const SavedGamesScreen = () => {
   };
 
   const handleGamePressed = async (gameId: string, gameType: GameType) => {
-    if (!pseudoId) {
-      // TODO handle
-      console.error("Pseudo id was not present");
-      return;
-    }
-
     switch (gameType) {
       case GameType.Quiz:
         setGameEntryMode(GameEntryMode.Host);

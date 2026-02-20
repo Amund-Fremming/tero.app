@@ -27,11 +27,6 @@ export const ProfileScreen = () => {
   const crown = require("../../../common/assets/images/crown.png");
 
   useEffect(() => {
-    if (!pseudoId) {
-      console.error("No user id");
-      return;
-    }
-
     setAvatar(userService().getProfilePicture(pseudoId, userData?.username));
   }, [userData]);
 
@@ -40,11 +35,6 @@ export const ProfileScreen = () => {
   }, [accessToken]);
 
   const fetchUserData = async () => {
-    if (!pseudoId) {
-      console.error("No user id");
-      return;
-    }
-
     if (!accessToken) {
       console.warn("No access token present");
       return;
@@ -60,7 +50,7 @@ export const ProfileScreen = () => {
     setPseudoId(userData.id);
     setIsAdmin(role === UserRole.Admin);
     setUserData(userData);
-    setAvatar(userService().getProfilePicture(pseudoId, userData.username));
+    setAvatar(userService().getProfilePicture(userData.id, userData.username));
     return;
   };
 
@@ -84,12 +74,6 @@ export const ProfileScreen = () => {
     if (!userData?.email) {
       displayErrorModal("Mangler e-post. Logg inn på nytt.");
       await triggerLogout();
-      return;
-    }
-
-    if (!pseudoId) {
-      // TODO - handle
-      console.error("User missin pseudo id");
       return;
     }
 

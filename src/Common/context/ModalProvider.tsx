@@ -16,7 +16,7 @@ interface IModalContext {
   displayActionModal: (message: string, onLeftCloseAction: () => void, onRightCloseAction: () => void) => void;
   displayErrorModal: (errorMessage: string, onCloseAction?: () => void) => void;
   displayInfoModal: (message: string, header?: string, onCloseAction?: () => void) => void;
-  displayLoadingModal: (onCloseAction: () => void) => void;
+  displayLoadingModal: (onCloseAction: () => void, message?: string) => void;
   closeLoadingModal: () => void;
 }
 
@@ -65,9 +65,10 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
     setMessage(message);
   };
 
-  const displayLoadingModal = (onCloseAction: () => void) => {
+  const displayLoadingModal = (onCloseAction: () => void, message?: string) => {
     setDisplayOption(DisplayOption.Action);
     onCloseActionRef.current = onCloseAction;
+    setMessage(message ?? "Forbindelsen er brutt. Vi prøver å koble deg til på nytt nå");
     setDisplayOption(DisplayOption.Loading);
   };
 
@@ -111,7 +112,7 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
           />
         );
       case DisplayOption.Loading:
-        return <LoadingModal onCloseFunc={onCloseActionRef.current} />;
+        return <LoadingModal onCloseFunc={onCloseActionRef.current} message={message} />;
       case DisplayOption.None:
         return <></>;
     }

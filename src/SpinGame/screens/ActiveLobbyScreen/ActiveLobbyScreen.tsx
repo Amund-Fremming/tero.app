@@ -2,7 +2,6 @@ import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProv
 import { useState } from "react";
 import { useHubConnectionProvider } from "@/src/common/context/HubConnectionProvider";
 import { useModalProvider } from "@/src/common/context/ModalProvider";
-import { useAuthProvider } from "@/src/common/context/AuthProvider";
 import { SpinSessionScreen } from "../../constants/SpinTypes";
 import { useSpinSessionProvider } from "../../context/SpinGameProvider";
 import { useNavigation } from "expo-router";
@@ -12,7 +11,6 @@ import { resetToHomeScreen } from "@/src/common/utils/navigation";
 
 export const ActiveLobbyScreen = () => {
   const navigation: any = useNavigation();
-  const { pseudoId } = useAuthProvider();
   const { invokeFunction, disconnect } = useHubConnectionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { gameKey, gameType, isHost, clearGlobalSessionValues } = useGlobalSessionProvider();
@@ -59,13 +57,6 @@ export const ActiveLobbyScreen = () => {
     setStartGameTriggered(true);
     if (!isHost) {
       console.error("Only hosts can start a game");
-      setStartGameTriggered(false);
-      return;
-    }
-
-    if (!pseudoId) {
-      console.error("No pseudo id present");
-      displayErrorModal("Noe gikk galt.");
       setStartGameTriggered(false);
       return;
     }

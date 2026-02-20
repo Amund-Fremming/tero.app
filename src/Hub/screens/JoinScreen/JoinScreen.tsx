@@ -34,18 +34,12 @@ export const JoinScreen = () => {
   );
 
   const handleJoinGame = async () => {
-    if (!pseudoId) {
-      // TODO -handle
-      console.error("Missing pseudo id");
-      return;
-    }
-
     if (userInput === "") {
       displayInfoModal("Skriv inn spillkode.", "Mangler");
       return;
     }
 
-    const gameKey = userInput.toLocaleLowerCase();
+    const gameKey = userInput.trim().toLocaleLowerCase();
     console.debug("Trying to join:", gameKey);
     const result = await gameService().joinInteractiveGame(pseudoId, gameKey);
     if (result.isError()) {
