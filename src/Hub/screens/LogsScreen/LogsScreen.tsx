@@ -2,19 +2,20 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 import styles from "./logsScreenStyles";
 import { useAuthProvider } from "@/src/common/context/AuthProvider";
 import { useServiceProvider } from "@/src/common/context/ServiceProvider";
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigation } from "expo-router";
-import { screenHeight, verticalScale } from "@/src/common/utils/dimensions";
 import Color from "@/src/common/constants/Color";
 import { useModalProvider } from "@/src/common/context/ModalProvider";
 import { SystemLog, LogCeverity, PagedResponse } from "@/src/common/constants/Types";
 import ScreenHeader from "@/src/common/components/ScreenHeader/ScreenHeader";
+import VerticalScroll from "@/src/common/wrappers/VerticalScroll";
 
 export const LogsScreen = () => {
   const navigation: any = useNavigation();
   const { accessToken } = useAuthProvider();
   const { commonService } = useServiceProvider();
   const { displayErrorModal } = useModalProvider();
+  const scrollRef = useRef<ScrollView>(null);
 
   const [logs, setLogs] = useState<SystemLog[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<LogCeverity | null>(null);
@@ -59,6 +60,7 @@ export const LogsScreen = () => {
     setPageNum(page);
     setHasPrev(true);
     await getLogs(page, selectedCategory);
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
   };
 
   const handlePrevPage = async () => {
@@ -73,6 +75,7 @@ export const LogsScreen = () => {
     const page = pageNum - 1;
     setPageNum(page);
     await getLogs(page, selectedCategory);
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
   };
 
   const getCategoryColor = (category: LogCeverity): string => {
@@ -100,90 +103,85 @@ export const LogsScreen = () => {
   };
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      scrollEnabled={true}
-      style={{
-        width: "100%",
-        backgroundColor: Color.White,
-        height: screenHeight(),
-      }}
-      contentContainerStyle={{
-        alignItems: "center",
-        gap: verticalScale(15),
-        paddingBottom: verticalScale(200),
-      }}
-    >
-      <ScreenHeader title="Logs" onBackPressed={() => navigation.goBack()} backgroundColor={Color.LightGray} />
+    <View style={styles.container}>
+      <VerticalScroll scrollRef={scrollRef}>
+        <ScreenHeader title="Logs" onBackPressed={() => navigation.goBack()} />
 
-      <View style={styles.categoryBar}>
-        <Pressable
-          style={selectedCategory === null ? styles.categoryButtonActive : styles.categoryButton}
-          onPress={() => handleCategorySelect(null)}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.categoryScroll}
+          contentContainerStyle={styles.categoryScrollContent}
         >
-          <Text style={selectedCategory === null ? styles.categoryTextActive : styles.categoryText}>Alle</Text>
-        </Pressable>
-        <Pressable
-          style={selectedCategory === LogCeverity.Info ? styles.categoryButtonActive : styles.categoryButton}
-          onPress={() => handleCategorySelect(LogCeverity.Info)}
-        >
-          <Text style={selectedCategory === LogCeverity.Info ? styles.categoryTextActive : styles.categoryText}>
-            Info
-          </Text>
-        </Pressable>
-        <Pressable
-          style={selectedCategory === LogCeverity.Warning ? styles.categoryButtonActive : styles.categoryButton}
-          onPress={() => handleCategorySelect(LogCeverity.Warning)}
-        >
-          <Text style={selectedCategory === LogCeverity.Warning ? styles.categoryTextActive : styles.categoryText}>
-            Warning
-          </Text>
-        </Pressable>
-        <Pressable
-          style={selectedCategory === LogCeverity.Critical ? styles.categoryButtonActive : styles.categoryButton}
-          onPress={() => handleCategorySelect(LogCeverity.Critical)}
-        >
-          <Text style={selectedCategory === LogCeverity.Critical ? styles.categoryTextActive : styles.categoryText}>
-            Critical
-          </Text>
-        </Pressable>
-      </View>
+          <Pressable
+            style={[styles.categoryButton, selectedCategory === null && styles.categoryButtonActive]}
+            onPress={() => handleCategorySelect(null)}
+          >
+            <Text style={[styles.categoryText, selectedCategory === null && styles.categoryTextActive]}>Alle</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.categoryButton, selectedCategory === LogCeverity.Info && styles.categoryButtonActive]}
+            onPress={() => handleCategorySelect(LogCeverity.Info)}
+          >
+            <Text style={[styles.categoryText, selectedCategory === LogCeverity.Info && styles.categoryTextActive]}>
+              Info
+            </Text>
+          </Pressable>
+          <Pressable
+            style={[styles.categoryButton, selectedCategory === LogCeverity.Warning && styles.categoryButtonActive]}
+            onPress={() => handleCategorySelect(LogCeverity.Warning)}
+          >
+            <Text style={[styles.categoryText, selectedCategory === LogCeverity.Warning && styles.categoryTextActive]}>
+              Warning
+            </Text>
+          </Pressable>
+          <Pressable
+            style={[styles.categoryButton, selectedCategory === LogCeverity.Critical && styles.categoryButtonActive]}
+            onPress={() => handleCategorySelect(LogCeverity.Critical)}
+          >
+            <Text style={[styles.categoryText, selectedCategory === LogCeverity.Critical && styles.categoryTextActive]}>
+              Critical
+            </Text>
+          </Pressable>
+        </ScrollView>
 
-      <View style={styles.separator} />
+        <View style={styles.separator} />
 
-      {logs.length === 0 && <Text style={styles.emptyText}>Ingen logger funnet</Text>}
+        {logs.length === 0 && <Text style={styles.emptyText}>Ingen logger funnet</Text>}
 
-      {logs.map((log) => (
-        <>
-          <View key={log.id} style={styles.logCard}>
-            <Text style={[styles.logCategory, { color: getCategoryColor(log.ceverity) }]}>{log.ceverity}</Text>
-            <Text style={styles.logMessage}>{log.description}</Text>
-            <Text style={styles.logSource}>Action: {log.action}</Text>
-            <Text style={styles.logSource}>Subject: {log.subject_type}</Text>
-            {log.file_name && <Text style={styles.logSource}>Source: {log.file_name}</Text>}
-            <Text style={styles.logTimestamp}>{formatTimestamp(log.created_at)}</Text>
+        {logs.map((log) => (
+          <React.Fragment key={log.id}>
+            <View key={log.id} style={styles.logCard}>
+              <Text style={[styles.logCategory, { color: getCategoryColor(log.ceverity) }]}>{log.ceverity}</Text>
+              <Text style={styles.logMessage}>{log.description}</Text>
+              <Text style={styles.logSource}>Action: {log.action}</Text>
+              <Text style={styles.logSource}>Subject: {log.subject_type}</Text>
+              {log.file_name && <Text style={styles.logSource}>Source: {log.file_name}</Text>}
+              <Text style={styles.logTimestamp}>{formatTimestamp(log.created_at)}</Text>
+            </View>
+            <View style={styles.separator} />
+          </React.Fragment>
+        ))}
+
+        {(hasPrev || hasNext) && (
+          <View style={styles.pagination}>
+            <Text style={styles.pageInfo}>Side {pageNum + 1}</Text>
+            <View style={styles.navButtons}>
+              {hasPrev && (
+                <Pressable style={hasNext ? styles.button : styles.buttonSingle} onPress={handlePrevPage}>
+                  <Text style={styles.buttonLabel}>Forrige</Text>
+                </Pressable>
+              )}
+              {hasNext && (
+                <Pressable style={hasPrev ? styles.button : styles.buttonSingle} onPress={handleNextPage}>
+                  <Text style={styles.buttonLabel}>Neste</Text>
+                </Pressable>
+              )}
+            </View>
           </View>
-          <View style={styles.separator} />
-        </>
-      ))}
-
-      {(hasPrev || hasNext) && (
-        <View style={styles.navButtons}>
-          {hasPrev && (
-            <Pressable style={styles.navButton} onPress={handlePrevPage}>
-              <Text style={styles.navButtonText}>Forrige</Text>
-            </Pressable>
-          )}
-          {hasNext && (
-            <Pressable style={styles.navButton} onPress={handleNextPage}>
-              <Text style={styles.navButtonText}>Neste</Text>
-            </Pressable>
-          )}
-        </View>
-      )}
-
-      {logs.length > 0 && <Text style={styles.pageInfo}>Side {pageNum + 1}</Text>}
-    </ScrollView>
+        )}
+      </VerticalScroll>
+    </View>
   );
 };
 

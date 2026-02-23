@@ -67,7 +67,10 @@ export const JoinScreen = () => {
   };
 
   const handleInfoPressed = () => {
-    console.log("Info pressed");
+    displayInfoModal(
+      "Få romnavnet fra spillverten, skriv det inn i feltet, og trykk 'Bli med' for å delta!",
+      "Hvordan?",
+    );
   };
 
   return (

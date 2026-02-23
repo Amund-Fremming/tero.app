@@ -23,7 +23,7 @@ export const TipsUsScreen = () => {
   });
 
   const handleCreateTip = async () => {
-    // Validate name/header (3-30 chars)
+    // Validate name/header (3-14 chars)
     if (!createRequest.header || createRequest.header.trim().length === 0) {
       displayErrorModal("Fyll inn navn.");
       return;
@@ -34,7 +34,7 @@ export const TipsUsScreen = () => {
       return;
     }
 
-    if (createRequest.header.length > 30) {
+    if (createRequest.header.length > 14) {
       displayErrorModal("Navn er for langt.");
       return;
     }
@@ -101,9 +101,15 @@ export const TipsUsScreen = () => {
             <TextInput
               style={styles.input}
               placeholder="Navn"
-              maxLength={30}
+              maxLength={14}
               value={createRequest.header}
-              onChangeText={(input) => setCreateRequest((prev) => ({ ...prev, header: input }))}
+              onChangeText={(input) => {
+                if (input.length > 14) {
+                  displayInfoModal("Navn kan ikke være lengre enn 14 tegn.");
+                  return;
+                }
+                setCreateRequest((prev) => ({ ...prev, header: input }));
+              }}
               placeholderTextColor={Color.DarkerGray}
             />
           </View>

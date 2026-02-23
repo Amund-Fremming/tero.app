@@ -137,7 +137,6 @@ export class GameService {
         .map(([key, value]) => `${key}=${value}`)
         .join("&");
 
-      console.debug("URL: ", `${this.urlBase}/games/general/saved?${queryString}`);
       const response = await axios.get(`${this.urlBase}/games/general/saved?${queryString}`, {
         headers: {
           Authorization: `Bearer ${token}`,

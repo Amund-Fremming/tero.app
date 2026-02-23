@@ -1,9 +1,9 @@
 import ScreenHeader from "@/src/common/components/ScreenHeader/ScreenHeader";
 import { useNavigation } from "expo-router";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./tipsListScreenStyles";
 import Color from "@/src/common/constants/Color";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthProvider } from "@/src/common/context/AuthProvider";
 import { useServiceProvider } from "@/src/common/context/ServiceProvider";
 import { useModalProvider } from "@/src/common/context/ModalProvider";
@@ -11,6 +11,7 @@ import { GameTip, PagedResponse } from "@/src/common/constants/Types";
 
 export const TipsListScreen = () => {
   const navigation: any = useNavigation();
+  const [openCards, setOpenCards] = useState<Set<string>>(new Set());
   const [pagedResponse, setPagedResponse] = useState<PagedResponse<GameTip>>({
     items: [],
     has_next: false,
@@ -41,16 +42,34 @@ export const TipsListScreen = () => {
     setPagedResponse(result.value);
   };
 
+  const handleCardToggled = (id: string) => {
+    setOpenCards((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
   return (
     <View style={styles.container}>
       <ScreenHeader title="Spill tips" backgroundColor={Color.LightGray} onBackPressed={() => navigation.goBack()} />
 
       {pagedResponse.items.map((tip) => (
-        <Pressable>
-          <Text>{tip.header}</Text>
-          <Text>{tip.mobile_phone}</Text>
-          <Text>{tip.description}</Text>
-        </Pressable>
+        <React.Fragment key={tip.id}>
+          <TouchableOpacity style={styles.card} onPress={() => handleCardToggled(tip.id)}>
+            <View style={styles.innerCard}>
+              <Text style={styles.header}>{tip.header}</Text>
+              <Text style={styles.phone}>{tip.mobile_phone}</Text>
+              {openCards.has(tip.id) && <Text style={styles.description}>{tip.description}</Text>}
+            </View>
+          </TouchableOpacity>
+
+          <View style={styles.separator} />
+        </React.Fragment>
       ))}
     </View>
   );

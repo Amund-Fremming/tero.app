@@ -1,79 +1,64 @@
 import { StyleSheet } from "react-native";
-import Colors, { Color } from "../../../common/constants/Color";
+import Color from "../../../common/constants/Color";
 import { horizontalScale, moderateScale, verticalScale } from "@/src/common/utils/dimensions";
 import { Font } from "../../../common/constants/Font";
 
 export const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
-    height: "100%",
-    backgroundColor: Colors.LightGray,
-    gap: verticalScale(20),
+    flex: 1,
+    backgroundColor: Color.White,
   },
 
   separator: {
     backgroundColor: Color.LightGray,
     height: verticalScale(5),
     width: "90%",
+    alignSelf: "center",
     borderRadius: moderateScale(20),
+    marginVertical: verticalScale(10),
   },
 
-  leadContainer: {
-    paddingTop: verticalScale(50),
-    width: "90%",
-    justifyContent: "center",
+  categoryScroll: {
+    width: "100%",
+    backgroundColor: Color.White,
+    paddingVertical: verticalScale(10),
   },
 
-  header: {
-    color: Colors.Purple,
-    fontSize: moderateScale(40),
-    fontFamily: Font.PassionOneBold,
-  },
-
-  categoryBar: {
-    flexDirection: "row",
-    width: "90%",
-    gap: horizontalScale(10),
-    marginTop: verticalScale(10),
+  categoryScrollContent: {
+    paddingHorizontal: moderateScale(15),
+    gap: moderateScale(10),
   },
 
   categoryButton: {
-    flex: 1,
-    justifyContent: "center",
+    flexDirection: "row",
     alignItems: "center",
-    borderRadius: moderateScale(10),
-    height: verticalScale(45),
-    borderWidth: moderateScale(3),
-    borderColor: Color.Purple,
+    paddingHorizontal: moderateScale(15),
+    paddingVertical: verticalScale(8),
+    borderRadius: moderateScale(20),
+    borderWidth: 2,
+    borderColor: Color.Gray,
     backgroundColor: Color.White,
   },
 
   categoryButtonActive: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: moderateScale(10),
-    height: verticalScale(45),
-    borderWidth: moderateScale(3),
-    borderColor: Color.Purple,
-    backgroundColor: Color.Purple,
+    backgroundColor: Color.BuzzifyLavender,
+    borderColor: Color.BuzzifyLavender,
   },
 
   categoryText: {
-    fontFamily: Font.SintonyBold,
-    fontSize: moderateScale(16),
-    color: Color.Purple,
+    fontFamily: Font.PassionOneRegular,
+    fontSize: moderateScale(18),
+    color: Color.Gray,
   },
 
   categoryTextActive: {
-    fontFamily: Font.SintonyBold,
-    fontSize: moderateScale(16),
     color: Color.White,
   },
 
   logCard: {
     backgroundColor: Color.White,
     width: "90%",
+    alignSelf: "center",
     paddingLeft: horizontalScale(20),
     paddingRight: horizontalScale(20),
     gap: verticalScale(10),
@@ -106,43 +91,62 @@ export const styles = StyleSheet.create({
     fontStyle: "italic",
   },
 
-  navButtons: {
-    flexDirection: "row",
-    gap: horizontalScale(10),
-    width: "90%",
-    marginTop: verticalScale(20),
-    marginBottom: verticalScale(10),
-  },
-
-  navButton: {
-    flex: 1,
+  pagination: {
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: moderateScale(10),
-    height: verticalScale(45),
-    borderWidth: moderateScale(3),
-    borderColor: Color.Purple,
-  },
-
-  navButtonText: {
-    fontFamily: Font.SintonyBold,
-    fontSize: moderateScale(19),
-    color: Color.Purple,
+    paddingTop: verticalScale(20),
   },
 
   pageInfo: {
-    fontFamily: Font.SintonyRegular,
-    fontSize: moderateScale(16),
     color: Color.OffBlack,
-    marginBottom: verticalScale(20),
+    fontSize: moderateScale(20),
+    fontFamily: Font.SintonyBold,
+    paddingVertical: verticalScale(10),
+  },
+
+  navButtons: {
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    width: "90%",
+    gap: horizontalScale(15),
+    paddingTop: verticalScale(15),
+  },
+
+  button: {
+    backgroundColor: Color.BuzzifyLavender,
+    flex: 1,
+    maxWidth: horizontalScale(160),
+    height: verticalScale(55),
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: moderateScale(12),
+  },
+
+  buttonSingle: {
+    backgroundColor: Color.BuzzifyLavender,
+    width: horizontalScale(160),
+    height: verticalScale(55),
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: moderateScale(12),
+  },
+
+  buttonLabel: {
+    color: Color.White,
+    fontSize: moderateScale(28),
+    fontFamily: Font.PassionOneRegular,
+    fontWeight: "600",
   },
 
   emptyText: {
-    fontFamily: Font.SintonyRegular,
-    fontSize: moderateScale(18),
+    fontFamily: Font.PassionOneRegular,
+    fontSize: moderateScale(20),
     color: Color.Gray,
     textAlign: "center",
     marginTop: verticalScale(40),
+    alignSelf: "center",
   },
 });
 

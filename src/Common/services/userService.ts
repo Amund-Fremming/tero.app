@@ -22,7 +22,6 @@ export class UserService {
     try {
       const payload: ResetPasswordRequest = { email };
       const url = `${this.baseUrl}/users/reset-password/${pseudoId}`;
-      console.debug("URL: ", url);
 
       const response = await axios.post(url, payload, {
         headers: {
@@ -49,9 +48,7 @@ export class UserService {
 
   async ensurePseudoId(pseudo_id: string | null): Promise<Result<string>> {
     try {
-      const url = pseudo_id
-        ? `${this.baseUrl}/pseudo-users?pseudo_id=${pseudo_id}`
-        : `${this.baseUrl}/pseudo-users`;
+      const url = pseudo_id ? `${this.baseUrl}/pseudo-users?pseudo_id=${pseudo_id}` : `${this.baseUrl}/pseudo-users`;
 
       const response = await axios.post<string>(url);
       return ok(response.data);
@@ -181,7 +178,7 @@ export class UserService {
 
   async updateGlobalPopup(token: string, popup: ClientPopup): Promise<Result<ClientPopup>> {
     try {
-      const response = await axios.put<ClientPopup>(`${this.baseUrl}/popups`, popup, {
+      const response = await axios.put<ClientPopup>(`${this.baseUrl}/users/popups`, popup, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

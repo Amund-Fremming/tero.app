@@ -222,7 +222,7 @@ export const GameListScreen = () => {
                 </View>
               </View>
               <Pressable style={styles.saveIcon} onPress={() => handleSaveGame(game.id)}>
-                <Feather name="bookmark" size={25} color={Color.Gray} />
+                <Feather name="bookmark" size={26} color={Color.Gray} />
               </Pressable>
             </TouchableOpacity>
             <View style={styles.separator} />

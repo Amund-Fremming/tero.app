@@ -31,7 +31,6 @@ export const ActiveLobbyScreen = () => {
     }
 
     if (round === "") {
-      displayInfoModal("Skriv inn en runde.");
       return;
     }
 
@@ -70,7 +69,7 @@ export const ActiveLobbyScreen = () => {
     const minPlayers = gameType == GameType.Roulette ? 2 : 3;
 
     if (players < minPlayers) {
-      displayInfoModal(`Minst ${minPlayers} spillere. Nå: ${players}.`);
+      displayInfoModal(`Må ha minst ${minPlayers} spillere for å starte.`);
       setStartGameTriggered(false);
       return;
     }

@@ -55,25 +55,19 @@ export const styles = StyleSheet.create({
   },
 
   card: {
-    height: verticalScale(110),
-    width: "100%",
-    justifyContent: "center",
+    width: "90%",
+    alignSelf: "center",
+    paddingVertical: verticalScale(15),
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    borderRadius: moderateScale(10),
-    marginVertical: verticalScale(8),
-    elevation: 2,
-    shadowColor: Color.Black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
   },
 
   innerCard: {
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    height: verticalScale(90),
-    width: "85%",
     flexDirection: "row",
+    alignItems: "center",
+    gap: moderateScale(15),
+    flex: 1,
   },
 
   iconCardInner: {
@@ -102,8 +96,9 @@ export const styles = StyleSheet.create({
   },
 
   textWrapper: {
-    paddingLeft: horizontalScale(20),
-    paddingRight: horizontalScale(60),
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "flex-start",
     flex: 1,
   },
 
@@ -115,9 +110,8 @@ export const styles = StyleSheet.create({
 
   cardDescription: {
     fontFamily: Font.SintonyRegular,
-    fontSize: moderateScale(18),
+    fontSize: moderateScale(14),
     color: Color.Gray,
-    paddingTop: verticalScale(4),
   },
 
   cardCategory: {

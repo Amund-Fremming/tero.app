@@ -96,11 +96,11 @@ export const SpinGame = () => {
       setRoundText(roundText);
     });
 
-    setListener(HubChannel.Error, (_message: string) => {
+    setListener(HubChannel.Error, (message: string) => {
       if (isHandlingErrorRef.current) return;
       isHandlingErrorRef.current = true;
 
-      displayErrorModal("Tilkoblingen mistet", async () => {
+      displayErrorModal(message, async () => {
         await resetSessionAndNavigateHome();
       });
     });

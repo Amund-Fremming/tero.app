@@ -8,15 +8,17 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Color.White,
   },
+
   gameTypeScroll: {
     width: "100%",
     backgroundColor: Color.White,
-    paddingVertical: verticalScale(10),
   },
+
   gameTypeScrollContent: {
     paddingHorizontal: moderateScale(15),
     gap: moderateScale(10),
   },
+
   gameTypeButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -27,18 +29,22 @@ export const styles = StyleSheet.create({
     borderColor: Color.Gray,
     backgroundColor: Color.White,
   },
+
   gameTypeButtonActive: {
     backgroundColor: Color.BuzzifyLavender,
     borderColor: Color.BuzzifyLavender,
   },
+
   gameTypeText: {
     fontFamily: Font.PassionOneRegular,
     fontSize: moderateScale(18),
     color: Color.Gray,
   },
+
   gameTypeTextActive: {
     color: Color.White,
   },
+
   card: {
     width: "90%",
     alignSelf: "center",
@@ -47,37 +53,48 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+
   innerCard: {
     flexDirection: "row",
     alignItems: "center",
     gap: moderateScale(15),
     flex: 1,
   },
+
   textWrapper: {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "flex-start",
     flex: 1,
   },
+
   cardCategory: {
-    fontFamily: Font.SintonyRegular,
-    fontSize: moderateScale(14),
-    color: Color.Gray,
+    fontFamily: Font.SintonyBold,
+    fontSize: moderateScale(12),
+    color: Color.Burgunde,
+    marginTop: verticalScale(4),
+    textTransform: "uppercase",
+    letterSpacing: 1.2,
+    marginBottom: -2,
+    fontWeight: 800,
   },
+
   cardHeader: {
     fontFamily: Font.PassionOneRegular,
-    fontSize: moderateScale(24),
-    color: Color.BuzzifyLavender,
-    letterSpacing: 1,
+    fontSize: moderateScale(28),
+    color: Color.OffBlack,
   },
+
   cardDescription: {
     fontFamily: Font.SintonyRegular,
     fontSize: moderateScale(14),
     color: Color.Gray,
   },
+
   saveIcon: {
     padding: moderateScale(8),
   },
+
   separator: {
     width: "90%",
     height: verticalScale(5),

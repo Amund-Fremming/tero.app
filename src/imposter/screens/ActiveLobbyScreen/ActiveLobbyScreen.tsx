@@ -18,61 +18,17 @@ export const ActiveLobbyScreen = () => {
   const { connect, setListener, invokeFunction, disconnect } = useHubConnectionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { gameKey, gameType, hubAddress, setIsHost, isHost, clearGlobalSessionValues } = useGlobalSessionProvider();
-  const { clearImposterSessionValues, setScreen } = useImposterSessionProvider();
+  const { clearImposterSessionValues, setScreen, iterations } = useImposterSessionProvider();
 
   const [round, setRound] = useState<string>("");
   const [started, setStarted] = useState<boolean>(false);
-  const [iterations, setIterations] = useState<number>(0);
-  const [players, setPlayers] = useState<number>(0);
-
-  useEffect(() => {
-    createHubConnecion();
-  }, []);
 
   const handleSetRound = (value: string) => {
     setRound(value);
   };
 
-  const createHubConnecion = async () => {
-    console.log("Hub address:", hubAddress);
-    const result = await connect(hubAddress);
-    if (result.isError()) {
-      console.error(result.error);
-      displayErrorModal("Koblingsfeil. Bli med på nytt.");
-      return;
-    }
-
-    setListener("host", (hostId: string) => {
-      setIsHost(pseudoId == hostId);
-    });
-
-    setListener("players_count", (players: number) => {
-      setPlayers(players);
-    });
-
-    setListener(HubChannel.Error, (message: string) => {
-      displayErrorModal(message);
-    });
-
-    setListener(HubChannel.Iterations, (iterations: number) => {
-      setIterations(iterations);
-    });
-
-    setListener("signal_start", (_value: boolean) => {
-      setScreen(ImposterSessionScreen.Game);
-    });
-
-    const groupResult = await invokeFunction("ConnectToGroup", gameKey, pseudoId);
-    if (groupResult.isError()) {
-      console.error(groupResult.error);
-      displayErrorModal("Kunne ikke koble til.");
-      return;
-    }
-  };
-
   const handleAddRound = async () => {
     if (round === "") {
-      displayInfoModal("Skriv inn en runde.");
       return;
     }
 
@@ -88,13 +44,6 @@ export const ActiveLobbyScreen = () => {
 
   const handleStartGame = async () => {
     if (started) {
-      return;
-    }
-
-    const minPlayers = gameType == GameType.Roulette ? 2 : 3;
-
-    if (players < minPlayers) {
-      displayInfoModal(`Minst ${minPlayers} spillere. Nå: ${players}.`);
       return;
     }
 
@@ -134,7 +83,7 @@ export const ActiveLobbyScreen = () => {
       topButtonText="Velg kategori"
       topButtonOnChange={() => {}}
       topButtonOnPress={handleAddRound}
-      bottomButtonText="Opprett"
+      bottomButtonText="Start spill"
       bottomButtonCallback={handleStartGame}
       featherIcon={"users"}
       iterations={iterations}

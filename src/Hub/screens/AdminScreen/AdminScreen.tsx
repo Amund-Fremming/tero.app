@@ -4,12 +4,14 @@ import { useAuthProvider } from "@/src/common/context/AuthProvider";
 import { useServiceProvider } from "@/src/common/context/ServiceProvider";
 import { useEffect, useState } from "react";
 import { useNavigation } from "expo-router";
-import { screenHeight, verticalScale } from "@/src/common/utils/dimensions";
+import { screenHeight, verticalScale, moderateScale } from "@/src/common/utils/dimensions";
 import Color from "@/src/common/constants/Color";
 import { useModalProvider } from "@/src/common/context/ModalProvider";
 import { ActivityStats, ClientPopup, LogCategoryCount, SystemHealth } from "@/src/common/constants/Types";
 import Screen from "@/src/common/constants/Screen";
 import ScreenHeader from "@/src/common/components/ScreenHeader/ScreenHeader";
+import { TextInput } from "react-native-gesture-handler";
+import { Feather } from "@expo/vector-icons";
 
 export const AdminScreen = () => {
   const navigation: any = useNavigation();
@@ -136,6 +138,7 @@ export const AdminScreen = () => {
       <View style={styles.separator} />
 
       <Pressable onPress={handleErrorLogCardClick} style={styles.card}>
+        <Text style={styles.sectionTitle}>Logger</Text>
         <View style={styles.healthWrapper}>
           <Text style={styles.errorLogTextBold}>Info</Text>
           <Text style={[styles.errorLogTextBold, { color: Color.Green }]}>{logCategoryCount.info}</Text>
@@ -153,6 +156,7 @@ export const AdminScreen = () => {
       <View style={styles.separator} />
 
       <View style={styles.card}>
+        <Text style={styles.sectionTitle}>System Helse</Text>
         <View style={styles.healthWrapper}>
           <Text style={styles.text}>Platform</Text>
           <Text style={styles.text}>{systemHealth.platform ? "✅" : "❌"}</Text>
@@ -170,14 +174,13 @@ export const AdminScreen = () => {
       <View style={styles.separator} />
 
       {!stats && (
-        // TODO - load again button
         <View style={styles.card}>
           <Text style={styles.text}>Klarte ikke laste stats...</Text>
         </View>
       )}
       {stats && (
         <View style={styles.card}>
-          <Text>Brukere</Text>
+          <Text style={styles.sectionTitle}>Nylige Brukere</Text>
           <View style={styles.healthWrapper}>
             <Text style={styles.text}>I dag</Text>
             <Text style={styles.text}>{stats.recent.todays_users}</Text>
@@ -197,7 +200,7 @@ export const AdminScreen = () => {
 
       {stats && (
         <View style={styles.card}>
-          <Text>Brukere</Text>
+          <Text style={styles.sectionTitle}>Gjennomsnitt Brukere</Text>
           <View style={styles.healthWrapper}>
             <Text style={styles.text}>Daglig</Text>
             <Text style={styles.text}>{stats.average.avg_daily_users}</Text>
@@ -220,26 +223,41 @@ export const AdminScreen = () => {
       <View style={styles.separator} />
 
       <Pressable onPress={() => navigation.navigate(Screen.TipsList)} style={styles.card}>
-        <Text style={styles.text}>Spill tips</Text>
-        <Text></Text>
+        <Text style={styles.sectionTitle}>Spill Tips</Text>
+        <Text style={styles.text}>Administrer spill tips</Text>
       </Pressable>
 
       <View style={styles.separator} />
 
       {!popup && (
-        // TODO - load again button
         <View style={styles.card}>
           <Text style={styles.text}>Klarte ikke laste modal...</Text>
         </View>
       )}
       {popup && !popupEditing && (
         <View style={styles.card}>
-          <Pressable style={styles.activeButton}>
-            <Text style={styles.modalIndicator}>{popup.active ? "✅" : "❌"}</Text>
+          <Pressable
+            onPress={() => setPopup((prev) => (prev ? { ...prev, active: !prev.active } : prev))}
+            style={[styles.toggleButton, popup.active ? styles.toggleButtonActive : styles.toggleButtonInactive]}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Text style={[styles.toggleText, popup.active ? styles.toggleTextActive : styles.toggleTextInactive]}>
+              {popup.active ? "PÅ" : "AV"}
+            </Text>
           </Pressable>
-          <Text>Popup</Text>
-          <Text style={styles.text}>{popup.heading}</Text>
-          <Text style={styles.text}>{popup.paragraph}</Text>
+          <Text style={styles.cardTitle}>Popup Melding</Text>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputLabel}>Tittel</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.text}>{popup.heading}</Text>
+            </View>
+          </View>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputLabel}>Beskrivelse</Text>
+            <View style={[styles.inputContainer, styles.multilineInputContainer]}>
+              <Text style={styles.text}>{popup.paragraph}</Text>
+            </View>
+          </View>
           <Pressable onPress={() => setPopupEditing(true)} style={styles.popupButton}>
             <Text style={styles.popupText}>Rediger</Text>
           </Pressable>
@@ -250,16 +268,59 @@ export const AdminScreen = () => {
         <View style={styles.card}>
           <Pressable
             onPress={() => setPopup((prev) => (prev ? { ...prev, active: !prev.active } : prev))}
-            style={styles.activeButton}
+            style={[styles.toggleButton, popup.active ? styles.toggleButtonActive : styles.toggleButtonInactive]}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Text style={styles.modalIndicator}>{popup.active ? "✅" : "❌"}</Text>
+            <Text style={[styles.toggleText, popup.active ? styles.toggleTextActive : styles.toggleTextInactive]}>
+              {popup.active ? "PÅ" : "AV"}
+            </Text>
           </Pressable>
-          <Text>Popup</Text>
-          <Text style={styles.text}>{popup.heading}</Text>
-          <Text style={styles.text}>{popup.paragraph}</Text>
-          <Pressable onPress={handleUpdateModal} style={styles.popupButton}>
-            <Text style={styles.popupText}>Lagre</Text>
-          </Pressable>
+          <Text style={styles.cardTitle}>Rediger Popup</Text>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputLabel}>Tittel</Text>
+            <View style={styles.inputContainer}>
+              <Feather
+                name="type"
+                size={moderateScale(18)}
+                color={Color.DarkerGray}
+                style={{ paddingRight: moderateScale(8) }}
+              />
+              <TextInput
+                style={styles.input}
+                value={popup.heading}
+                onChangeText={(text) => setPopup((prev) => (prev ? { ...prev, heading: text } : prev))}
+                placeholder="Tittel"
+                placeholderTextColor={Color.DarkerGray}
+              />
+            </View>
+          </View>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputLabel}>Beskrivelse</Text>
+            <View style={[styles.inputContainer, styles.multilineInputContainer]}>
+              <Feather
+                name="edit-3"
+                size={moderateScale(18)}
+                color={Color.DarkerGray}
+                style={{ paddingRight: moderateScale(8), alignSelf: "flex-start", paddingTop: moderateScale(2) }}
+              />
+              <TextInput
+                style={[styles.input, styles.multilineInput]}
+                value={popup.paragraph}
+                onChangeText={(text) => setPopup((prev) => (prev ? { ...prev, paragraph: text } : prev))}
+                placeholder="Beskrivelse"
+                placeholderTextColor={Color.DarkerGray}
+                multiline
+              />
+            </View>
+          </View>
+          <View style={styles.buttonContainer}>
+            <Pressable onPress={() => setPopupEditing(false)} style={styles.cancelButton}>
+              <Text style={styles.cancelText}>Avbryt</Text>
+            </Pressable>
+            <Pressable onPress={handleUpdateModal} style={styles.saveButton}>
+              <Text style={styles.saveButtonText}>Lagre</Text>
+            </Pressable>
+          </View>
         </View>
       )}
     </ScrollView>

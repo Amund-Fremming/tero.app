@@ -131,12 +131,12 @@ export const GameScreen = () => {
         </TouchableOpacity>
         {/* TODO - remove this ? not needed here */}
         <TouchableOpacity onPress={handleInfoPressed} style={styles.iconWrapper}>
-          <Text style={styles.textIcon}>?</Text>
+          <Text style={styles.textIcon}>x</Text>
         </TouchableOpacity>
       </View>
 
       <Text style={{ ...styles.text }}>
-        {gameState === SpinGameState.RoundStarted && isHost && roundText}
+        {gameState === SpinGameState.RoundStarted && isHost && `"${roundText}"`}
         {gameState === SpinGameState.RoundStarted && !isHost && "Gjør deg klar!"}
         {gameState === SpinGameState.RoundFinished && "Venter på ny runde"}
         {gameState === SpinGameState.Finished && "Spillet er ferdig!"}
