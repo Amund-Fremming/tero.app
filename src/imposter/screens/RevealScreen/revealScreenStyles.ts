@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
-    paddingBottom: verticalScale(80),
+    paddingBottom: verticalScale(160),
   },
 
   mysteryCard: {
@@ -59,12 +59,11 @@ export const styles = StyleSheet.create({
   },
 
   buttonsWrapper: {
+    position: "absolute",
+    bottom: 50,
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: "auto",
-    paddingTop: verticalScale(20),
-    paddingBottom: 50,
   },
 
   nextButton: {

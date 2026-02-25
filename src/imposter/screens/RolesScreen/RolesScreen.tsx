@@ -89,7 +89,9 @@ const PlayerCard = ({ name, word, isImposter, onLocked }: PlayerCardProps) => {
     >
       <Animated.View style={[styles.playerCardFill, { width: fillAnim }]} />
       <Feather name="user" size={28} color={Color.White} />
-      <Text style={[styles.playerNameText, revealed && isImposter && { color: Color.HomeRed }]}>
+      <Text
+        style={[styles.playerNameText, revealed && (isImposter ? { color: Color.HomeRed } : { color: Color.Green })]}
+      >
         {revealed ? (isImposter ? "Imposter" : word) : name}
       </Text>
     </Pressable>

@@ -13,7 +13,7 @@ import * as Haptics from "expo-haptics";
 export const RevealScreen = () => {
   const navigation: any = useNavigation();
   const { clearGlobalSessionValues } = useGlobalSessionProvider();
-  const { clearImposterSessionValues, imposterName, session, setScreen, newRound } = useImposterSessionProvider();
+  const { clearImposterSessionValues, imposterName, session, setScreen } = useImposterSessionProvider();
   const { displayActionModal, displayInfoModal } = useModalProvider();
 
   const [revealed, setRevealed] = useState(false);
@@ -52,7 +52,7 @@ export const RevealScreen = () => {
         Animated.timing(swayAnim, {
           toValue: 1,
           duration: 1100,
-          easing: Easing.inOut(Easing.ease),
+          easing: Easing.out(Easing.ease),
           useNativeDriver: true,
         }),
         Animated.timing(swayAnim, {
@@ -64,7 +64,7 @@ export const RevealScreen = () => {
         Animated.timing(swayAnim, {
           toValue: 0,
           duration: 1100,
-          easing: Easing.inOut(Easing.ease),
+          easing: Easing.in(Easing.ease),
           useNativeDriver: true,
         }),
       ]),
@@ -142,7 +142,6 @@ export const RevealScreen = () => {
 
   const handleNext = () => {
     if (hasMoreRounds) {
-      newRound();
       setScreen(ImposterSessionScreen.Roles);
     } else {
       clearGlobalSessionValues();
