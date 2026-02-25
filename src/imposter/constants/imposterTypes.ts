@@ -1,7 +1,8 @@
 export const enum ImposterSessionScreen {
   ActiveLobby = "ActiveLobby",
   Create = "Create",
-  Game = "Game",
+  Roles = "Roles",
+  Reveal = "Reveal",
   Started = "Started",
   AddPlayers = "Players",
 }

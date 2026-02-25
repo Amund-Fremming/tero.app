@@ -1,10 +1,11 @@
-import { View, Text, ScrollView, Pressable, Animated } from "react-native";
-import styles from "./gameScreenStyles";
+import { View, Text, ScrollView, Pressable, Animated, TouchableOpacity } from "react-native";
+import styles from "./rolesScreenStyles";
 import { useEffect, useRef, useState } from "react";
 import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
 import { useModalProvider } from "@/src/common/context/ModalProvider";
 import { useNavigation } from "expo-router";
 import { useImposterSessionProvider } from "../../context/ImposterSessionProvider";
+import { ImposterSessionScreen } from "../../constants/imposterTypes";
 import { resetToHomeScreen } from "@/src/common/utils/navigation";
 import ScreenHeader from "@/src/common/components/ScreenHeader/ScreenHeader";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
@@ -20,9 +21,11 @@ const REVERSE_DURATION = 300;
 interface PlayerCardProps {
   name: string;
   word: string;
+  isImposter: boolean;
+  onLocked: () => void;
 }
 
-const PlayerCard = ({ name, word }: PlayerCardProps) => {
+const PlayerCard = ({ name, word, isImposter, onLocked }: PlayerCardProps) => {
   const fillAnim = useRef(new Animated.Value(0)).current;
   const [revealed, setRevealed] = useState(false);
   const [locked, setLocked] = useState(false);
@@ -56,7 +59,10 @@ const PlayerCard = ({ name, word }: PlayerCardProps) => {
             duration: DRAIN_DURATION,
             useNativeDriver: false,
           });
-          currentAnimation.current.start(() => setLocked(true));
+          currentAnimation.current.start(() => {
+            setLocked(true);
+            onLocked();
+          });
         }, 300);
       }, DRAIN_DELAY);
     });
@@ -83,31 +89,30 @@ const PlayerCard = ({ name, word }: PlayerCardProps) => {
     >
       <Animated.View style={[styles.playerCardFill, { width: fillAnim }]} />
       <Feather name="user" size={28} color={Color.White} />
-      <Text style={styles.playerNameText}>{revealed ? word : name}</Text>
+      <Text style={[styles.playerNameText, revealed && isImposter && { color: Color.HomeRed }]}>
+        {revealed ? (isImposter ? "Imposter" : word) : name}
+      </Text>
     </Pressable>
   );
 };
 
-export const GameScreen = () => {
+export const RolesScreen = () => {
   const navigation: any = useNavigation();
 
   const { clearGlobalSessionValues } = useGlobalSessionProvider();
-  const { clearImposterSessionValues, session, players } = useImposterSessionProvider();
+  const { clearImposterSessionValues, session, players, setScreen, imposterName, newRound, roundWord } =
+    useImposterSessionProvider();
   const { displayActionModal, displayInfoModal } = useModalProvider();
 
-  const [testWord] = useState("test-role");
+  const [lockedPlayers, setLockedPlayers] = useState<Set<number>>(new Set());
 
   useEffect(() => {
-    console.log(session);
-    return () => {
-      clearImposterSessionValues();
-      clearGlobalSessionValues();
-    };
+    newRound();
   }, []);
 
   const handleLeaveGame = () => {
     displayActionModal(
-      "Spillet vil avsluttes om du forlater",
+      "Er du sikker på at du vil forlate spillet?",
       () => {
         clearGlobalSessionValues();
         clearImposterSessionValues();
@@ -122,6 +127,14 @@ export const GameScreen = () => {
       "Send telefonen på rundgang i rommet. Hold inn på ditt kort og hold rollen din skjult",
       "Rolle utdeling",
     );
+  };
+
+  const handleNextPressed = () => {
+    if (lockedPlayers.size < players.length) {
+      displayInfoModal("Noen spillere har ikke sett sin rolle", "Vent litt!");
+      return;
+    }
+    setScreen(ImposterSessionScreen.Reveal);
   };
 
   return (
@@ -139,7 +152,13 @@ export const GameScreen = () => {
       >
         <View style={styles.playersWrapper}>
           {players.map((player, index) => (
-            <PlayerCard key={index} name={player} word={testWord} />
+            <PlayerCard
+              key={index}
+              name={player}
+              word={roundWord}
+              isImposter={player === imposterName}
+              onLocked={() => setLockedPlayers((prev) => new Set(prev).add(index))}
+            />
           ))}
         </View>
         <View style={styles.helperWrapper}>
@@ -147,8 +166,14 @@ export const GameScreen = () => {
           <Text style={styles.helperText}>Hold nede på boksen for å avsløre</Text>
         </View>
       </ScrollView>
+
+      <View style={styles.buttonsWrapper}>
+        <TouchableOpacity onPress={handleNextPressed} style={styles.nextButton}>
+          <Text style={styles.buttonText}>Neste</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
-export default GameScreen;
+export default RolesScreen;

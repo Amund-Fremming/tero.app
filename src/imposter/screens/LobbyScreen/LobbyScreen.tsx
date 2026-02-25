@@ -14,11 +14,10 @@ import { resetToHomeScreen } from "@/src/common/utils/navigation";
 
 export const LobbyScreen = () => {
   const navigation: any = useNavigation();
-  const { pseudoId } = useAuthProvider();
-  const { connect, setListener, invokeFunction, disconnect } = useHubConnectionProvider();
-  const { displayErrorModal, displayInfoModal } = useModalProvider();
-  const { gameKey, gameType, hubAddress, setIsHost, isHost, clearGlobalSessionValues } = useGlobalSessionProvider();
-  const { clearImposterSessionValues, setScreen, iterations } = useImposterSessionProvider();
+  const { invokeFunction, disconnect } = useHubConnectionProvider();
+  const { displayErrorModal, displayInfoModal, displayActionModal } = useModalProvider();
+  const { gameKey, clearGlobalSessionValues } = useGlobalSessionProvider();
+  const { setScreen, iterations, clearImposterSessionValues } = useImposterSessionProvider();
 
   const [round, setRound] = useState<string>("");
   const [started, setStarted] = useState<boolean>(false);
@@ -58,15 +57,20 @@ export const LobbyScreen = () => {
     }
 
     await disconnect();
-    setScreen(ImposterSessionScreen.Game);
+    setScreen(ImposterSessionScreen.Roles);
   };
 
   const handleBackPressed = async () => {
-    setScreen(ImposterSessionScreen.AddPlayers);
-    // await disconnect();
-    // clearGlobalSessionValues();
-    // clearImposterSessionValues();
-    // resetToHomeScreen(navigation);
+    displayActionModal(
+      "Er du sikker på at du vil forlate spillet?",
+      async () => {
+        await disconnect();
+        clearGlobalSessionValues();
+        clearImposterSessionValues();
+        resetToHomeScreen(navigation);
+      },
+      () => {},
+    );
   };
 
   const handleInfoPressed = () => {

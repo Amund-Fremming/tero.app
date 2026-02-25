@@ -51,10 +51,26 @@ export const styles = StyleSheet.create({
     backgroundColor: Color.BuzzifyLavenderLight,
     paddingHorizontal: moderateScale(15),
     paddingVertical: verticalScale(25),
-    borderRadius: moderateScale(10),
+    borderRadius: moderateScale(15),
     gap: moderateScale(12),
     height: verticalScale(95),
     overflow: "hidden",
+  },
+
+  buttonText: {
+    color: Color.White,
+    fontFamily: Font.PassionOneBold,
+    fontSize: moderateScale(35),
+  },
+
+  buttonsWrapper: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: verticalScale(20),
+    marginTop: "auto",
+    paddingTop: verticalScale(20),
+    paddingBottom: 50,
   },
 
   playerCardFill: {
@@ -68,15 +84,18 @@ export const styles = StyleSheet.create({
   playerNameText: {
     flex: 1,
     color: Color.White,
-    fontFamily: Font.PassionOneBold,
-    fontSize: moderateScale(20),
+    fontFamily: Font.PassionOneRegular,
+    fontSize: moderateScale(26),
   },
 
-  text: {},
-
-  button: {},
-
-  buttonText: {},
+  nextButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "86%",
+    borderRadius: moderateScale(10),
+    height: verticalScale(69),
+    backgroundColor: Color.Black,
+  },
 });
 
 export default styles;

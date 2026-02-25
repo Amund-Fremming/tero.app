@@ -4,12 +4,26 @@ import ScreenHeader from "@/src/common/components/ScreenHeader/ScreenHeader";
 import Color from "@/src/common/constants/Color";
 import { useNavigation } from "expo-router";
 import { resetToHomeScreen } from "@/src/common/utils/navigation";
+import { useModalProvider } from "@/src/common/context/ModalProvider";
+import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
+import { useImposterSessionProvider } from "../../context/ImposterSessionProvider";
 
 export const StartedScreen = () => {
   const navigation: any = useNavigation();
+  const { displayActionModal } = useModalProvider();
+  const { clearGlobalSessionValues } = useGlobalSessionProvider();
+  const { clearImposterSessionValues } = useImposterSessionProvider();
 
   const handleGoHome = () => {
-    resetToHomeScreen(navigation);
+    displayActionModal(
+      "Er du sikker på at du vil forlate spillet?",
+      () => {
+        clearGlobalSessionValues();
+        clearImposterSessionValues();
+        resetToHomeScreen(navigation);
+      },
+      () => {},
+    );
   };
 
   return (

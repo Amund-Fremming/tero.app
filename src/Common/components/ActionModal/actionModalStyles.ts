@@ -50,7 +50,7 @@ export const styles = StyleSheet.create({
 
   button: {
     flex: 1,
-    backgroundColor: Color.BuzzifyLavender,
+    backgroundColor: Color.Gray,
     borderRadius: moderateScale(10),
     justifyContent: "center",
     alignItems: "center",
@@ -67,7 +67,7 @@ export const styles = StyleSheet.create({
     backgroundColor: Color.White,
     borderRadius: moderateScale(10),
     borderWidth: moderateScale(4),
-    borderColor: Color.BuzzifyLavender,
+    borderColor: Color.Gray,
     justifyContent: "center",
     alignItems: "center",
     height: verticalScale(50),
@@ -75,7 +75,7 @@ export const styles = StyleSheet.create({
   buttonInvertedText: {
     fontFamily: Font.PassionOneRegular,
     fontSize: moderateScale(30),
-    color: Color.BuzzifyLavender,
+    color: Color.Gray,
     fontWeight: "600",
   },
 });

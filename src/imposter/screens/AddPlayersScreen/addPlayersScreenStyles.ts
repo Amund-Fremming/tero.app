@@ -64,9 +64,9 @@ export const styles = StyleSheet.create({
   },
 
   editButtonText: {
-    color: Color.White,
     fontFamily: Font.PassionOneBold,
-    fontSize: moderateScale(22),
+    color: Color.C2,
+    fontSize: moderateScale(24),
   },
 
   playersWrapper: {
@@ -86,7 +86,7 @@ export const styles = StyleSheet.create({
     backgroundColor: Color.BuzzifyLavenderLight,
     paddingHorizontal: moderateScale(15),
     paddingVertical: verticalScale(25),
-    borderRadius: moderateScale(10),
+    borderRadius: moderateScale(15),
     gap: moderateScale(12),
     position: "relative",
     height: verticalScale(95),
@@ -108,8 +108,8 @@ export const styles = StyleSheet.create({
   playerNameInput: {
     flex: 1,
     color: Color.White,
-    fontFamily: Font.PassionOneBold,
-    fontSize: moderateScale(20),
+    fontFamily: Font.PassionOneRegular,
+    fontSize: moderateScale(26),
     padding: 0,
   },
 });

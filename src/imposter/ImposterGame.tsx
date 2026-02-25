@@ -4,7 +4,7 @@ import { ImposterSession, ImposterSessionScreen } from "./constants/imposterType
 import { GameEntryMode } from "../common/constants/Types";
 import { useImposterSessionProvider } from "./context/ImposterSessionProvider";
 import CreateScreen from "./screens/CreateScreen/CreateScreen";
-import { GameScreen } from "./screens/GameScreen/GameScreen";
+import { RolesScreen } from "./screens/RolesScreen/RolesScreen";
 import LobbyScreen from "./screens/LobbyScreen/LobbyScreen";
 import { useModalProvider } from "../common/context/ModalProvider";
 import { resetToHomeScreen } from "../common/utils/navigation";
@@ -14,6 +14,7 @@ import { useAuthProvider } from "../common/context/AuthProvider";
 import { HubChannel } from "../common/constants/HubChannel";
 import StartedScreen from "./screens/StartedScreen/StartedScreen";
 import AddPlayersScreen from "./screens/AddPlayersScreen/AddPlayersScreen";
+import RevealScreen from "./screens/RevealScreen/RevealScreen";
 
 export const ImposterGame = () => {
   const navigation: any = useNavigation();
@@ -68,7 +69,7 @@ export const ImposterGame = () => {
 
     setListener("session", async (session: ImposterSession) => {
       setSession(session);
-      setScreen(ImposterSessionScreen.Game);
+      setScreen(ImposterSessionScreen.Roles);
     });
 
     setListener("signal_start", async (_value: boolean) => {
@@ -105,7 +106,7 @@ export const ImposterGame = () => {
       case GameEntryMode.Creator:
         return ImposterSessionScreen.Create;
       case GameEntryMode.Host:
-        return ImposterSessionScreen.Game;
+        return ImposterSessionScreen.Roles;
       case GameEntryMode.Participant || GameEntryMode.Member:
         return ImposterSessionScreen.ActiveLobby;
       default:
@@ -118,8 +119,10 @@ export const ImposterGame = () => {
       return (
         <CreateScreen onGameCreated={(address, key) => initializeHub(address, key, ImposterSessionScreen.AddPlayers)} />
       );
-    case ImposterSessionScreen.Game:
-      return <GameScreen />;
+    case ImposterSessionScreen.Roles:
+      return <RolesScreen />;
+    case ImposterSessionScreen.Reveal:
+      return <RevealScreen />;
     case ImposterSessionScreen.ActiveLobby:
       return <LobbyScreen />;
     case ImposterSessionScreen.Started:

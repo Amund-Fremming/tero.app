@@ -15,15 +15,23 @@ import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProv
 export const AddPlayersScreen = () => {
   const navigation: any = useNavigation();
 
-  const { displayErrorModal, displayInfoModal } = useModalProvider();
+  const { displayErrorModal, displayInfoModal, displayActionModal } = useModalProvider();
   const { invokeFunction } = useHubConnectionProvider();
-  const { gameKey } = useGlobalSessionProvider();
-  const { setScreen, players, setPlayers } = useImposterSessionProvider();
+  const { gameKey, clearGlobalSessionValues } = useGlobalSessionProvider();
+  const { setScreen, players, setPlayers, clearImposterSessionValues } = useImposterSessionProvider();
 
   const [editMode, setEditMode] = React.useState(false);
 
   const handleGoHome = () => {
-    resetToHomeScreen(navigation);
+    displayActionModal(
+      "Er du sikker på at du vil forlate spillet?",
+      () => {
+        clearGlobalSessionValues();
+        clearImposterSessionValues();
+        resetToHomeScreen(navigation);
+      },
+      () => {},
+    );
   };
 
   const handleInfoPressed = () => {
@@ -31,8 +39,24 @@ export const AddPlayersScreen = () => {
   };
 
   const handleNextPressed = async () => {
-    ensureNoDuplicates();
+    if (!ensureNoDuplicates()) {
+      return;
+    }
 
+    const defaultNamePrefixCount = players.filter((name) => name.startsWith("Spiller")).length;
+    if (defaultNamePrefixCount === players.length) {
+      displayActionModal(
+        "Du kan endre spiller navn ved å trykke på kortene. Vil du endre navn?",
+        () => {},
+        addPlayersToServer,
+      );
+      return;
+    }
+
+    addPlayersToServer();
+  };
+
+  const addPlayersToServer = async () => {
     const result = await invokeFunction("AddPlayers", gameKey, players);
     if (result.isError()) {
       console.error("Failed to AddPlayers:", result.error);
@@ -50,23 +74,25 @@ export const AddPlayersScreen = () => {
     setScreen(ImposterSessionScreen.ActiveLobby);
   };
 
-  const ensureNoDuplicates = () => {
+  const ensureNoDuplicates = (): boolean => {
     const seen = new Set();
     for (const name of players) {
-      const trimmedName = name.trim();
+      const trimmedName = name.trim().toLocaleLowerCase();
 
       if (!trimmedName) {
         displayErrorModal("Alle spillere må ha et navn");
-        return;
+        return false;
       }
 
       if (seen.has(trimmedName)) {
         displayErrorModal("Kan ikke ha duplikat navn");
-        return;
+        return false;
       }
 
       seen.add(trimmedName);
     }
+
+    return true;
   };
 
   const handleAddPlayer = () => {
