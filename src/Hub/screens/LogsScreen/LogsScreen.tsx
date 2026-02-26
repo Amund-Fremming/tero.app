@@ -1,14 +1,14 @@
 import { Pressable, ScrollView, Text, View } from "react-native";
 import styles from "./logsScreenStyles";
-import { useAuthProvider } from "@/src/common/context/AuthProvider";
-import { useServiceProvider } from "@/src/common/context/ServiceProvider";
+import { useAuthProvider } from "@/src/core/context/AuthProvider";
+import { useServiceProvider } from "@/src/core/context/ServiceProvider";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigation } from "expo-router";
-import Color from "@/src/common/constants/Color";
-import { useModalProvider } from "@/src/common/context/ModalProvider";
-import { SystemLog, LogCeverity, PagedResponse } from "@/src/common/constants/Types";
-import ScreenHeader from "@/src/common/components/ScreenHeader/ScreenHeader";
-import VerticalScroll from "@/src/common/wrappers/VerticalScroll";
+import Color from "@/src/core/constants/Color";
+import { useModalProvider } from "@/src/core/context/ModalProvider";
+import { SystemLog, LogCeverity, PagedResponse } from "@/src/core/constants/Types";
+import ScreenHeader from "@/src/core/components/ScreenHeader/ScreenHeader";
+import VerticalScroll from "@/src/core/components/VerticalScroll/VerticalScroll";
 
 export const LogsScreen = () => {
   const navigation: any = useNavigation();

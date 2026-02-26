@@ -1,20 +1,18 @@
 import HubConnectionProvider from "@/src/common/context/HubConnectionProvider";
-import GlobalGameProvider from "../src/common/context/GlobalSessionProvider";
-import ModalProvider from "@/src/common/context/ModalProvider";
+import GlobalGameProvider from "../src/core/context/GlobalSessionProvider";
+import ModalProvider from "@/src/core/context/ModalProvider";
 import Hub from "@/src/hub/Hub";
-import AuthProvider from "../src/common/context/AuthProvider";
-import ServiceProvider from "@/src/common/context/ServiceProvider";
+import AuthProvider from "../src/core/context/AuthProvider";
+import ServiceProvider from "@/src/core/context/ServiceProvider";
 import { View, StatusBar, Dimensions } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { useEffect } from "react";
+import QuizSessionProvider from "@/src/games/quizGame/context/QuizGameProvider";
+import ImposterSessionProvider from "@/src/games/imposter/context/ImposterSessionProvider";
+import SpinSessionProvider from "@/src/games/spinGame/context/SpinGameProvider";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
-import QuizSessionProvider from "@/src/quizGame/context/QuizGameProvider";
-import SpinSessionProvider from "@/src/spinGame/context/SpinGameProvider";
-import ImposterSessionProvider from "@/src/imposter/context/ImposterSessionProvider";
-import "@/src/common/utils/logConfig"; // Configure logging
-
 const { width, height } = Dimensions.get("window");
 
 export default () => (

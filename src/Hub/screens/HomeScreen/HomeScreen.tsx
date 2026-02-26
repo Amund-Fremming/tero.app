@@ -1,15 +1,15 @@
 import { View, Text, Pressable, Image } from "react-native";
-import Screen from "../../../common/constants/Screen";
+import Screen from "../../../core/constants/Screen";
 import styles from "./homeScreenStyles";
-import { useGlobalSessionProvider } from "../../../common/context/GlobalSessionProvider";
+import { useGlobalSessionProvider } from "../../../core/context/GlobalSessionProvider";
 import { useEffect, useState } from "react";
-import { useServiceProvider } from "@/src/common/context/ServiceProvider";
-import { useModalProvider } from "@/src/common/context/ModalProvider";
-import { useAuthProvider } from "@/src/common/context/AuthProvider";
-import DiagonalSplit from "../../../common/components/Shapes/DiagonalSplit";
-import ArcWithCircles from "../../../common/components/Shapes/ArcWithCircles";
-import ScatteredCircles from "../../../common/components/Shapes/ScatteredCircles";
-import { GameEntryMode } from "@/src/common/constants/Types";
+import { useServiceProvider } from "@/src/core/context/ServiceProvider";
+import { useModalProvider } from "@/src/core/context/ModalProvider";
+import { useAuthProvider } from "@/src/core/context/AuthProvider";
+import DiagonalSplit from "../../../core/components/Shapes/DiagonalSplit";
+import ArcWithCircles from "../../../core/components/Shapes/ArcWithCircles";
+import ScatteredCircles from "../../../core/components/Shapes/ScatteredCircles";
+import { GameEntryMode } from "@/src/core/constants/Types";
 import * as SecureStore from "expo-secure-store";
 
 import redFigure from "../../../common/assets/images/red-figure.png";
@@ -59,13 +59,10 @@ export const HomeScreen = () => {
 
     const maxAttempts = 5;
     const baseDelay = 1000;
-    displayLoadingModal(
-      () => {
-        closeLoadingModal();
-        navigation.navigate(Screen.Problem);
-      },
-      "Trying to reconnect.",
-    );
+    displayLoadingModal(() => {
+      closeLoadingModal();
+      navigation.navigate(Screen.Problem);
+    }, "Trying to reconnect.");
 
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const result = await ensurePseudoId();

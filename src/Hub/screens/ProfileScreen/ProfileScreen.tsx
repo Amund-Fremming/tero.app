@@ -1,17 +1,17 @@
 import { Image, Pressable, Text, View } from "react-native";
 import { styles } from "./profileScreenStyles";
-import { useAuthProvider } from "@/src/common/context/AuthProvider";
+import { useAuthProvider } from "@/src/core/context/AuthProvider";
 import { useEffect, useState } from "react";
-import { UserRole } from "@/src/common/constants/Types";
-import { useServiceProvider } from "@/src/common/context/ServiceProvider";
+import { UserRole } from "@/src/core/constants/Types";
+import { useServiceProvider } from "@/src/core/context/ServiceProvider";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
-import Color from "@/src/common/constants/Color";
-import Screen from "@/src/common/constants/Screen";
-import { horizontalScale } from "@/src/common/utils/dimensions";
-import ScreenHeader from "@/src/common/components/ScreenHeader/ScreenHeader";
-import VerticalScroll from "@/src/common/wrappers/VerticalScroll";
-import { useModalProvider } from "@/src/common/context/ModalProvider";
+import Color from "@/src/core/constants/Color";
+import Screen from "@/src/core/constants/Screen";
+import { horizontalScale } from "@/src/core/utils/dimensions";
+import ScreenHeader from "@/src/core/components/ScreenHeader/ScreenHeader";
+import VerticalScroll from "@/src/core/components/VerticalScroll/VerticalScroll";
+import { useModalProvider } from "@/src/core/context/ModalProvider";
 
 export const ProfileScreen = () => {
   const navigation: any = useNavigation();
