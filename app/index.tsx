@@ -1,5 +1,5 @@
-import HubConnectionProvider from "@/src/common/context/HubConnectionProvider";
-import GlobalGameProvider from "../src/core/context/GlobalSessionProvider";
+import HubConnectionProvider from "@/src/play/context/HubConnectionProvider";
+import GlobalGameProvider from "../src/play/context/GlobalSessionProvider";
 import ModalProvider from "@/src/core/context/ModalProvider";
 import Hub from "@/src/hub/Hub";
 import AuthProvider from "../src/core/context/AuthProvider";
@@ -8,9 +8,9 @@ import { View, StatusBar, Dimensions } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { useEffect } from "react";
-import QuizSessionProvider from "@/src/games/quizGame/context/QuizGameProvider";
-import ImposterSessionProvider from "@/src/games/imposter/context/ImposterSessionProvider";
-import SpinSessionProvider from "@/src/games/spinGame/context/SpinGameProvider";
+import QuizSessionProvider from "@/src/play/games/quizGame/context/QuizGameProvider";
+import ImposterSessionProvider from "@/src/play/games/imposter/context/ImposterSessionProvider";
+import SpinSessionProvider from "@/src/play/games/spinGame/context/SpinGameProvider";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 const { width, height } = Dimensions.get("window");
@@ -40,12 +40,12 @@ export default () => (
 
 const FontLoader = ({ children }: { children: React.ReactNode }) => {
   const [fontsLoaded] = Font.useFonts({
-    "PassionOne-Regular": require("../src/common/assets/fonts/PassionOne-Regular.ttf"),
-    "PassionOne-Bold": require("../src/common/assets/fonts/PassionOne-Bold.ttf"),
-    "SpaceMono-Regular": require("../src/common/assets/fonts/SpaceMono-Regular.ttf"),
-    "Sintony-Regular": require("../src/common/assets/fonts/Sintony-Regular.ttf"),
-    "Sintony-Bold": require("../src/common/assets/fonts/Sintony-Bold.ttf"),
-    "ArchivoBlack-Regular": require("../src/common/assets/fonts/ArchivoBlack-Regular.ttf"),
+    "PassionOne-Regular": require("../src/core/assets/fonts/PassionOne-Regular.ttf"),
+    "PassionOne-Bold": require("../src/core/assets/fonts/PassionOne-Bold.ttf"),
+    "SpaceMono-Regular": require("../src/core/assets/fonts/SpaceMono-Regular.ttf"),
+    "Sintony-Regular": require("../src/core/assets/fonts/Sintony-Regular.ttf"),
+    "Sintony-Bold": require("../src/core/assets/fonts/Sintony-Bold.ttf"),
+    "ArchivoBlack-Regular": require("../src/core/assets/fonts/ArchivoBlack-Regular.ttf"),
   });
 
   useEffect(() => {

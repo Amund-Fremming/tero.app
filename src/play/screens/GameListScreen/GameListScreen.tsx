@@ -1,13 +1,13 @@
 import { Pressable, Text, View, TouchableOpacity, ScrollView } from "react-native";
-import VerticalScroll from "../../wrappers/VerticalScroll";
+import VerticalScroll from "../../../core/components/VerticalScroll/VerticalScroll";
 import { useEffect, useRef, useState } from "react";
-import { useModalProvider } from "../../context/ModalProvider";
-import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
-import { useAuthProvider } from "../../context/AuthProvider";
+import { useModalProvider } from "../../../core/context/ModalProvider";
+import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
+import { useAuthProvider } from "../../../core/context/AuthProvider";
 import { useNavigation } from "@react-navigation/native";
-import { useQuizSessionProvider } from "@/src/quizGame/context/QuizGameProvider";
+import { useQuizSessionProvider } from "@/src/play/games/quizGame/context/QuizGameProvider";
 import styles from "./gameListScreenStyles";
-import { useServiceProvider } from "../../context/ServiceProvider";
+import { useServiceProvider } from "../../../core/context/ServiceProvider";
 import {
   GameBase,
   GameCategory,
@@ -15,13 +15,13 @@ import {
   GamePagedRequest,
   GameType,
   PagedResponse,
-} from "../../constants/Types";
-import Screen from "../../constants/Screen";
+} from "../../../core/constants/Types";
+import Screen from "../../../core/constants/Screen";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import Color from "../../constants/Color";
-import { QuizSession } from "@/src/quizGame/constants/quizTypes";
-import { moderateScale } from "../../utils/dimensions";
-import ScreenHeader from "../../components/ScreenHeader/ScreenHeader";
+import Color from "../../../core/constants/Color";
+import { QuizSession } from "@/src/play/games/quizGame/constants/quizTypes";
+import { moderateScale } from "../../../core/utils/dimensions";
+import ScreenHeader from "../../../core/components/ScreenHeader/ScreenHeader";
 import React from "react";
 
 const CATEGORY_LABELS: Record<GameCategory, string> = {

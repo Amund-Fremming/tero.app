@@ -24,7 +24,7 @@ export const ProfileScreen = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<string>("");
 
-  const crown = require("../../../common/assets/images/crown.png");
+  const crown = require("../../../core/assets/images/crown.png");
 
   useEffect(() => {
     setAvatar(userService().getProfilePicture(pseudoId, userData?.username));

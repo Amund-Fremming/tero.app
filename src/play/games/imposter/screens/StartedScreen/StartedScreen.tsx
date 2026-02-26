@@ -3,9 +3,9 @@ import styles from "./startedScreenStyles";
 import ScreenHeader from "@/src/core/components/ScreenHeader/ScreenHeader";
 import Color from "@/src/core/constants/Color";
 import { useNavigation } from "expo-router";
-import { resetToHomeScreen } from "@/src/common/utils/navigation";
+import { resetToHomeScreen } from "@/src/core/utils/utilFunctions";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
-import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
+import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
 import { useImposterSessionProvider } from "../../context/ImposterSessionProvider";
 
 export const StartedScreen = () => {

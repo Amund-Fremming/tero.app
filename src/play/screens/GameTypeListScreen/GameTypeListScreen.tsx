@@ -1,24 +1,23 @@
 import styles from "./gameTypeListScreenStyles";
 import data from "./data.json";
-import { View, Text, Pressable, ScrollView, Dimensions, Image, TouchableOpacity } from "react-native";
+import { View, Text, Pressable, ScrollView, Dimensions, Image } from "react-native";
 import React from "react";
 import { useNavigation } from "expo-router";
 import { useGlobalSessionProvider } from "../../context/GlobalSessionProvider";
-import Screen from "../../constants/Screen";
-import { moderateScale, verticalScale } from "../../utils/dimensions";
-import { Feather } from "@expo/vector-icons";
-import { GameEntryMode, GameType } from "../../constants/Types";
-import Color from "../../constants/Color";
-import ScreenHeader from "../../components/ScreenHeader/ScreenHeader";
+import Screen from "../../../core/constants/Screen";
+import { verticalScale } from "../../../core/utils/dimensions";
+import { GameEntryMode, GameType } from "../../../core/constants/Types";
+import Color from "../../../core/constants/Color";
+import ScreenHeader from "../../../core/components/ScreenHeader/ScreenHeader";
 
 const { height } = Dimensions.get("window");
 
 const iconMap: { [key: string]: any } = {
-  "quiz.webp": require("../../assets/images/quiz.webp"),
-  "roulette.webp": require("../../assets/images/roulette.webp"),
-  "duel.webp": require("../../assets/images/duel.webp"),
-  "imposter.webp": require("../../assets/images/imposter.webp"),
-  "dice.webp": require("../../assets/images/dice.webp"),
+  "quiz.webp": require("../../../core/assets/images/quiz.webp"),
+  "roulette.webp": require("../../../core/assets/images/roulette.webp"),
+  "duel.webp": require("../../../core/assets/images/duel.webp"),
+  "imposter.webp": require("../../../core/assets/images/imposter.webp"),
+  "dice.webp": require("../../../core/assets/images/dice.webp"),
 };
 
 export const GameTypeListScreen = () => {
@@ -83,7 +82,7 @@ export const GameTypeListScreen = () => {
             </Pressable>
           ))}
         <Pressable key={100} style={styles.card} onPress={() => navigation.navigate(Screen.TipsUs)}>
-          <Image source={require("../../assets/images/finger.jpg")} style={styles.cardImage} />
+          <Image source={require("../../../core/assets/images/finger.jpg")} style={styles.cardImage} />
           <Text style={{ ...styles.cardHeader, color: Color.White }}>Ditt spill?</Text>
         </Pressable>
       </ScrollView>

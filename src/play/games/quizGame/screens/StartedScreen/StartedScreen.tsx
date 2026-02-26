@@ -3,7 +3,7 @@ import styles from "./startedScreenStyles";
 import ScreenHeader from "@/src/core/components/ScreenHeader/ScreenHeader";
 import Color from "@/src/core/constants/Color";
 import { useNavigation } from "expo-router";
-import { resetToHomeScreen } from "@/src/common/utils/navigation";
+import { resetToHomeScreen } from "@/src/core/utils/utilFunctions";
 
 export const StartedScreen = () => {
   const navigation: any = useNavigation();

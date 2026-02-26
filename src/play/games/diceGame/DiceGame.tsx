@@ -1,8 +1,8 @@
 import { View } from "react-native";
 import { styles } from "./diceGameStyles";
-import ScreenHeader from "../common/components/ScreenHeader/ScreenHeader";
 import { useNavigation } from "expo-router";
-import Color from "../common/constants/Color";
+import ScreenHeader from "@/src/core/components/ScreenHeader/ScreenHeader";
+import Color from "@/src/core/constants/Color";
 
 export const DiceGame = () => {
   const navigation: any = useNavigation();

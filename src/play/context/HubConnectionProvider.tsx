@@ -1,10 +1,10 @@
 import * as signalR from "@microsoft/signalr";
 import React, { createContext, ReactNode, useContext, useEffect, useRef } from "react";
-import { useModalProvider } from "./ModalProvider";
+import { useModalProvider } from "../../core/context/ModalProvider";
 import { useNavigation } from "expo-router";
-import { ok, err, Result } from "../utils/result";
-import { resetToHomeScreen } from "../utils/navigation";
-import { useAuthProvider } from "./AuthProvider";
+import { ok, err, Result } from "../../core/utils/result";
+import { resetToHomeScreen } from "../../core/utils/utilFunctions";
+import { useAuthProvider } from "../../core/context/AuthProvider";
 import { useGlobalSessionProvider } from "./GlobalSessionProvider";
 
 interface IHubConnectionContext {

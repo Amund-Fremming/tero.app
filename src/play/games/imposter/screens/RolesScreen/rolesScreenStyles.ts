@@ -43,20 +43,6 @@ export const styles = StyleSheet.create({
     columnGap: "4%",
   },
 
-  playerCard: {
-    width: "48%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    backgroundColor: Color.BuzzifyLavenderLight,
-    paddingHorizontal: moderateScale(15),
-    paddingVertical: verticalScale(25),
-    borderRadius: moderateScale(15),
-    gap: moderateScale(12),
-    height: verticalScale(95),
-    overflow: "hidden",
-  },
-
   buttonText: {
     color: Color.White,
     fontFamily: Font.PassionOneBold,
@@ -71,21 +57,6 @@ export const styles = StyleSheet.create({
     marginTop: "auto",
     paddingTop: verticalScale(20),
     paddingBottom: 50,
-  },
-
-  playerCardFill: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    backgroundColor: Color.Black,
-  },
-
-  playerNameText: {
-    flex: 1,
-    color: Color.White,
-    fontFamily: Font.PassionOneRegular,
-    fontSize: moderateScale(26),
   },
 
   nextButton: {

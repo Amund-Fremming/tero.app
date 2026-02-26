@@ -5,7 +5,7 @@ import { Pressable, TextInput } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
 import { useAuthProvider } from "@/src/core/context/AuthProvider";
-import { useGlobalSessionProvider } from "../../../core/context/GlobalSessionProvider";
+import { useGlobalSessionProvider } from "../../../play/context/GlobalSessionProvider";
 import { Feather } from "@expo/vector-icons";
 import Color from "@/src/core/constants/Color";
 import { GameEntryMode, GameType } from "@/src/core/constants/Types";
@@ -82,7 +82,7 @@ export const JoinScreen = () => {
         backgroundColor={Color.HomeRed}
       />
       <View style={styles.cardWrapper}>
-        <Image source={require("@/src/common/assets/images/tero.webp")} style={styles.mascot} resizeMode="contain" />
+        <Image source={require("@/src/core/assets/images/tero.webp")} style={styles.mascot} resizeMode="contain" />
         <View style={styles.card}>
           <View style={styles.inputContainer}>
             <Feather

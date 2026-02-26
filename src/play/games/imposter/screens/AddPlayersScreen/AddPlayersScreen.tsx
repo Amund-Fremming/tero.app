@@ -2,15 +2,15 @@ import { View, Text, TouchableOpacity, TextInput, ScrollView } from "react-nativ
 import styles from "./addPlayersScreenStyles";
 import ScreenHeader from "@/src/core/components/ScreenHeader/ScreenHeader";
 import { useNavigation } from "expo-router";
-import { resetToHomeScreen } from "@/src/common/utils/navigation";
+import { resetToHomeScreen } from "@/src/core/utils/utilFunctions";
 import React from "react";
 import Color from "@/src/core/constants/Color";
 import { Feather } from "@expo/vector-icons";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
-import { useHubConnectionProvider } from "@/src/common/context/HubConnectionProvider";
+import { useHubConnectionProvider } from "@/src/play/context/HubConnectionProvider";
 import { ImposterSessionScreen } from "../../constants/imposterTypes";
 import { useImposterSessionProvider } from "../../context/ImposterSessionProvider";
-import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
+import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
 
 export const AddPlayersScreen = () => {
   const navigation: any = useNavigation();

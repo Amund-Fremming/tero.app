@@ -7,8 +7,8 @@ import { QuizSession } from "../../constants/quizTypes";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
 import { Feather } from "@expo/vector-icons";
 import { moderateScale } from "@/src/core/utils/dimensions";
-import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
-import { resetToHomeScreen } from "@/src/common/utils/navigation";
+import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
+import { resetToHomeScreen } from "@/src/core/utils/utilFunctions";
 
 export const GameScreen = () => {
   const navigation: any = useNavigation();

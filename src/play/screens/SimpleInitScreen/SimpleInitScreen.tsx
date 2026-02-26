@@ -4,8 +4,8 @@ import { TextInput } from "react-native-gesture-handler";
 import { Feather, FontAwesome6, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import { moderateScale, verticalScale } from "@/src/core/utils/dimensions";
 import CategoryDropdown from "../../components/CategoryDropdown/CategoryDropdown";
-import { GameCategory } from "../../constants/Types";
-import Color from "../../constants/Color";
+import { GameCategory } from "../../../core/constants/Types";
+import Color from "../../../core/constants/Color";
 import { useGlobalSessionProvider } from "../../context/GlobalSessionProvider";
 import { useNavigation } from "expo-router";
 

@@ -2,16 +2,16 @@ import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import styles from "./gameScreenStyles";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { SpinGameState } from "../../constants/SpinTypes";
-import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
+import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
 import Color from "@/src/core/constants/Color";
-import { useHubConnectionProvider } from "@/src/common/context/HubConnectionProvider";
+import { useHubConnectionProvider } from "@/src/play/context/HubConnectionProvider";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
 import { useAuthProvider } from "@/src/core/context/AuthProvider";
 import { useSpinSessionProvider } from "../../context/SpinGameProvider";
 import { Feather } from "@expo/vector-icons";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { moderateScale } from "@/src/core/utils/dimensions";
-import { resetToHomeScreen } from "@/src/common/utils/navigation";
+import { resetToHomeScreen } from "@/src/core/utils/utilFunctions";
 
 export const GameScreen = () => {
   const navigation: any = useNavigation();

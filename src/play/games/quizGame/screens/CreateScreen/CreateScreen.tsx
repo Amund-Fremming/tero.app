@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { CreateGameRequest, GameCategory, GameEntryMode, GameType } from "@/src/core/constants/Types";
 import { useAuthProvider } from "@/src/core/context/AuthProvider";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
-import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
+import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
 import { useServiceProvider } from "@/src/core/context/ServiceProvider";
 import { useNavigation } from "expo-router";
 import { QuizGameScreen as QuizSessionScreen } from "../../constants/quizTypes";
 import { useQuizSessionProvider } from "../../context/QuizGameProvider";
 import Color from "@/src/core/constants/Color";
-import SimpleInitScreen from "@/src/common/screens/SimpleInitScreen/SimpleInitScreen";
+import SimpleInitScreen from "@/src/play/screens/SimpleInitScreen/SimpleInitScreen";
 
 export const CreateScreen = () => {
   const navigation: any = useNavigation();

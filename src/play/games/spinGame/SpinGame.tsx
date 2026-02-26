@@ -1,19 +1,19 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
-import { GameEntryMode } from "../common/constants/Types";
+import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
 import CreateScreen from "./screens/CreateScreen/CreateScreen";
 import { GameScreen } from "./screens/GameScreen/GameScreen";
 import ActiveLobbyScreen from "./screens/ActiveLobbyScreen/ActiveLobbyScreen";
 import PassiveLobbyScreen from "./screens/PassiveLobbyScreen/PassiveLobbyScreen";
 import { SpinSessionScreen, SpinGameState } from "./constants/SpinTypes";
 import { useSpinSessionProvider } from "./context/SpinGameProvider";
-import { useHubConnectionProvider } from "../common/context/HubConnectionProvider";
-import { useModalProvider } from "../common/context/ModalProvider";
-import { useAuthProvider } from "../common/context/AuthProvider";
-import { HubChannel } from "../common/constants/HubChannel";
 import { View, ActivityIndicator } from "react-native";
-import { resetToHomeScreen } from "../common/utils/navigation";
 import { useNavigation } from "expo-router";
+import { GameEntryMode } from "@/src/core/constants/Types";
+import { useAuthProvider } from "@/src/core/context/AuthProvider";
+import { useModalProvider } from "@/src/core/context/ModalProvider";
+import { useHubConnectionProvider } from "../../context/HubConnectionProvider";
+import { resetToHomeScreen } from "@/src/core/utils/utilFunctions";
+import { HubChannel } from "@/src/core/constants/HubChannel";
 
 export const SpinGame = () => {
   const navigation: any = useNavigation();

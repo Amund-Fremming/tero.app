@@ -1,7 +1,6 @@
 import axios from "axios";
 import { err, ok, Result } from "../utils/result";
 import { LogCeverity, LogCategoryCount, PagedResponse, SystemHealth, SystemLog, GameTip } from "../constants/Types";
-import { getHeaders } from "../utils/utilFunctions";
 
 export class CommonService {
   urlBase: string;

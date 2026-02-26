@@ -2,10 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { CreateGameRequest, GameCategory, GameEntryMode } from "@/src/core/constants/Types";
 import { useAuthProvider } from "@/src/core/context/AuthProvider";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
-import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
+import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
 import { useServiceProvider } from "@/src/core/context/ServiceProvider";
 import { useFocusEffect, useNavigation } from "expo-router";
-import SimpleInitScreen from "@/src/common/screens/SimpleInitScreen/SimpleInitScreen";
+import SimpleInitScreen from "@/src/play/screens/SimpleInitScreen/SimpleInitScreen";
 import Color from "@/src/core/constants/Color";
 
 export const CreateScreen = ({

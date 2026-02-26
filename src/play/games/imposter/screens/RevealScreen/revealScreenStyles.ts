@@ -41,6 +41,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     gap: verticalScale(8),
     paddingHorizontal: moderateScale(20),
+    paddingBottom: verticalScale(150),
   },
 
   imposterLabel: {

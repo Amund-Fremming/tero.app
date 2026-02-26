@@ -2,14 +2,14 @@ import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { styles } from "./tipsUsScreenStyles";
 import { TextInput } from "react-native-gesture-handler";
 import { useNavigation } from "expo-router";
-import { useModalProvider } from "../../context/ModalProvider";
+import { useModalProvider } from "../../../core/context/ModalProvider";
 import { Feather } from "@expo/vector-icons";
-import Color from "../../constants/Color";
-import ScreenHeader from "../../components/ScreenHeader/ScreenHeader";
-import { moderateScale } from "../../utils/dimensions";
+import Color from "../../../core/constants/Color";
+import ScreenHeader from "../../../core/components/ScreenHeader/ScreenHeader";
+import { moderateScale } from "../../../core/utils/dimensions";
 import { useState } from "react";
-import { useServiceProvider } from "../../context/ServiceProvider";
-import { CreateGameTipRequest } from "../../constants/Types";
+import { useServiceProvider } from "../../../core/context/ServiceProvider";
+import { CreateGameTipRequest } from "../../../core/constants/Types";
 
 export const TipsUsScreen = () => {
   const navigation: any = useNavigation();

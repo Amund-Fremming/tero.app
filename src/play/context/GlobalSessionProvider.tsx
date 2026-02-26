@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { GameEntryMode, GameType } from "../constants/Types";
+import { GameEntryMode, GameType } from "../../core/constants/Types";
 
 interface IGlobalSessionContext {
   gameEntryMode: GameEntryMode;

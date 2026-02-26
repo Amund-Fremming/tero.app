@@ -12,11 +12,11 @@ import Color from "@/src/core/constants/Color";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import ScreenHeader from "@/src/core/components/ScreenHeader/ScreenHeader";
 import React from "react";
-import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
+import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
 import Screen from "@/src/core/constants/Screen";
-import { useSpinSessionProvider } from "@/src/spinGame/context/SpinGameProvider";
-import { useQuizSessionProvider } from "@/src/quizGame/context/QuizGameProvider";
-import { QuizSession } from "@/src/quizGame/constants/quizTypes";
+import { useSpinSessionProvider } from "@/src/play/games/spinGame/context/SpinGameProvider";
+import { useQuizSessionProvider } from "@/src/play/games/quizGame/context/QuizGameProvider";
+import { QuizSession } from "@/src/play/games/quizGame/constants/quizTypes";
 
 const CATEGORY_LABELS: Record<GameCategory, string> = {
   [GameCategory.Girls]: "Jentene",

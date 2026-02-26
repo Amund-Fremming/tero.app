@@ -1,20 +1,20 @@
 import { useEffect, useRef, useState } from "react";
-import { useGlobalSessionProvider } from "../../common/context/GlobalSessionProvider";
 import { ImposterSession, ImposterSessionScreen } from "./constants/imposterTypes";
-import { GameEntryMode } from "../../common/constants/Types";
 import { useImposterSessionProvider } from "./context/ImposterSessionProvider";
 import CreateScreen from "./screens/CreateScreen/CreateScreen";
 import { RolesScreen } from "./screens/RolesScreen/RolesScreen";
 import LobbyScreen from "./screens/LobbyScreen/LobbyScreen";
-import { useModalProvider } from "../../common/context/ModalProvider";
-import { resetToHomeScreen } from "../../common/utils/navigation";
-import { useHubConnectionProvider } from "../../common/context/HubConnectionProvider";
 import { useNavigation } from "expo-router";
-import { useAuthProvider } from "../../common/context/AuthProvider";
-import { HubChannel } from "../../common/constants/HubChannel";
 import StartedScreen from "./screens/StartedScreen/StartedScreen";
 import AddPlayersScreen from "./screens/AddPlayersScreen/AddPlayersScreen";
 import RevealScreen from "./screens/RevealScreen/RevealScreen";
+import { useGlobalSessionProvider } from "../../context/GlobalSessionProvider";
+import { useModalProvider } from "@/src/core/context/ModalProvider";
+import { HubChannel } from "@/src/core/constants/HubChannel";
+import { resetToHomeScreen } from "@/src/core/utils/utilFunctions";
+import { useAuthProvider } from "@/src/core/context/AuthProvider";
+import { useHubConnectionProvider } from "../../context/HubConnectionProvider";
+import { GameEntryMode } from "@/src/core/constants/Types";
 
 export const ImposterGame = () => {
   const navigation: any = useNavigation();

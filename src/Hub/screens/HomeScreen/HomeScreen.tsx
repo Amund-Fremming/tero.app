@@ -1,7 +1,7 @@
 import { View, Text, Pressable, Image } from "react-native";
 import Screen from "../../../core/constants/Screen";
 import styles from "./homeScreenStyles";
-import { useGlobalSessionProvider } from "../../../core/context/GlobalSessionProvider";
+import { useGlobalSessionProvider } from "../../../play/context/GlobalSessionProvider";
 import { useEffect, useState } from "react";
 import { useServiceProvider } from "@/src/core/context/ServiceProvider";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
@@ -12,7 +12,7 @@ import ScatteredCircles from "../../../core/components/Shapes/ScatteredCircles";
 import { GameEntryMode } from "@/src/core/constants/Types";
 import * as SecureStore from "expo-secure-store";
 
-import redFigure from "../../../common/assets/images/red-figure.png";
+import redFigure from "../../../core/assets/images/red-figure.png";
 import { useNavigation } from "expo-router";
 
 const subHeaderList = [

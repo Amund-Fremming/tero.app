@@ -1,16 +1,16 @@
-import { useGlobalSessionProvider } from "@/src/common/context/GlobalSessionProvider";
+import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
 import { useEffect, useState } from "react";
-import { useHubConnectionProvider } from "@/src/common/context/HubConnectionProvider";
+import { useHubConnectionProvider } from "@/src/play/context/HubConnectionProvider";
 import { HubChannel } from "@/src/core/constants/HubChannel";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
 import { useAuthProvider } from "@/src/core/context/AuthProvider";
 import { useNavigation } from "expo-router";
 import { GameType } from "@/src/core/constants/Types";
-import SimpleInitScreen from "@/src/common/screens/SimpleInitScreen/SimpleInitScreen";
+import SimpleInitScreen from "@/src/play/screens/SimpleInitScreen/SimpleInitScreen";
 import { useImposterSessionProvider } from "../../context/ImposterSessionProvider";
 import { ImposterSessionScreen } from "../../constants/imposterTypes";
 import Color from "@/src/core/constants/Color";
-import { resetToHomeScreen } from "@/src/common/utils/navigation";
+import { resetToHomeScreen } from "@/src/core/utils/utilFunctions";
 
 export const LobbyScreen = () => {
   const navigation: any = useNavigation();
