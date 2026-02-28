@@ -157,12 +157,7 @@ export const RevealScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ScreenHeader
-        miniHeader="Finn"
-        title="Avsløring"
-        onBackPressed={handleLeaveGame}
-        onInfoPress={handleInfoPressed}
-      />
+      <ScreenHeader title="Avsløring" onBackPressed={handleLeaveGame} onInfoPress={handleInfoPressed} />
 
       <View style={styles.centerContent}>
         <Pressable onPress={handleReveal} disabled={revealed}>

@@ -52,30 +52,36 @@ export const AddPlayersScreen = () => {
 
     const defaultNamePrefixCount = players.filter((name) => name.startsWith("Spiller")).length;
     if (defaultNamePrefixCount === players.length) {
-      displayActionModal(
-        "Du kan endre spiller navn ved å trykke på kortene. Vil du endre navn?",
-        () => {},
-        addPlayersToServer,
-      );
+      displayActionModal("Du kan endre spiller navn ved å trykke på kortene. Vil du endre navn?", () => {}, addPlayers);
       return;
     }
 
+    addPlayers();
+  };
+
+  const addPlayers = () => {
     if (gameEntryMode === GameEntryMode.Creator) {
       addPlayersToServer();
+      setScreen(ImposterSessionScreen.ActiveLobby);
       return;
     }
 
     if (gameEntryMode === GameEntryMode.Host) {
-      setImposterSession((prev) => {
-        if (!prev) return prev;
-
-        return {
-          ...prev,
-          players: new Set(players),
-        };
-      });
+      addPlayerToProvider();
+      setScreen(ImposterSessionScreen.Roles);
       return;
     }
+  };
+
+  const addPlayerToProvider = () => {
+    setImposterSession((prev) => {
+      if (!prev) return prev;
+
+      return {
+        ...prev,
+        players: new Set(players),
+      };
+    });
   };
 
   const addPlayersToServer = async () => {
@@ -92,8 +98,6 @@ export const AddPlayersScreen = () => {
       // TODO - return to home?
       return;
     }
-
-    setScreen(ImposterSessionScreen.ActiveLobby);
   };
 
   const ensureNoDuplicates = (): boolean => {
