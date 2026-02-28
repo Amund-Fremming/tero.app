@@ -45,7 +45,7 @@ export const SavedGamesScreen = () => {
   const { gameService } = useServiceProvider();
   const { accessToken, pseudoId } = useAuthProvider();
   const { displayErrorModal } = useModalProvider();
-  const { setIsHost, setGameKey, setHubAddress, setGameEntryMode, setIsDraft } = useGlobalSessionProvider();
+  const { setIsHost, setGameKey, setHubName, setGameEntryMode, setIsDraft } = useGlobalSessionProvider();
   const { setQuizSession } = useQuizSessionProvider();
 
   const [pagedResponse, setPagedResponse] = useState<PagedResponse<GameBase>>({
@@ -143,7 +143,7 @@ export const SavedGamesScreen = () => {
         const roulette = rResult.value;
         setIsDraft(roulette.is_draft);
         setGameKey(roulette.key);
-        setHubAddress(roulette.hub_address);
+        setHubName(roulette.hub_name);
         navigation.navigate(Screen.Spin);
         break;
       case GameType.Duel:
@@ -158,7 +158,7 @@ export const SavedGamesScreen = () => {
         const duel = dResult.value;
         setIsDraft(duel.is_draft);
         setGameKey(duel.key);
-        setHubAddress(duel.hub_address);
+        setHubName(duel.hub_name);
         navigation.navigate(Screen.Spin);
         break;
       default:

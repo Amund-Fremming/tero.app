@@ -6,9 +6,10 @@ import { ok, err, Result } from "../../core/utils/result";
 import { resetToHomeScreen } from "../../core/utils/utilFunctions";
 import { useAuthProvider } from "../../core/context/AuthProvider";
 import { useGlobalSessionProvider } from "./GlobalSessionProvider";
+import { HUB_URL_BASE } from "../../core/config/api";
 
 interface IHubConnectionContext {
-  connect: (hubAddress: string) => Promise<Result<signalR.HubConnection>>;
+  connect: (hubName: string) => Promise<Result<signalR.HubConnection>>;
   disconnect: () => Promise<Result>;
   debugDisconnect: () => Promise<void>;
   setListener: <T>(channel: string, fn: (item: T) => void) => Result;
@@ -16,7 +17,7 @@ interface IHubConnectionContext {
 }
 
 const defaultContextValue: IHubConnectionContext = {
-  connect: async (_hubAddress: string) => err(""),
+  connect: async (_hubName: string) => err(""),
   disconnect: async () => err(""),
   debugDisconnect: async () => {},
   setListener: (_channel: string, _fn: (item: any) => void) => err(""),
@@ -35,7 +36,7 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
   const connectionRef = useRef<signalR.HubConnection | undefined>(undefined);
   const connectedStateRef = useRef<boolean>(false);
   const disconnectTriggeredRef = useRef<boolean>(false);
-  const hubAddressRef = useRef<string | undefined>(undefined);
+  const hubNameRef = useRef<string | undefined>(undefined);
   const reconnectAttemptsRef = useRef(0);
   const isReconnectingRef = useRef(false);
   const listenersMapRef = useRef<Map<string, (item: any) => void>>(new Map());
@@ -117,8 +118,8 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
     const maxAttempts = 5;
     const baseDelay = 1000;
 
-    if (!hubAddressRef.current) {
-      console.error("Failed to reconnect to hub. Address is undefined");
+    if (!hubNameRef.current) {
+      console.error("Failed to reconnect to hub. Hub name is undefined");
       return false;
     }
 
@@ -127,7 +128,7 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
       console.warn(`Reconnect attempt ${reconnectAttemptsRef.current + 1}/${maxAttempts} after ${delay}ms`);
 
       await new Promise((resolve) => setTimeout(resolve, delay));
-      const result = await connect(hubAddressRef.current);
+      const result = await connect(hubNameRef.current);
 
       if (result.isError()) {
         reconnectAttemptsRef.current++;
@@ -146,17 +147,31 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
     return false;
   };
 
-  async function connect(hubAddress: string): Promise<Result<signalR.HubConnection>> {
+  async function connect(hubName: string): Promise<Result<signalR.HubConnection>> {
     try {
-      hubAddressRef.current = hubAddress;
+      // Map roulette and duel to spin hub (backend workaround)
+      const normalizedHubName = hubName === "roulette" || hubName === "duel" ? "spin" : hubName;
+
+      hubNameRef.current = normalizedHubName;
+      const hubAddress = `${HUB_URL_BASE}/${normalizedHubName}`;
+
       if (connectionRef.current) {
         const curHubName = (connectionRef.current as any)._hubName;
 
-        if (curHubName !== hubAddress) {
-          return err("Finnes allerede en åpen socket til feil hub. (HubConnectionProvider)");
+        if (curHubName !== normalizedHubName) {
+          console.warn(`Switching hub from ${curHubName} to ${normalizedHubName}, closing old connection`);
+          // Close the old connection before creating a new one
+          try {
+            await connectionRef.current.stop();
+          } catch (e) {
+            console.warn("Error stopping old connection:", e);
+          }
+          connectionRef.current = undefined;
+          connectedStateRef.current = false;
+        } else {
+          // Already connected to the correct hub
+          return ok(connectionRef.current);
         }
-
-        return ok(connectionRef.current);
       }
 
       const hubConnection = new signalR.HubConnectionBuilder()
@@ -164,7 +179,7 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
         .configureLogging(signalR.LogLevel.Information)
         .build();
 
-      (hubConnection as any)._hubName = hubAddress;
+      (hubConnection as any)._hubName = normalizedHubName;
 
       await hubConnection.start();
       hubConnection.onclose(async () => {
@@ -272,7 +287,7 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
     reconnectAttemptsRef.current = 0;
     isReconnectingRef.current = false;
     connectedStateRef.current = false;
-    hubAddressRef.current = undefined;
+    hubNameRef.current = undefined;
     listenersMapRef.current.clear();
     disconnectTriggeredRef.current = false;
     gameKeyRef.current = "";

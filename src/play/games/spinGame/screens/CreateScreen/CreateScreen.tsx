@@ -12,13 +12,13 @@ import SimpleInitScreen from "@/src/play/screens/SimpleInitScreen/SimpleInitScre
 export const CreateScreen = ({
   onGameCreated,
 }: {
-  onGameCreated: (hubAddress: string, gameKey: string) => Promise<void>;
+  onGameCreated: (hubName: string, gameKey: string) => Promise<void>;
 }) => {
   const navigation: any = useNavigation();
   const { pseudoId } = useAuthProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { gameService } = useServiceProvider();
-  const { setGameKey, setGameEntryMode, setHubAddress, gameType, isHost, setIsHost, setIsDraft } =
+  const { setGameKey, setGameEntryMode, setHubName, gameType, isHost, setIsHost, setIsDraft } =
     useGlobalSessionProvider();
   const { setScreen, themeColor, secondaryThemeColor, featherIcon, setThemeColors } = useSpinSessionProvider();
 
@@ -74,12 +74,12 @@ export const CreateScreen = ({
       return;
     }
 
-    console.info("Game initiated with key:", result.value.key, "hub:", result.value.hub_address, "type:", gameType);
+    console.info("Game initiated with key:", result.value.key, "hub:", result.value.hub_name, "type:", gameType);
     setIsDraft(result.value.is_draft);
     setGameKey(result.value.key);
-    setHubAddress(result.value.hub_address);
+    setHubName(result.value.hub_name);
     setGameEntryMode(GameEntryMode.Creator);
-    await onGameCreated(result.value.hub_address, result.value.key);
+    await onGameCreated(result.value.hub_name, result.value.key);
     setLoading(false);
   };
 

@@ -154,13 +154,13 @@ export interface GameTip {
 
 export interface InteractiveGameResponse {
   key: string;
-  hub_address: string;
+  hub_name: string;
   is_draft: boolean;
 }
 
 export interface JoinGameResponse {
   game_key: string;
-  hub_address: string;
+  hub_name: string;
   game_type: GameType;
   is_draft: boolean;
 }

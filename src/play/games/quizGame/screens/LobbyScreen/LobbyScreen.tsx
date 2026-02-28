@@ -17,14 +17,14 @@ export const LobbyScreen = () => {
   const [iterations, setIterations] = useState<number>(0);
   const [isAddingQuestion, setIsAddingQuestion] = useState<boolean>(false);
 
-  const { gameKey, hubAddress } = useGlobalSessionProvider();
+  const { gameKey, hubName } = useGlobalSessionProvider();
   const { connect, disconnect, setListener, invokeFunction } = useHubConnectionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { setQuizSession, setScreen } = useQuizSessionProvider();
 
   useEffect(() => {
     if (gameKey) {
-      createHubConnection(gameKey, hubAddress);
+      createHubConnection(gameKey, hubName);
     }
 
     return () => {
@@ -36,8 +36,8 @@ export const LobbyScreen = () => {
     setQuestion(value);
   };
 
-  const createHubConnection = async (key: string, address: string) => {
-    const result = await connect(address);
+  const createHubConnection = async (key: string, hubName: string) => {
+    const result = await connect(hubName);
     if (result.isError()) {
       displayErrorModal(result.error);
       return;

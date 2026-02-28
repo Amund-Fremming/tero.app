@@ -21,7 +21,7 @@ export const ImposterGame = () => {
   const { screen, setScreen, clearImposterSessionValues, setIterations, setImposterSession } =
     useImposterSessionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
-  const { gameEntryMode, hubAddress, gameKey, setIsHost, clearGlobalSessionValues, isHost, isDraft, gameType } =
+  const { gameEntryMode, hubName, gameKey, setIsHost, clearGlobalSessionValues, isHost, isDraft, gameType } =
     useGlobalSessionProvider();
   const { connect, setListener, disconnect, invokeFunction } = useHubConnectionProvider();
   const { pseudoId } = useAuthProvider();
@@ -36,16 +36,19 @@ export const ImposterGame = () => {
       return;
     }
 
-    initializeHub(hubAddress, gameKey, initScreen);
+    if ([GameEntryMode.Member, GameEntryMode.Participant].includes(gameEntryMode)) {
+      initializeHub(hubName, gameKey, initScreen);
+    }
 
     return () => {
       disconnect();
     };
   }, []);
 
-  const initializeHub = async (address: string, key: string, initialScreen: ImposterSessionScreen) => {
-    const result = await connect(address);
+  const initializeHub = async (hubName: string, key: string, initialScreen: ImposterSessionScreen) => {
+    const result = await connect(hubName);
     if (result.isError()) {
+      console.warn(hubName);
       console.error(result.error);
       displayErrorModal("Koblingsfeil. Bli med på nytt.");
       return;

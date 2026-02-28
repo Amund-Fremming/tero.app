@@ -15,7 +15,7 @@ export const CreateScreen = () => {
   const { pseudoId } = useAuthProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { gameService } = useServiceProvider();
-  const { setGameKey, setGameEntryMode, setHubAddress, isHost, setIsHost } = useGlobalSessionProvider();
+  const { setGameKey, setGameEntryMode, setHubName, isHost, setIsHost } = useGlobalSessionProvider();
   const { setScreen } = useQuizSessionProvider();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -69,7 +69,7 @@ export const CreateScreen = () => {
 
     console.info("Game initiated with key:", result.value.key);
     setGameKey(result.value.key);
-    setHubAddress(result.value.hub_address);
+    setHubName(result.value.hub_name);
     setGameEntryMode(GameEntryMode.Creator);
     setScreen(QuizSessionScreen.Lobby);
     setLoading(false);

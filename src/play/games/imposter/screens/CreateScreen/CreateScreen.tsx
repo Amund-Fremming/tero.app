@@ -11,13 +11,13 @@ import Color from "@/src/core/constants/Color";
 export const CreateScreen = ({
   onGameCreated,
 }: {
-  onGameCreated: (hubAddress: string, gameKey: string) => Promise<void>;
+  onGameCreated: (hubName: string, gameKey: string) => Promise<void>;
 }) => {
   const navigation: any = useNavigation();
   const { pseudoId } = useAuthProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { gameService } = useServiceProvider();
-  const { setGameKey, setGameEntryMode, setHubAddress, gameType, setIsHost } = useGlobalSessionProvider();
+  const { setGameKey, setGameEntryMode, setHubName, gameType, setIsHost } = useGlobalSessionProvider();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [createRequest, setCreateRequest] = useState<CreateGameRequest>({
@@ -69,9 +69,9 @@ export const CreateScreen = ({
 
     console.info("Game initiated with key:", result.value.key);
     setGameKey(result.value.key);
-    setHubAddress(result.value.hub_address);
+    setHubName(result.value.hub_name);
     setGameEntryMode(GameEntryMode.Creator);
-    await onGameCreated(result.value.hub_address, result.value.key);
+    await onGameCreated(result.value.hub_name, result.value.key);
     setLoading(false);
   };
 

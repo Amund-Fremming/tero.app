@@ -20,8 +20,7 @@ export const JoinScreen = () => {
   const navigation: any = useNavigation();
   const { pseudoId } = useAuthProvider();
   const { displayInfoModal } = useModalProvider();
-  const { setGameEntryMode, setGameKey, setHubAddress, setGameType, setIsHost, setIsDraft } =
-    useGlobalSessionProvider();
+  const { setGameEntryMode, setGameKey, setHubName, setGameType, setIsHost, setIsDraft } = useGlobalSessionProvider();
   const { gameService } = useServiceProvider();
 
   const [userInput, setUserInput] = useState<string>("");
@@ -54,7 +53,7 @@ export const JoinScreen = () => {
 
     console.debug(response);
     setIsDraft(response.is_draft);
-    setHubAddress(response.hub_address);
+    setHubName(response.hub_name);
     setGameKey(response.game_key);
     setGameType(response.game_type);
 

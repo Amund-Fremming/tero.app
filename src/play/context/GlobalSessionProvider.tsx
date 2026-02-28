@@ -8,8 +8,8 @@ interface IGlobalSessionContext {
   setGameType: React.Dispatch<React.SetStateAction<GameType>>;
   gameKey: string;
   setGameKey: React.Dispatch<React.SetStateAction<string>>;
-  hubAddress: string;
-  setHubAddress: React.Dispatch<React.SetStateAction<string>>;
+  hubName: string;
+  setHubName: React.Dispatch<React.SetStateAction<string>>;
   isHost: boolean;
   setIsHost: React.Dispatch<React.SetStateAction<boolean>>;
   clearGlobalSessionValues: () => void;
@@ -24,8 +24,8 @@ const defaultContextValue: IGlobalSessionContext = {
   setGameType: () => {},
   gameKey: "",
   setGameKey: () => {},
-  hubAddress: "",
-  setHubAddress: () => {},
+  hubName: "",
+  setHubName: () => {},
   isHost: false,
   setIsHost: () => {},
   isDraft: false,
@@ -45,7 +45,7 @@ export const GlobalGameProvider = ({ children }: GlobalSessionProviderProps) => 
   const [gameEntryMode, setGameEntryMode] = useState<GameEntryMode>(GameEntryMode.Host);
   const [gameType, setGameType] = useState<GameType>(GameType.Quiz);
   const [gameKey, setGameKey] = useState<string>("");
-  const [hubAddress, setHubAddress] = useState<string>("");
+  const [hubName, setHubName] = useState<string>("");
   const [isHost, setIsHost] = useState<boolean>(false);
   const [isDraft, setIsDraft] = useState<boolean>(false);
 
@@ -55,7 +55,7 @@ export const GlobalGameProvider = ({ children }: GlobalSessionProviderProps) => 
     setGameEntryMode(GameEntryMode.Creator);
     setGameType(GameType.Quiz);
     setGameKey("");
-    setHubAddress("");
+    setHubName("");
     setIsHost(false);
   };
 
@@ -67,8 +67,8 @@ export const GlobalGameProvider = ({ children }: GlobalSessionProviderProps) => 
     setGameType,
     gameKey,
     setGameKey,
-    hubAddress,
-    setHubAddress,
+    hubName,
+    setHubName,
     isHost,
     setIsHost,
     isDraft,

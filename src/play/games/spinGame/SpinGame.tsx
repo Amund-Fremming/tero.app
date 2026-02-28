@@ -17,7 +17,7 @@ import { HubChannel } from "@/src/core/constants/HubChannel";
 
 export const SpinGame = () => {
   const navigation: any = useNavigation();
-  const { gameEntryMode, hubAddress, gameKey, setIsHost, clearGlobalSessionValues, isDraft, gameType } =
+  const { gameEntryMode, hubName, gameKey, setIsHost, clearGlobalSessionValues, isDraft, gameType } =
     useGlobalSessionProvider();
   const { screen, setScreen, setRoundText, setSelectedBatch, setGameState, setIterations, setPlayers, setThemeColors } =
     useSpinSessionProvider();
@@ -46,15 +46,15 @@ export const SpinGame = () => {
       return;
     }
 
-    initializeHub(hubAddress, gameKey, initScreen);
+    initializeHub(hubName, gameKey, initScreen);
 
     return () => {
       disconnect();
     };
   }, []);
 
-  const initializeHub = async (address: string, key: string, initialScreen: SpinSessionScreen) => {
-    const result = await connect(address);
+  const initializeHub = async (hubName: string, key: string, initialScreen: SpinSessionScreen) => {
+    const result = await connect(hubName);
     if (result.isError()) {
       console.error(result.error);
       displayErrorModal("Koblingsfeil. Bli med på nytt.");
