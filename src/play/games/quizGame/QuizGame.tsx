@@ -70,9 +70,7 @@ export const QuizGame = () => {
     });
 
     setListener(HubChannel.State, (_message: string) => {
-      innerNavRef.current?.dispatch(
-        CommonActions.reset({ index: 0, routes: [{ name: QuizGameScreen.Started }] }),
-      );
+      innerNavRef.current?.dispatch(CommonActions.reset({ index: 0, routes: [{ name: QuizGameScreen.Started }] }));
       disconnect();
     });
   };
@@ -94,10 +92,7 @@ export const QuizGame = () => {
   const initialRoute = getInitialScreen();
 
   return (
-    <QuizStack.Navigator
-      initialRouteName={initialRoute}
-      screenOptions={{ headerShown: false }}
-    >
+    <QuizStack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
       <QuizStack.Screen name={QuizGameScreen.Create}>
         {({ navigation }) => {
           innerNavRef.current = navigation;

@@ -82,9 +82,7 @@ export const LobbyScreen = () => {
     }
 
     await disconnect();
-    navigation.dispatch(
-      CommonActions.reset({ index: 0, routes: [{ name: QuizGameScreen.Game }] }),
-    );
+    navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: QuizGameScreen.Game }] }));
   };
 
   const handleInfoPressed = () => {

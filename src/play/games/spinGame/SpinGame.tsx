@@ -24,8 +24,15 @@ export const SpinGame = () => {
   const innerNavRef = useRef<any>(null);
   const { gameEntryMode, hubName, gameKey, setIsHost, clearGlobalSessionValues, isDraft, gameType } =
     useGlobalSessionProvider();
-  const { setRoundText, setSelectedBatch, setGameState, setIterations, setPlayers, setThemeColors, clearSpinSessionValues } =
-    useSpinSessionProvider();
+  const {
+    setRoundText,
+    setSelectedBatch,
+    setGameState,
+    setIterations,
+    setPlayers,
+    setThemeColors,
+    clearSpinSessionValues,
+  } = useSpinSessionProvider();
   const { connect, setListener, disconnect, invokeFunction } = useHubConnectionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { pseudoId } = useAuthProvider();
@@ -34,9 +41,7 @@ export const SpinGame = () => {
   const [hubReady, setHubReady] = useState<boolean>(false);
 
   const navigateInner = (screenName: string) => {
-    innerNavRef.current?.dispatch(
-      CommonActions.reset({ index: 0, routes: [{ name: screenName }] }),
-    );
+    innerNavRef.current?.dispatch(CommonActions.reset({ index: 0, routes: [{ name: screenName }] }));
   };
 
   const resetSessionAndNavigateHome = async () => {
@@ -152,10 +157,7 @@ export const SpinGame = () => {
   const initialRoute = getInitialScreen();
 
   return (
-    <SpinStack.Navigator
-      initialRouteName={initialRoute}
-      screenOptions={{ headerShown: false }}
-    >
+    <SpinStack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
       <SpinStack.Screen name={SpinSessionScreen.Create}>
         {({ navigation }) => {
           innerNavRef.current = navigation;

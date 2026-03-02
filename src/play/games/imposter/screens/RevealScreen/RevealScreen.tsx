@@ -143,9 +143,7 @@ export const RevealScreen = () => {
 
   const handleNext = () => {
     if (hasMoreRounds) {
-      navigation.dispatch(
-        CommonActions.reset({ index: 0, routes: [{ name: ImposterSessionScreen.Roles }] }),
-      );
+      navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: ImposterSessionScreen.Roles }] }));
     } else {
       clearGlobalSessionValues();
       clearImposterSessionValues();

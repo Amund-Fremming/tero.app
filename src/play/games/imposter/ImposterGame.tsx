@@ -23,8 +23,7 @@ const ImposterStack = createStackNavigator();
 export const ImposterGame = () => {
   const outerNavigation: any = useNavigation();
   const innerNavRef = useRef<any>(null);
-  const { clearImposterSessionValues, setIterations, setImposterSession } =
-    useImposterSessionProvider();
+  const { clearImposterSessionValues, setIterations, setImposterSession } = useImposterSessionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { gameEntryMode, hubName, gameKey, setIsHost, clearGlobalSessionValues, isHost, isDraft, gameType } =
     useGlobalSessionProvider();
@@ -34,9 +33,7 @@ export const ImposterGame = () => {
   const isHandlingErrorRef = useRef(false);
 
   const navigateInner = (screenName: string) => {
-    innerNavRef.current?.dispatch(
-      CommonActions.reset({ index: 0, routes: [{ name: screenName }] }),
-    );
+    innerNavRef.current?.dispatch(CommonActions.reset({ index: 0, routes: [{ name: screenName }] }));
   };
 
   useEffect(() => {
@@ -131,15 +128,14 @@ export const ImposterGame = () => {
   const initialRoute = getInitialScreen();
 
   return (
-    <ImposterStack.Navigator
-      initialRouteName={initialRoute}
-      screenOptions={{ headerShown: false }}
-    >
+    <ImposterStack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
       <ImposterStack.Screen name={ImposterSessionScreen.Create}>
         {({ navigation }) => {
           innerNavRef.current = navigation;
           return (
-            <CreateScreen onGameCreated={(address, key) => initializeHub(address, key, ImposterSessionScreen.AddPlayers)} />
+            <CreateScreen
+              onGameCreated={(address, key) => initializeHub(address, key, ImposterSessionScreen.AddPlayers)}
+            />
           );
         }}
       </ImposterStack.Screen>

@@ -71,9 +71,7 @@ export const CreateScreen = () => {
     setGameKey(result.value.key);
     setHubName(result.value.hub_name);
     setGameEntryMode(GameEntryMode.Creator);
-    navigation.dispatch(
-      CommonActions.reset({ index: 0, routes: [{ name: QuizSessionScreen.Lobby }] }),
-    );
+    navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: QuizSessionScreen.Lobby }] }));
     setLoading(false);
   };
 

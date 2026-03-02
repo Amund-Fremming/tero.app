@@ -19,8 +19,7 @@ export const RolesScreen = () => {
   const navigation: any = useNavigation();
 
   const { clearGlobalSessionValues } = useGlobalSessionProvider();
-  const { clearImposterSessionValues, players, imposterName, newRound, roundWord } =
-    useImposterSessionProvider();
+  const { clearImposterSessionValues, players, imposterName, newRound, roundWord } = useImposterSessionProvider();
   const { displayActionModal, displayInfoModal } = useModalProvider();
 
   const [lockedPlayers, setLockedPlayers] = useState<Set<number>>(new Set());
@@ -54,9 +53,7 @@ export const RolesScreen = () => {
       return;
     }
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    navigation.dispatch(
-      CommonActions.reset({ index: 0, routes: [{ name: ImposterSessionScreen.Reveal }] }),
-    );
+    navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: ImposterSessionScreen.Reveal }] }));
   };
 
   return (
