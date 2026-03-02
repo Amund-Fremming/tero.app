@@ -1,5 +1,9 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React, { createContext, ReactNode, useContext, useState, useEffect } from "react";
 import { ImposterSession, ImposterSessionScreen } from "../constants/imposterTypes";
+import { registerCrashResetCallback } from "@/src/core/utils/navigationRef";
+import { useGameScreenStore } from "@/src/play/stores/gameScreenStore";
+
+const GAME_KEY = "imposter";
 
 interface IImposterSessionContext {
   clearImposterSessionValues: () => void;
@@ -39,16 +43,12 @@ interface SpinGameProviderProps {
   children: ReactNode;
 }
 
-// Module-level cache survives Fast Refresh / hot reload
-let __screenCache: ImposterSessionScreen | null = null;
-export const getImposterScreenCache = () => __screenCache;
-
 export const ImposterSessionProvider = ({ children }: SpinGameProviderProps) => {
-  const [screen, _setScreen] = useState<ImposterSessionScreen>(__screenCache ?? ImposterSessionScreen.Create);
-  const setScreen: React.Dispatch<React.SetStateAction<ImposterSessionScreen>> = (value) => {
+  const persistedScreen = useGameScreenStore((s) => s.screens[GAME_KEY]) as ImposterSessionScreen | undefined;
+  const screen = persistedScreen ?? ImposterSessionScreen.Create;
+  const setScreen = (value: ImposterSessionScreen | ((prev: ImposterSessionScreen) => ImposterSessionScreen)) => {
     const next = typeof value === "function" ? value(screen) : value;
-    __screenCache = next;
-    _setScreen(next);
+    useGameScreenStore.getState().setScreen(GAME_KEY, next);
   };
   const [iterations, setIterations] = useState<number>(0);
   const [imposterSession, setImposterSession] = useState<ImposterSession | undefined>(undefined);
@@ -73,13 +73,16 @@ export const ImposterSessionProvider = ({ children }: SpinGameProviderProps) => 
   };
 
   const clearImposterSessionValues = () => {
-    __screenCache = null;
-    setScreen(ImposterSessionScreen.Create);
+    useGameScreenStore.getState().clearScreen(GAME_KEY);
     setIterations(0);
     setPlayers(["Spiller 1", "Spiller 2", "Spiller 3", "Spiller 4"]);
     setImposterName("");
     setRoundWord("");
   };
+
+  useEffect(() => {
+    return registerCrashResetCallback(clearImposterSessionValues);
+  }, []);
 
   const value = {
     clearImposterSessionValues,

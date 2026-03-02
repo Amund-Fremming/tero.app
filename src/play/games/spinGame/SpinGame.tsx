@@ -6,7 +6,7 @@ import ActiveLobbyScreen from "./screens/ActiveLobbyScreen/ActiveLobbyScreen";
 import PassiveLobbyScreen from "./screens/PassiveLobbyScreen/PassiveLobbyScreen";
 import { SpinSessionScreen, SpinGameState } from "./constants/SpinTypes";
 import { useSpinSessionProvider } from "./context/SpinGameProvider";
-import { getSpinScreenCache } from "./context/SpinGameProvider";
+import { useGameScreenStore } from "@/src/play/stores/gameScreenStore";
 import { View, ActivityIndicator } from "react-native";
 import { useNavigation } from "expo-router";
 import { GameEntryMode } from "@/src/core/constants/Types";
@@ -40,8 +40,7 @@ export const SpinGame = () => {
   useEffect(() => {
     setThemeColors(gameType);
 
-    // Skip screen reset on hot reload — cache already has the current screen
-    if (getSpinScreenCache() !== null) return;
+    if (useGameScreenStore.getState().screens["spin"]) return;
 
     const initScreen = getInitialScreen();
     setScreen(initScreen);
