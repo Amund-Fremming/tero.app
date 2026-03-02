@@ -2,8 +2,7 @@ import React, { createContext, ReactNode, useContext, useState, useEffect } from
 import { ImposterSession, ImposterSessionScreen } from "../constants/imposterTypes";
 import { registerCrashResetCallback } from "@/src/core/utils/navigationRef";
 import { useGameScreenStore } from "@/src/play/stores/gameScreenStore";
-
-const GAME_KEY = "imposter";
+import { GameType } from "@/src/core/constants/Types";
 
 interface IImposterSessionContext {
   clearImposterSessionValues: () => void;
@@ -44,11 +43,11 @@ interface SpinGameProviderProps {
 }
 
 export const ImposterSessionProvider = ({ children }: SpinGameProviderProps) => {
-  const persistedScreen = useGameScreenStore((s) => s.screens[GAME_KEY]) as ImposterSessionScreen | undefined;
+  const persistedScreen = useGameScreenStore((s) => s.screens[GameType.Imposter]) as ImposterSessionScreen | undefined;
   const screen = persistedScreen ?? ImposterSessionScreen.Create;
   const setScreen = (value: ImposterSessionScreen | ((prev: ImposterSessionScreen) => ImposterSessionScreen)) => {
     const next = typeof value === "function" ? value(screen) : value;
-    useGameScreenStore.getState().setScreen(GAME_KEY, next);
+    useGameScreenStore.getState().setScreen(GameType.Imposter, next);
   };
   const [iterations, setIterations] = useState<number>(0);
   const [imposterSession, setImposterSession] = useState<ImposterSession | undefined>(undefined);
@@ -73,7 +72,7 @@ export const ImposterSessionProvider = ({ children }: SpinGameProviderProps) => 
   };
 
   const clearImposterSessionValues = () => {
-    useGameScreenStore.getState().clearScreen(GAME_KEY);
+    useGameScreenStore.getState().clearScreen(GameType.Imposter);
     setIterations(0);
     setPlayers(["Spiller 1", "Spiller 2", "Spiller 3", "Spiller 4"]);
     setImposterName("");

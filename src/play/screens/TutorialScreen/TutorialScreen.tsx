@@ -6,12 +6,10 @@ import { useGlobalSessionProvider } from "../../context/GlobalSessionProvider";
 import { GameEntryMode, GameType } from "../../../core/constants/Types";
 import Screen from "../../../core/constants/Screen";
 import ScreenHeader from "../../../core/components/ScreenHeader/ScreenHeader";
-import Color from "../../../core/constants/Color";
-import Font from "../../../core/constants/Font";
-import { moderateScale, verticalScale } from "../../../core/utils/dimensions";
 import { tutorialConfig } from "./tutorialConfig";
 import SimpleTutorial from "./components/SimpleTutorial";
 import MultiStepTutorial from "./components/MultiStepTutorial";
+import styles from "./tutorialScreenStyles";
 
 export const TutorialScreen = () => {
   const navigation: any = useNavigation();
@@ -34,12 +32,12 @@ export const TutorialScreen = () => {
 
   if (config.mode === "multi") {
     return (
-      <View style={{ flex: 1, backgroundColor: Color.LightGray }}>
+      <View style={styles.container}>
         <ScreenHeader
           title="Slik spiller du"
           onBackPressed={() => navigation.goBack()}
           showBorder
-          backgroundColor={Color.LightGray}
+          backgroundColor={styles.container.backgroundColor}
         />
         <MultiStepTutorial pages={config.pages} onFinish={navigateToGame} onBack={() => navigation.goBack()} />
       </View>
@@ -47,14 +45,14 @@ export const TutorialScreen = () => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: Color.LightGray }}>
+    <View style={styles.container}>
       <ScreenHeader
         title="Tutorial"
         onBackPressed={() => navigation.goBack()}
         showBorder
-        backgroundColor={Color.LightGray}
+        backgroundColor={styles.container.backgroundColor}
       />
-      <View style={{ flex: 1 }}>
+      <View style={styles.content}>
         <SimpleTutorial title={config.title} items={config.items} />
       </View>
       <TouchableOpacity
@@ -62,24 +60,9 @@ export const TutorialScreen = () => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
           navigateToGame();
         }}
-        style={{
-          marginHorizontal: moderateScale(20),
-          marginBottom: verticalScale(40),
-          backgroundColor: Color.BuzzifyLavender,
-          borderRadius: moderateScale(14),
-          paddingVertical: verticalScale(16),
-          alignItems: "center",
-        }}
+        style={styles.continueButton}
       >
-        <Text
-          style={{
-            fontFamily: Font.ArchivoBlackRegular,
-            fontSize: moderateScale(15),
-            color: Color.White,
-          }}
-        >
-          Fortsett
-        </Text>
+        <Text style={styles.continueText}>Fortsett</Text>
       </TouchableOpacity>
     </View>
   );

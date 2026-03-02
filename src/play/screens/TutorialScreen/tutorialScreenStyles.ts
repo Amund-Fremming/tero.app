@@ -64,6 +64,10 @@ const styles = StyleSheet.create({
     opacity: 1,
     borderRadius: DOT_SIZE / 2,
   },
+  content: {
+    flex: 1,
+  },
+
   continueButton: {
     marginHorizontal: moderateScale(28),
     marginBottom: verticalScale(40),
@@ -72,11 +76,11 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(16),
     alignItems: "center",
   },
+
   continueText: {
-    fontFamily: Font.ArchivoBlackRegular,
-    fontSize: moderateScale(16),
     color: Color.White,
-    letterSpacing: 0.5,
+    fontFamily: Font.PassionOneBold,
+    fontSize: moderateScale(35),
   },
 });
 

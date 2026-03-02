@@ -10,13 +10,12 @@ import { useModalProvider } from "@/src/core/context/ModalProvider";
 import { useAuthProvider } from "@/src/core/context/AuthProvider";
 import { useSpinSessionProvider } from "../../context/SpinGameProvider";
 import { Feather } from "@expo/vector-icons";
-import { useFocusEffect, useNavigation } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import { moderateScale } from "@/src/core/utils/dimensions";
-import { resetToHomeScreen } from "@/src/core/utils/utilFunctions";
+import { resetToHomeGlobal } from "@/src/core/utils/navigationRef";
 import { GameType } from "@/src/core/constants/Types";
 
 export const GameScreen = () => {
-  const navigation: any = useNavigation();
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [bgColor, setBgColor] = useState<string>(Color.Gray);
 
@@ -64,7 +63,7 @@ export const GameScreen = () => {
     await disconnect();
     clearGlobalSessionValues();
     clearSpinSessionValues();
-    resetToHomeScreen(navigation);
+    resetToHomeGlobal();
   };
 
   // Only disconnects the hub
@@ -77,7 +76,7 @@ export const GameScreen = () => {
   const navigateHome = () => {
     clearGlobalSessionValues();
     clearSpinSessionValues();
-    resetToHomeScreen(navigation);
+    resetToHomeGlobal();
   };
 
   const handleNextRound = async () => {
@@ -119,7 +118,7 @@ export const GameScreen = () => {
     await disconnect();
     clearSpinSessionValues();
     clearGlobalSessionValues();
-    resetToHomeScreen(navigation);
+    resetToHomeGlobal();
   };
 
   const handleInfoPressed = () => {

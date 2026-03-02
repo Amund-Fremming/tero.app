@@ -10,12 +10,14 @@ const styles = StyleSheet.create({
     paddingBottom: verticalScale(16),
     gap: verticalScale(12),
   },
+
   title: {
-    fontFamily: Font.ArchivoBlackRegular,
-    fontSize: moderateScale(22),
-    color: Color.Black,
+    fontFamily: Font.PassionOneRegular,
+    fontSize: moderateScale(26),
+    color: Color.BeigeLight,
     marginBottom: verticalScale(4),
   },
+
   card: {
     flexDirection: "row",
     alignItems: "center",
@@ -29,22 +31,25 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
+
   badge: {
     width: horizontalScale(38),
     height: horizontalScale(38),
     borderRadius: moderateScale(10),
-    borderWidth: 2,
+    borderWidth: moderateScale(3),
     borderColor: Color.BuzzifyLavender,
     justifyContent: "center",
     alignItems: "center",
     flexShrink: 0,
   },
+
   badgeText: {
     fontFamily: Font.ArchivoBlackRegular,
-    fontSize: moderateScale(18),
+    fontSize: moderateScale(20),
     color: Color.BuzzifyLavender,
     lineHeight: moderateScale(22),
   },
+
   itemText: {
     flex: 1,
     fontFamily: Font.SintonyRegular,

@@ -5,15 +5,13 @@ import { useHubConnectionProvider } from "@/src/play/context/HubConnectionProvid
 import { useModalProvider } from "@/src/core/context/ModalProvider";
 import { SpinSessionScreen } from "../../constants/SpinTypes";
 import { useSpinSessionProvider } from "../../context/SpinGameProvider";
-import { useNavigation } from "expo-router";
 import { GameEntryMode, GameType } from "@/src/core/constants/Types";
 import SimpleInitScreen from "@/src/play/screens/SimpleInitScreen/SimpleInitScreen";
-import { resetToHomeScreen } from "@/src/core/utils/utilFunctions";
+import { resetToHomeGlobal } from "@/src/core/utils/navigationRef";
 
 export const ActiveLobbyScreen = () => {
-  const navigation: any = useNavigation();
   const { invokeFunction, disconnect } = useHubConnectionProvider();
-  const { displayErrorModal, displayInfoModal } = useModalProvider();
+  const { displayErrorModal, displayInfoModal, displayActionModal } = useModalProvider();
   const { gameKey, gameType, isHost, clearGlobalSessionValues } = useGlobalSessionProvider();
   const { setScreen, themeColor, secondaryThemeColor, featherIcon, clearSpinSessionValues, iterations, players } =
     useSpinSessionProvider();
@@ -111,10 +109,16 @@ export const ActiveLobbyScreen = () => {
   };
 
   const handleBackPressed = async () => {
-    await disconnect();
-    clearGlobalSessionValues();
-    clearSpinSessionValues();
-    resetToHomeScreen(navigation);
+    displayActionModal(
+      "Er du sikker på at du vil forlate spillet?",
+      async () => {
+        await disconnect();
+        clearGlobalSessionValues();
+        clearSpinSessionValues();
+        resetToHomeGlobal();
+      },
+      () => {},
+    );
   };
 
   const handleInfoPressed = () => {

@@ -6,7 +6,7 @@ import { KeyboardAvoidingWrapper } from "@/src/core/components/KeyboardAvoidingW
 import { useRef } from "react";
 import { Feather, FontAwesome6, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import { moderateScale, verticalScale } from "@/src/core/utils/dimensions";
-import CategoryDropdown from "../../components/CategoryDropdown/CategoryDropdown";
+import CategoryDropdown from "./components/CategoryDropdown/CategoryDropdown";
 import { GameCategory } from "../../../core/constants/Types";
 import Color from "../../../core/constants/Color";
 import { useGlobalSessionProvider } from "../../context/GlobalSessionProvider";

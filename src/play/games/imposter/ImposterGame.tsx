@@ -12,12 +12,12 @@ import StartedScreen from "./screens/StartedScreen/StartedScreen";
 import AddPlayersScreen from "./screens/AddPlayersScreen/AddPlayersScreen";
 import RevealScreen from "./screens/RevealScreen/RevealScreen";
 import { useGlobalSessionProvider } from "../../context/GlobalSessionProvider";
+import { GameEntryMode, GameType } from "@/src/core/constants/Types";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
 import { HubChannel } from "@/src/core/constants/HubChannel";
 import { resetToHomeScreen } from "@/src/core/utils/utilFunctions";
 import { useAuthProvider } from "@/src/core/context/AuthProvider";
 import { useHubConnectionProvider } from "../../context/HubConnectionProvider";
-import { GameEntryMode } from "@/src/core/constants/Types";
 
 const ImposterStack = createStackNavigator();
 
@@ -37,9 +37,9 @@ export const ImposterGame = () => {
   };
 
   useEffect(() => {
-    if (!useGameScreenStore.getState().screens["imposter"]) {
+    if (!useGameScreenStore.getState().screens[GameType.Imposter]) {
       const initScreen = getInitialScreen();
-      setScreen(initScreen);
+      useGameScreenStore.getState().setScreen(GameType.Imposter, initScreen);
 
       if (
         initScreen !== ImposterSessionScreen.Create &&

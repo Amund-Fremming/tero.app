@@ -30,24 +30,30 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(40),
     gap: moderateScale(10),
   },
+
   backButton: {
-    flex: 1,
+    flex: 1.2,
     backgroundColor: Color.Black,
     borderRadius: moderateScale(14),
     paddingVertical: verticalScale(16),
     alignItems: "center",
+    justifyContent: "center",
   },
+
   nextButton: {
-    flex: 2,
+    flex: 1.8,
     backgroundColor: Color.BuzzifyLavender,
     borderRadius: moderateScale(14),
     paddingVertical: verticalScale(16),
     alignItems: "center",
+    justifyContent: "center",
+    height: verticalScale(69),
   },
+
   buttonText: {
-    fontFamily: Font.ArchivoBlackRegular,
-    fontSize: moderateScale(15),
     color: Color.White,
+    fontFamily: Font.PassionOneBold,
+    fontSize: moderateScale(25),
   },
 });
 

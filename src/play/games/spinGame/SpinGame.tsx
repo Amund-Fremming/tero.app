@@ -8,10 +8,10 @@ import ActiveLobbyScreen from "./screens/ActiveLobbyScreen/ActiveLobbyScreen";
 import PassiveLobbyScreen from "./screens/PassiveLobbyScreen/PassiveLobbyScreen";
 import { SpinSessionScreen, SpinGameState } from "./constants/SpinTypes";
 import { useSpinSessionProvider } from "./context/SpinGameProvider";
-import { useGameScreenStore } from "@/src/play/stores/gameScreenStore";
+import { useGameScreenStore, resolveKey } from "@/src/play/stores/gameScreenStore";
 import { View, ActivityIndicator } from "react-native";
 import { useNavigation } from "expo-router";
-import { GameEntryMode } from "@/src/core/constants/Types";
+import { GameEntryMode, GameType } from "@/src/core/constants/Types";
 import { useAuthProvider } from "@/src/core/context/AuthProvider";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
 import { useHubConnectionProvider } from "../../context/HubConnectionProvider";
@@ -55,9 +55,9 @@ export const SpinGame = () => {
   useEffect(() => {
     setThemeColors(gameType);
 
-    if (!useGameScreenStore.getState().screens["spin"]) {
+    if (!useGameScreenStore.getState().screens[resolveKey(gameType)]) {
       const initScreen = getInitialScreen();
-      setScreen(initScreen);
+      useGameScreenStore.getState().setScreen(gameType, initScreen);
 
       if (initScreen !== SpinSessionScreen.Create) {
         initializeHub(hubName, gameKey, initScreen);
