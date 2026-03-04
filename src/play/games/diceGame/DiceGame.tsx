@@ -1,7 +1,7 @@
 import ScreenHeader from "@/src/core/components/ScreenHeader/ScreenHeader";
 import Color from "@/src/core/constants/Color";
 import { useNavigation } from "expo-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Animated, Easing, Pressable, View } from "react-native";
 import Svg, { Circle, Defs, LinearGradient, Polygon, Stop } from "react-native-svg";
 import { styles } from "./diceGameStyles";
@@ -15,83 +15,178 @@ const FACE_LAYOUTS: Record<number, number[]> = {
   6: [0, 2, 3, 5, 6, 8],
 };
 
-const PIP_POSITIONS: Record<number, { left: `${number}%`; top: `${number}%` }> = {
-  0: { left: "20%", top: "20%" },
-  1: { left: "50%", top: "20%" },
-  2: { left: "80%", top: "20%" },
-  3: { left: "20%", top: "50%" },
-  4: { left: "50%", top: "50%" },
-  5: { left: "80%", top: "50%" },
-  6: { left: "20%", top: "80%" },
-  7: { left: "50%", top: "80%" },
-  8: { left: "80%", top: "80%" },
+const PIP_POSITIONS: Record<number, { x: number; y: number }> = {
+  0: { x: 0.2, y: 0.2 },
+  1: { x: 0.5, y: 0.2 },
+  2: { x: 0.8, y: 0.2 },
+  3: { x: 0.2, y: 0.5 },
+  4: { x: 0.5, y: 0.5 },
+  5: { x: 0.8, y: 0.5 },
+  6: { x: 0.2, y: 0.8 },
+  7: { x: 0.5, y: 0.8 },
+  8: { x: 0.8, y: 0.8 },
 };
 
-const TOP_FACE: Record<number, number> = {
-  1: 2,
-  2: 6,
-  3: 2,
-  4: 6,
-  5: 1,
-  6: 5,
+type Vec3 = {
+  x: number;
+  y: number;
+  z: number;
 };
 
-const RIGHT_FACE: Record<number, number> = {
-  1: 3,
-  2: 3,
-  3: 5,
-  4: 1,
-  5: 4,
-  6: 4,
+type Vec2 = {
+  x: number;
+  y: number;
 };
 
-type FaceProps = {
-  value: number;
+type Angles = {
+  x: number;
+  y: number;
+  z: number;
 };
 
-const toUnit = (index: number) => {
-  const position = PIP_POSITIONS[index];
+const FACE_VALUES = {
+  front: 1,
+  back: 6,
+  right: 3,
+  left: 4,
+  top: 2,
+  bottom: 5,
+} as const;
+
+const BASE_FRONT_ANGLES: Record<number, Angles> = {
+  1: { x: -18, y: -28, z: 0 },
+  2: { x: 72, y: -24, z: 0 },
+  3: { x: -18, y: -118, z: 0 },
+  4: { x: -18, y: 62, z: 0 },
+  5: { x: -108, y: -24, z: 0 },
+  6: { x: -18, y: 152, z: 0 },
+};
+
+const CUBE_POINTS: Vec3[] = [
+  { x: -1, y: 1, z: 1 },
+  { x: 1, y: 1, z: 1 },
+  { x: 1, y: -1, z: 1 },
+  { x: -1, y: -1, z: 1 },
+  { x: -1, y: 1, z: -1 },
+  { x: 1, y: 1, z: -1 },
+  { x: 1, y: -1, z: -1 },
+  { x: -1, y: -1, z: -1 },
+];
+
+const FACE_DEFS = [
+  { id: "front", indices: [0, 1, 2, 3] as const, fill: "url(#frontGrad)" },
+  { id: "back", indices: [5, 4, 7, 6] as const, fill: "#d8d8df" },
+  { id: "right", indices: [1, 5, 6, 2] as const, fill: "url(#rightGrad)" },
+  { id: "left", indices: [4, 0, 3, 7] as const, fill: "#dcdce1" },
+  { id: "top", indices: [4, 5, 1, 0] as const, fill: "url(#topGrad)" },
+  { id: "bottom", indices: [3, 2, 6, 7] as const, fill: "#d5d5db" },
+] as const;
+
+const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
+
+const rotatePoint = (point: Vec3, angles: Angles): Vec3 => {
+  const rx = toRadians(angles.x);
+  const ry = toRadians(angles.y);
+  const rz = toRadians(angles.z);
+
+  const cosX = Math.cos(rx);
+  const sinX = Math.sin(rx);
+  const cosY = Math.cos(ry);
+  const sinY = Math.sin(ry);
+  const cosZ = Math.cos(rz);
+  const sinZ = Math.sin(rz);
+
+  const y1 = point.y * cosX - point.z * sinX;
+  const z1 = point.y * sinX + point.z * cosX;
+  const x2 = point.x * cosY + z1 * sinY;
+  const z2 = -point.x * sinY + z1 * cosY;
+  const x3 = x2 * cosZ - y1 * sinZ;
+  const y3 = x2 * sinZ + y1 * cosZ;
+
+  return { x: x3, y: y3, z: z2 };
+};
+
+const cross = (a: Vec3, b: Vec3): Vec3 => {
   return {
-    x: Number.parseInt(position.left, 10) / 100,
-    y: Number.parseInt(position.top, 10) / 100,
+    x: a.y * b.z - a.z * b.y,
+    y: a.z * b.x - a.x * b.z,
+    z: a.x * b.y - a.y * b.x,
   };
 };
 
-const frontMap = (ux: number, uy: number) => ({
-  x: 34 + ux * 60,
-  y: 46 + uy * 60,
-});
+const bilinear = (corners: [Vec2, Vec2, Vec2, Vec2], ux: number, uy: number): Vec2 => {
+  const [p0, p1, p2, p3] = corners;
 
-const topMap = (ux: number, uy: number) => ({
-  x: 34 + ux * 60 + uy * 20,
-  y: 46 - uy * 20,
-});
+  const w0 = (1 - ux) * (1 - uy);
+  const w1 = ux * (1 - uy);
+  const w2 = ux * uy;
+  const w3 = (1 - ux) * uy;
 
-const rightMap = (ux: number, uy: number) => ({
-  x: 94 + ux * 20,
-  y: 46 - ux * 20 + uy * 60,
-});
+  return {
+    x: p0.x * w0 + p1.x * w1 + p2.x * w2 + p3.x * w3,
+    y: p0.y * w0 + p1.y * w1 + p2.y * w2 + p3.y * w3,
+  };
+};
 
-const Dice3D = ({ value }: FaceProps) => {
-  const frontFace = value;
-  const topFace = TOP_FACE[value];
-  const rightFace = RIGHT_FACE[value];
+const Dice3D = ({ angles }: { angles: Angles }) => {
+  const size = 36;
+  const cameraZ = 220;
+  const focal = 180;
+  const centerX = 100;
+  const centerY = 100;
 
-  const renderFacePips = (
-    faceValue: number,
-    mapper: (ux: number, uy: number) => { x: number; y: number },
-    prefix: string,
-    radius = 4.2
-  ) => {
-    return FACE_LAYOUTS[faceValue].map((index) => {
-      const unit = toUnit(index);
-      const point = mapper(unit.x, unit.y);
-      return <Circle key={`${prefix}-${index}`} cx={point.x} cy={point.y} r={radius} fill="#1f2428" />;
-    });
+  const transformed = CUBE_POINTS.map((point) => rotatePoint(point, angles));
+  const scaled = transformed.map((point) => ({ x: point.x * size, y: point.y * size, z: point.z * size }));
+
+  const projected = scaled.map((point) => {
+    const perspective = focal / (cameraZ - point.z);
+    return {
+      x: centerX + point.x * perspective,
+      y: centerY - point.y * perspective,
+      z: point.z,
+    };
+  });
+
+  const faces = FACE_DEFS.map((face) => {
+    const a = scaled[face.indices[0]];
+    const b = scaled[face.indices[1]];
+    const c = scaled[face.indices[2]];
+
+    const ab = { x: b.x - a.x, y: b.y - a.y, z: b.z - a.z };
+    const ac = { x: c.x - a.x, y: c.y - a.y, z: c.z - a.z };
+    const normal = cross(ab, ac);
+
+    const points2d = face.indices.map((index) => ({ x: projected[index].x, y: projected[index].y })) as [
+      Vec2,
+      Vec2,
+      Vec2,
+      Vec2,
+    ];
+
+    const avgZ = face.indices.reduce<number>((sum, index) => sum + scaled[index].z, 0) / 4;
+
+    return {
+      id: face.id,
+      fill: face.fill,
+      points2d,
+      avgZ,
+      visible: normal.z > 0,
+    };
+  })
+    .filter((face) => face.visible)
+    .sort((a, b) => a.avgZ - b.avgZ);
+
+  const valueMap: Record<string, number> = {
+    front: FACE_VALUES.front,
+    back: FACE_VALUES.back,
+    right: FACE_VALUES.right,
+    left: FACE_VALUES.left,
+    top: FACE_VALUES.top,
+    bottom: FACE_VALUES.bottom,
   };
 
   return (
-    <Svg width="100%" height="100%" viewBox="0 0 140 120">
+    <Svg width="100%" height="100%" viewBox="0 0 200 200">
       <Defs>
         <LinearGradient id="frontGrad" x1="0" y1="0" x2="1" y2="1">
           <Stop offset="0" stopColor="#ffffff" />
@@ -99,36 +194,82 @@ const Dice3D = ({ value }: FaceProps) => {
         </LinearGradient>
         <LinearGradient id="topGrad" x1="0" y1="0" x2="1" y2="1">
           <Stop offset="0" stopColor="#ffffff" />
-          <Stop offset="1" stopColor="#f2f2f5" />
+          <Stop offset="1" stopColor="#f1f1f5" />
         </LinearGradient>
         <LinearGradient id="rightGrad" x1="0" y1="0" x2="1" y2="1">
           <Stop offset="0" stopColor="#e7e7eb" />
-          <Stop offset="1" stopColor="#d9d9df" />
+          <Stop offset="1" stopColor="#d6d6dd" />
         </LinearGradient>
       </Defs>
 
-      <Polygon points="34,46 54,26 114,26 94,46" fill="url(#topGrad)" stroke="#d8d8dd" strokeWidth="2" />
-      <Polygon points="94,46 114,26 114,86 94,106" fill="url(#rightGrad)" stroke="#cbccd2" strokeWidth="2" />
-      <Polygon points="34,46 94,46 94,106 34,106" fill="url(#frontGrad)" stroke="#d8d8dd" strokeWidth="2" />
+      {faces.map((face) => {
+        const points = face.points2d.map((point) => `${point.x},${point.y}`).join(" ");
+        return <Polygon key={`poly-${face.id}`} points={points} fill={face.fill} stroke="#c9cad0" strokeWidth="2" />;
+      })}
 
-      {renderFacePips(topFace, topMap, "top", 3.6)}
-      {renderFacePips(rightFace, rightMap, "right", 3.6)}
-      {renderFacePips(frontFace, frontMap, "front", 4.2)}
+      {faces.map((face) => {
+        const value = valueMap[face.id];
+        if (!value) {
+          return null;
+        }
+
+        return FACE_LAYOUTS[value].map((pipIndex) => {
+          const position = PIP_POSITIONS[pipIndex];
+          const pipPoint = bilinear(face.points2d, position.x, position.y);
+          const radius = face.id === "front" ? 4 : 3.4;
+
+          return <Circle key={`pip-${face.id}-${pipIndex}`} cx={pipPoint.x} cy={pipPoint.y} r={radius} fill="#20242a" />;
+        });
+      })}
     </Svg>
   );
 };
 
 export const DiceGame = () => {
   const navigation: any = useNavigation();
-  const [diceValue, setDiceValue] = useState(1);
   const [isRolling, setIsRolling] = useState(false);
+  const [cubeAngles, setCubeAngles] = useState<Angles>(BASE_FRONT_ANGLES[1]);
 
   const throwProgress = useRef(new Animated.Value(0)).current;
-  const spinProgress = useRef(new Animated.Value(0)).current;
-  const settleTilt = useRef(new Animated.Value(0)).current;
+  const angleX = useRef(new Animated.Value(BASE_FRONT_ANGLES[1].x)).current;
+  const angleY = useRef(new Animated.Value(BASE_FRONT_ANGLES[1].y)).current;
+  const angleZ = useRef(new Animated.Value(BASE_FRONT_ANGLES[1].z)).current;
+
+  const currentAnglesRef = useRef<Angles>(BASE_FRONT_ANGLES[1]);
+
+  useEffect(() => {
+    const xListener = angleX.addListener(({ value }) => {
+      currentAnglesRef.current = { ...currentAnglesRef.current, x: value };
+      setCubeAngles((previous) => ({ ...previous, x: value }));
+    });
+
+    const yListener = angleY.addListener(({ value }) => {
+      currentAnglesRef.current = { ...currentAnglesRef.current, y: value };
+      setCubeAngles((previous) => ({ ...previous, y: value }));
+    });
+
+    const zListener = angleZ.addListener(({ value }) => {
+      currentAnglesRef.current = { ...currentAnglesRef.current, z: value };
+      setCubeAngles((previous) => ({ ...previous, z: value }));
+    });
+
+    return () => {
+      angleX.removeListener(xListener);
+      angleY.removeListener(yListener);
+      angleZ.removeListener(zListener);
+    };
+  }, [angleX, angleY, angleZ]);
 
   const handleInfoPressed = () => {
     //
+  };
+
+  const randomInt = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
+  const getTargetAngles = (frontValue: number): Angles => {
+    return BASE_FRONT_ANGLES[frontValue] ?? BASE_FRONT_ANGLES[1];
   };
 
   const handleRoll = () => {
@@ -137,11 +278,15 @@ export const DiceGame = () => {
     }
 
     const nextValue = Math.floor(Math.random() * 6) + 1;
-    setIsRolling(true);
+    const target = getTargetAngles(nextValue);
+    const start = currentAnglesRef.current;
 
+    const targetX = target.x + randomInt(2, 4) * 360;
+    const targetY = target.y + randomInt(2, 5) * 360;
+    const targetZ = start.z + randomInt(1, 4) * 360 * (Math.random() > 0.5 ? 1 : -1);
+
+    setIsRolling(true);
     throwProgress.setValue(0);
-    spinProgress.setValue(0);
-    settleTilt.setValue(0);
 
     Animated.parallel([
       Animated.timing(throwProgress, {
@@ -150,29 +295,65 @@ export const DiceGame = () => {
         easing: Easing.bezier(0.2, 0.85, 0.25, 1),
         useNativeDriver: true,
       }),
-      Animated.timing(spinProgress, {
-        toValue: 1,
+      Animated.timing(angleX, {
+        toValue: targetX,
         duration: 1150,
         easing: Easing.linear,
-        useNativeDriver: true,
+        useNativeDriver: false,
+      }),
+      Animated.timing(angleY, {
+        toValue: targetY,
+        duration: 1150,
+        easing: Easing.linear,
+        useNativeDriver: false,
+      }),
+      Animated.timing(angleZ, {
+        toValue: targetZ,
+        duration: 1150,
+        easing: Easing.linear,
+        useNativeDriver: false,
       }),
     ]).start(() => {
-      setDiceValue(nextValue);
-
       Animated.sequence([
-        Animated.spring(settleTilt, {
-          toValue: nextValue % 2 === 0 ? 1 : -1,
-          friction: 6,
-          tension: 75,
-          useNativeDriver: true,
-        }),
-        Animated.spring(settleTilt, {
-          toValue: 0,
-          friction: 8,
-          tension: 90,
-          useNativeDriver: true,
-        }),
-      ]).start(() => setIsRolling(false));
+        Animated.parallel([
+          Animated.spring(angleX, {
+            toValue: target.x + (nextValue % 2 === 0 ? 5 : -5),
+            friction: 6,
+            tension: 65,
+            useNativeDriver: false,
+          }),
+          Animated.spring(angleY, {
+            toValue: target.y + (nextValue % 2 === 0 ? -4 : 4),
+            friction: 6,
+            tension: 65,
+            useNativeDriver: false,
+          }),
+        ]),
+        Animated.parallel([
+          Animated.spring(angleX, {
+            toValue: target.x,
+            friction: 8,
+            tension: 85,
+            useNativeDriver: false,
+          }),
+          Animated.spring(angleY, {
+            toValue: target.y,
+            friction: 8,
+            tension: 85,
+            useNativeDriver: false,
+          }),
+          Animated.spring(angleZ, {
+            toValue: target.z,
+            friction: 9,
+            tension: 90,
+            useNativeDriver: false,
+          }),
+        ]),
+      ]).start(() => {
+        currentAnglesRef.current = target;
+        setCubeAngles(target);
+        setIsRolling(false);
+      });
     });
   };
 
@@ -186,31 +367,6 @@ export const DiceGame = () => {
     outputRange: [1, 0.9, 1.04, 1],
   });
 
-  const rotateX = spinProgress.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "980deg"],
-  });
-
-  const rotateY = spinProgress.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "1280deg"],
-  });
-
-  const rotateZ = spinProgress.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "760deg"],
-  });
-
-  const settleX = settleTilt.interpolate({
-    inputRange: [-1, 0, 1],
-    outputRange: ["-5deg", "0deg", "5deg"],
-  });
-
-  const settleY = settleTilt.interpolate({
-    inputRange: [-1, 0, 1],
-    outputRange: ["4deg", "0deg", "-4deg"],
-  });
-
   const shadowScale = throwProgress.interpolate({
     inputRange: [0, 0.45, 1],
     outputRange: [1, 0.74, 1],
@@ -222,16 +378,7 @@ export const DiceGame = () => {
   });
 
   const animatedDiceStyle = {
-    transform: [
-      { perspective: 1000 },
-      { translateY },
-      { scale },
-      { rotateX },
-      { rotateY },
-      { rotateZ },
-      { rotateX: settleX },
-      { rotateY: settleY },
-    ],
+    transform: [{ translateY }, { scale }],
   };
 
   return (
@@ -262,7 +409,7 @@ export const DiceGame = () => {
           <Pressable style={styles.dicePressable} onPress={handleRoll} disabled={isRolling}>
             <Animated.View style={[styles.diceContainer, animatedDiceStyle]}>
               <View style={styles.diceCube}>
-                <Dice3D value={diceValue} />
+                <Dice3D angles={cubeAngles} />
               </View>
             </Animated.View>
           </Pressable>
