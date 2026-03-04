@@ -121,7 +121,7 @@ export const ActiveLobbyScreen = () => {
       iterations={iterations}
       inputPlaceholder="Taperen må..."
       bottomButtonText="Start spill"
-      onCreatePressed={handleStartGame}
+      onStartPressed={handleStartGame}
       onAddRoundPressed={handleAddRound}
       onBackPressed={handleBackPressed}
       onInfoPressed={handleInfoPressed}

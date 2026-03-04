@@ -15,6 +15,7 @@ import LobbyScreen from "./screens/LobbyScreen/LobbyScreen";
 import RevealScreen from "./screens/RevealScreen/RevealScreen";
 import { RolesScreen } from "./screens/RolesScreen/RolesScreen";
 import StartedScreen from "./screens/StartedScreen/StartedScreen";
+import TutorialScreen from "./screens/TutorialScreen/TutorialScreen";
 
 export const ImposterGame = () => {
   const outerNavigation: any = useNavigation();
@@ -125,7 +126,11 @@ export const ImposterGame = () => {
 
   switch (screen) {
     case ImposterSessionScreen.Create:
-      return <CreateScreen onGameCreated={(address, key) => initializeHub(address, key, ImposterSessionScreen.AddPlayers)} />;
+      return (
+        <TutorialScreen
+          onGameCreated={(address, key) => initializeHub(address, key, ImposterSessionScreen.AddPlayers)}
+        />
+      );
     case ImposterSessionScreen.AddPlayers:
       return <AddPlayersScreen />;
     case ImposterSessionScreen.ActiveLobby:
@@ -134,6 +139,8 @@ export const ImposterGame = () => {
       return <RolesScreen />;
     case ImposterSessionScreen.Reveal:
       return <RevealScreen />;
+    case ImposterSessionScreen.Create:
+      return <CreateScreen />;
     case ImposterSessionScreen.Started:
     default:
       return <StartedScreen />;

@@ -103,7 +103,7 @@ export const LobbyScreen = () => {
       iterations={iterations}
       inputPlaceholder="Spørsmål..."
       bottomButtonText="Start spill"
-      onCreatePressed={handleStartGame}
+      onStartPressed={handleStartGame}
       onAddRoundPressed={handleAddRound}
       onBackPressed={handleBackPressed}
       onInfoPressed={handleInfoPressed}

@@ -19,8 +19,8 @@ interface GenericActiveLobbyScreenProps {
   iterations: number | string;
   inputPlaceholder: string;
   bottomButtonText: string;
-  onCreatePressed: () => Promise<void>;
-  onAddRoundPressed: (round: string) => Promise<void>;
+  onStartPressed: () => void;
+  onAddRoundPressed: (round: string) => void;
   onBackPressed: () => void;
   onInfoPressed?: () => void;
 }
@@ -32,7 +32,7 @@ export const GenericActiveLobbyScreen = ({
   iterations,
   inputPlaceholder,
   bottomButtonText,
-  onCreatePressed,
+  onStartPressed,
   onAddRoundPressed,
   onBackPressed,
   onInfoPressed,
@@ -135,7 +135,7 @@ export const GenericActiveLobbyScreen = ({
             <TouchableOpacity
               onPress={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-                void onCreatePressed();
+                void onStartPressed();
               }}
               style={styles.createButton}
             >

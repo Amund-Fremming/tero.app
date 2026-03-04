@@ -1,24 +1,15 @@
-import { CreateGameRequest, GameCategory, GameEntryMode } from "@/src/core/constants/Types";
-import { useAuthProvider } from "@/src/core/context/AuthProvider";
+import { CreateGameRequest, GameCategory } from "@/src/core/constants/Types";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
-import { useServiceProvider } from "@/src/core/context/ServiceProvider";
-import { getGameTheme } from "@/src/play/config/gameTheme";
-import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
 import GenericCreateScreen from "@/src/play/screens/GenericCreateScreen/GenericCreateScreen";
-import { useFocusEffect, useNavigation } from "expo-router";
-import { useCallback, useState } from "react";
+import { useNavigation } from "expo-router";
+import { useState } from "react";
+import { useSpinSessionProvider } from "../../../spinGame/context/SpinGameProvider";
 
-export const CreateScreen = ({
-  onGameCreated,
-}: {
-  onGameCreated: (hubName: string, gameKey: string) => Promise<void>;
-}) => {
+export const CreateScreen = () => {
   const navigation: any = useNavigation();
-  const { pseudoId } = useAuthProvider();
-  const { displayErrorModal, displayInfoModal } = useModalProvider();
-  const { gameService } = useServiceProvider();
-  const { setGameSessionValues, setGameEntryMode, gameType, setIsHost } = useGlobalSessionProvider();
-  const theme = getGameTheme(gameType);
+
+  const { themeColor, secondaryThemeColor } = useSpinSessionProvider();
+  const { displayInfoModal } = useModalProvider();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [createRequest, setCreateRequest] = useState<CreateGameRequest>({
@@ -26,74 +17,24 @@ export const CreateScreen = ({
     category: "" as any,
   });
 
-  useFocusEffect(
-    useCallback(() => {
-      setIsHost(true);
-    }, []),
-  );
-
-  const handleSetCategory = (value: any) => {
-    setCreateRequest((prev) => ({ ...prev, category: value as GameCategory }));
-  };
-
-  const handleSetName = (value: string) => {
-    setCreateRequest((prev) => ({ ...prev, name: value }));
-  };
-
-  const handleCreateGame = async () => {
-    if (loading) return;
-    const gameName = createRequest.name.trim();
-
-    if (!createRequest.category) {
-      displayInfoModal("Velg kategori.");
-      return;
-    }
-
-    if (gameName === "") {
-      displayInfoModal("Spillnavn kan ikke være tomt");
-      return;
-    }
-
-    if (gameName.length < 3) {
-      displayInfoModal("Navn må ha minst 3 tegn.");
-      return;
-    }
-
-    setLoading(true);
-    const result = await gameService().createInteractiveGame(pseudoId, gameType, { ...createRequest, name: gameName });
-
-    if (result.isError()) {
-      displayErrorModal(result.error);
-      setLoading(false);
-      return;
-    }
-
-    console.info("Game initiated with key:", result.value.key);
-    setGameSessionValues(result.value.key, result.value.hub_name);
-    setGameEntryMode(GameEntryMode.Creator);
-    await onGameCreated(result.value.hub_name, result.value.key);
-    setLoading(false);
-  };
-
   const handleInfoPressed = () => {
     displayInfoModal("Gi ditt nye spill ett navn og en kategori!", "Hva nå?");
   };
 
+  const handlePatchGame = async (name: string, category: GameCategory) => {
+    // TODO
+  };
+
   return (
     <GenericCreateScreen
-      themeColor={theme.primaryColor}
-      secondaryThemeColor={theme.secondaryColor}
+      handlePatchGame={handlePatchGame}
+      themeColor={themeColor}
+      secondaryThemeColor={secondaryThemeColor}
       onBackPressed={() => navigation.goBack()}
       onInfoPressed={handleInfoPressed}
       headerText="Opprett"
-      topButtonText={createRequest.category}
-      topButtonOnChange={handleSetCategory}
       bottomButtonText="Neste"
-      bottomButtonCallback={handleCreateGame}
       featherIcon={"users"}
-      inputPlaceholder="Spillnavn..."
-      inputValue={createRequest.name}
-      setInput={handleSetName}
     />
   );
 };

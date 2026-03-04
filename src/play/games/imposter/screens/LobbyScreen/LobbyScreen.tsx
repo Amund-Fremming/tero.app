@@ -3,6 +3,7 @@ import { useModalProvider } from "@/src/core/context/ModalProvider";
 import { getGameTheme } from "@/src/play/config/gameTheme";
 import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
 import { useHubConnectionProvider } from "@/src/play/context/HubConnectionProvider";
+import GenericActiveLobbyScreen from "@/src/play/screens/GenericActiveLobbyScreen/GenericActiveLobbyScreen";
 import { useNavigation } from "expo-router";
 import { useState } from "react";
 import { ImposterSessionScreen } from "../../constants/imposterTypes";
@@ -68,24 +69,26 @@ export const LobbyScreen = () => {
     );
   };
 
+  const onStartPressed = async () => {
+    // TODO!
+  };
+
+  const onAddRoundPressed = async (round: string) => {
+    // TODO
+  };
+
   return (
-    <SimpleInitScreen
-      createScreen={false}
+    <GenericActiveLobbyScreen
+      onStartPressed={onStartPressed}
+      onAddRoundPressed={onAddRoundPressed}
       themeColor={theme.primaryColor}
       secondaryThemeColor={theme.secondaryColor}
       onBackPressed={handleBackPressed}
       onInfoPressed={handleInfoPressed}
-      headerText="Opprett"
-      topButtonText="Velg kategori"
-      topButtonOnChange={() => {}}
-      topButtonOnPress={handleAddRound}
       bottomButtonText="Start spill"
-      bottomButtonCallback={handleStartGame}
       featherIcon={"users"}
       iterations={iterations}
       inputPlaceholder="Runde ord..."
-      inputValue={round}
-      setInput={handleSetRound}
     />
   );
 };

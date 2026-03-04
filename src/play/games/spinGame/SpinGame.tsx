@@ -14,6 +14,7 @@ import ActiveLobbyScreen from "./screens/ActiveLobbyScreen/ActiveLobbyScreen";
 import CreateScreen from "./screens/CreateScreen/CreateScreen";
 import { GameScreen } from "./screens/GameScreen/GameScreen";
 import PassiveLobbyScreen from "./screens/PassiveLobbyScreen/PassiveLobbyScreen";
+import TutorialScreen from "./screens/TutorialScreen/TutorialScreen";
 
 export const SpinGame = () => {
   const outerNavigation: any = useNavigation();
@@ -49,7 +50,7 @@ export const SpinGame = () => {
 
     const initScreen = getInitialScreen();
     setScreen(initScreen);
-    if (initScreen !== SpinSessionScreen.Create) {
+    if (initScreen !== SpinSessionScreen.Create && initScreen !== SpinSessionScreen.Tutorial) {
       initializeHub(gameSession.hubName, gameSession.gameKey, initScreen);
     } else {
       setHubReady(true);
@@ -146,7 +147,7 @@ export const SpinGame = () => {
 
     switch (gameEntryMode) {
       case GameEntryMode.Creator:
-        return SpinSessionScreen.Create;
+        return SpinSessionScreen.Tutorial;
       case GameEntryMode.Host:
         return SpinSessionScreen.PassiveLobby;
       case GameEntryMode.Participant:
@@ -157,13 +158,15 @@ export const SpinGame = () => {
     }
   };
 
-  if (!hubReady && screen !== SpinSessionScreen.Create) {
+  if (!hubReady && screen !== SpinSessionScreen.Create && screen !== SpinSessionScreen.Tutorial) {
     return <LoadingView />;
   }
 
   switch (screen) {
+    case SpinSessionScreen.Tutorial:
+      return <TutorialScreen onGameCreated={(a, k) => initializeHub(a, k, SpinSessionScreen.ActiveLobby)} />;
     case SpinSessionScreen.Create:
-      return <CreateScreen onGameCreated={(a, k) => initializeHub(a, k, SpinSessionScreen.ActiveLobby)} />;
+      return <CreateScreen />;
     case SpinSessionScreen.ActiveLobby:
       return <ActiveLobbyScreen />;
     case SpinSessionScreen.PassiveLobby:
