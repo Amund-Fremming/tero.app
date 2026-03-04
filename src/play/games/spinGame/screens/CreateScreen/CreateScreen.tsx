@@ -1,13 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
 import { CreateGameRequest, GameCategory, GameEntryMode } from "@/src/core/constants/Types";
 import { useAuthProvider } from "@/src/core/context/AuthProvider";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
-import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
 import { useServiceProvider } from "@/src/core/context/ServiceProvider";
-import { useFocusEffect, useNavigation } from "expo-router";
-import { SpinSessionScreen } from "../../constants/SpinTypes";
-import { useSpinSessionProvider } from "../../context/SpinGameProvider";
+import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
 import SimpleInitScreen from "@/src/play/screens/SimpleInitScreen/SimpleInitScreen";
+import { useFocusEffect, useNavigation } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
+import { useSpinSessionProvider } from "../../context/SpinGameProvider";
 
 export const CreateScreen = ({
   onGameCreated,
@@ -18,7 +17,7 @@ export const CreateScreen = ({
   const { pseudoId } = useAuthProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { gameService } = useServiceProvider();
-  const { setGameKey, setGameEntryMode, setHubName, gameType, isHost, setIsHost, setIsDraft } =
+  const { setGameSessionValues, setGameEntryMode, gameType, isHost, setIsHost, setIsDraft } =
     useGlobalSessionProvider();
   const { setScreen, themeColor, secondaryThemeColor, featherIcon, setThemeColors } = useSpinSessionProvider();
 
@@ -76,8 +75,7 @@ export const CreateScreen = ({
 
     console.info("Game initiated with key:", result.value.key, "hub:", result.value.hub_name, "type:", gameType);
     setIsDraft(result.value.is_draft);
-    setGameKey(result.value.key);
-    setHubName(result.value.hub_name);
+    setGameSessionValues(result.value.key, result.value.hub_name);
     setGameEntryMode(GameEntryMode.Creator);
     await onGameCreated(result.value.hub_name, result.value.key);
     setLoading(false);

@@ -1,16 +1,16 @@
-import styles from "./gameTypeListScreenStyles";
-import data from "./data.json";
-import { View, Text, ScrollView, Dimensions, Image, TouchableOpacity } from "react-native";
-import * as Haptics from "expo-haptics";
-import React from "react";
-import { useNavigation } from "expo-router";
-import { useGlobalSessionProvider } from "../../context/GlobalSessionProvider";
-import Screen from "../../../core/constants/Screen";
-import { verticalScale } from "../../../core/utils/dimensions";
-import { GameEntryMode, GameType } from "../../../core/constants/Types";
-import Color from "../../../core/constants/Color";
-import ScreenHeader from "../../../core/components/ScreenHeader/ScreenHeader";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
+import * as Haptics from "expo-haptics";
+import { useNavigation } from "expo-router";
+import React from "react";
+import { Dimensions, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import ScreenHeader from "../../../core/components/ScreenHeader/ScreenHeader";
+import Color from "../../../core/constants/Color";
+import Screen from "../../../core/constants/Screen";
+import { GameEntryMode, GameType } from "../../../core/constants/Types";
+import { verticalScale } from "../../../core/utils/dimensions";
+import { useGlobalSessionProvider } from "../../context/GlobalSessionProvider";
+import data from "./data.json";
+import styles from "./gameTypeListScreenStyles";
 
 const { height } = Dimensions.get("window");
 
@@ -35,14 +35,20 @@ export const GameTypeListScreen = () => {
 
     if (isCreating) {
       setIsDraft(true);
-      navigation.navigate(Screen.Tutorial);
+      if (screenEnum === GameType.Duel || screenEnum === GameType.Roulette) {
+        navigation.navigate(Screen.Spin);
+        return;
+      }
+
+      if (screenEnum === GameType.Dice) {
+        navigation.navigate(Screen.Dice);
+        return;
+      }
+
+      navigation.navigate(screenEnum);
       return;
     }
 
-    if (screenEnum === GameType.Duel || screenEnum === GameType.Roulette) {
-      navigation.navigate(Screen.GameList);
-      return;
-    }
     navigation.navigate(Screen.GameList);
   };
 

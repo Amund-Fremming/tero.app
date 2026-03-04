@@ -20,7 +20,7 @@ export const AddPlayersScreen = () => {
 
   const { displayErrorModal, displayInfoModal, displayActionModal } = useModalProvider();
   const { invokeFunction } = useHubConnectionProvider();
-  const { gameKey, clearGlobalSessionValues, gameEntryMode } = useGlobalSessionProvider();
+  const { gameSession, clearGlobalSessionValues, gameEntryMode } = useGlobalSessionProvider();
   const { setScreen, players, setPlayers, clearImposterSessionValues, setImposterSession } =
     useImposterSessionProvider();
 
@@ -91,7 +91,7 @@ export const AddPlayersScreen = () => {
   };
 
   const addPlayersToServer = async () => {
-    const result = await invokeFunction("AddPlayers", gameKey, players);
+    const result = await invokeFunction("AddPlayers", gameSession.gameKey, players);
     if (result.isError()) {
       console.error("Failed to AddPlayers:", result.error);
       displayErrorModal("Klarte ikke legge til spillere");

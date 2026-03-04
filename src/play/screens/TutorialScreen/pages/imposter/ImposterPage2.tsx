@@ -1,7 +1,7 @@
 import { GameType } from "@/src/core/constants/Types";
 import { getGameTheme } from "@/src/play/config/gameTheme";
 import React from "react";
-import SimpleTutorial from "../../components/SimpleTutorial";
+import SimpleTutorial from "../../components/SimpleTutorial/SimpleTutorial";
 
 const theme = getGameTheme(GameType.Imposter);
 

@@ -12,11 +12,11 @@ interface SimpleTutorialProps {
 export const SimpleTutorial = ({ title, items, accentColor = Color.BuzzifyLavender }: SimpleTutorialProps) => {
   return (
     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-      {title && <Text style={[styles.title, { color: accentColor }]}>{title}</Text>}
+      {title && <Text style={styles.title}>{title}</Text>}
 
       {items.map((text, i) => (
         <View key={i} style={styles.card}>
-          <View style={[styles.badge, { borderColor: accentColor }]}>
+          <View style={[styles.badge, { borderColor: accentColor }]}> 
             <Text style={[styles.badgeText, { color: accentColor }]}>{i + 1}</Text>
           </View>
           <Text style={styles.itemText}>{text}</Text>

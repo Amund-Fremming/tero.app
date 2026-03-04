@@ -1,14 +1,15 @@
-import { Text, View, TouchableOpacity, ScrollView, Animated } from "react-native";
-import * as Haptics from "expo-haptics";
-import VerticalScroll from "../../../core/components/VerticalScroll/VerticalScroll";
-import { useEffect, useRef, useState, useCallback } from "react";
-import { useModalProvider } from "../../../core/context/ModalProvider";
 import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
-import { useAuthProvider } from "../../../core/context/AuthProvider";
-import { useNavigation } from "@react-navigation/native";
+import { QuizSession } from "@/src/play/games/quizGame/constants/quizTypes";
 import { useQuizSessionProvider } from "@/src/play/games/quizGame/context/QuizGameProvider";
-import styles from "./gameListScreenStyles";
-import { useServiceProvider } from "../../../core/context/ServiceProvider";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import * as Haptics from "expo-haptics";
+import React, { memo, useEffect, useRef, useState } from "react";
+import { Animated, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import ScreenHeader from "../../../core/components/ScreenHeader/ScreenHeader";
+import VerticalScroll from "../../../core/components/VerticalScroll/VerticalScroll";
+import Color from "../../../core/constants/Color";
+import Screen from "../../../core/constants/Screen";
 import {
   GameBase,
   GameCategory,
@@ -17,15 +18,13 @@ import {
   GameType,
   PagedResponse,
 } from "../../../core/constants/Types";
-import Screen from "../../../core/constants/Screen";
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import Color from "../../../core/constants/Color";
-import { QuizSession } from "@/src/play/games/quizGame/constants/quizTypes";
+import { useAuthProvider } from "../../../core/context/AuthProvider";
+import { useModalProvider } from "../../../core/context/ModalProvider";
+import { useServiceProvider } from "../../../core/context/ServiceProvider";
 import { moderateScale } from "../../../core/utils/dimensions";
-import ScreenHeader from "../../../core/components/ScreenHeader/ScreenHeader";
-import React, { memo } from "react";
 import { ImposterSession } from "../../games/imposter/constants/imposterTypes";
 import { useImposterSessionProvider } from "../../games/imposter/context/ImposterSessionProvider";
+import styles from "./gameListScreenStyles";
 
 const SkeletonCard = memo(() => {
   const opacity = useRef(new Animated.Value(0.4)).current;
@@ -80,7 +79,7 @@ export const GameListScreen = () => {
   const { setGameEntryMode } = useGlobalSessionProvider();
   const { displayErrorModal, displayActionModal } = useModalProvider();
   const { pseudoId, accessToken, triggerLogin } = useAuthProvider();
-  const { gameType, setGameKey, setHubName, setIsHost, setIsDraft } = useGlobalSessionProvider();
+  const { gameType, setGameSessionValues, setIsHost, setIsDraft } = useGlobalSessionProvider();
   const { gameService } = useServiceProvider();
 
   const getHeaderBg = () => {
@@ -202,8 +201,7 @@ export const GameListScreen = () => {
 
         const roulette = rResult.value;
         setIsDraft(roulette.is_draft);
-        setGameKey(roulette.key);
-        setHubName(roulette.hub_name);
+        setGameSessionValues(roulette.key, roulette.hub_name);
         navigation.navigate(Screen.Spin);
         break;
       case GameType.Duel:
@@ -216,8 +214,7 @@ export const GameListScreen = () => {
         }
 
         const duel = dResult.value;
-        setGameKey(duel.key);
-        setHubName(duel.hub_name);
+        setGameSessionValues(duel.key, duel.hub_name);
         navigation.navigate(Screen.Spin);
         break;
       case GameType.Imposter:

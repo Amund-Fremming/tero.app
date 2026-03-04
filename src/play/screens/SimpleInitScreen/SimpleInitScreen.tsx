@@ -1,16 +1,16 @@
-import { Text, TouchableOpacity, View, Keyboard } from "react-native";
-import * as Haptics from "expo-haptics";
-import { styles } from "./simpleInitScreenStyles";
-import { TextInput } from "react-native-gesture-handler";
 import { KeyboardAvoidingWrapper } from "@/src/core/components/KeyboardAvoidingWrapper/KeyboardAvoidingWrapper";
-import { useRef } from "react";
-import { Feather, FontAwesome6, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import { moderateScale, verticalScale } from "@/src/core/utils/dimensions";
-import CategoryDropdown from "./components/CategoryDropdown/CategoryDropdown";
-import { GameCategory } from "../../../core/constants/Types";
-import Color from "../../../core/constants/Color";
-import { useGlobalSessionProvider } from "../../context/GlobalSessionProvider";
+import { Feather, FontAwesome6, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import { useNavigation } from "expo-router";
+import { useRef } from "react";
+import { Keyboard, Text, TouchableOpacity, View } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
+import Color from "../../../core/constants/Color";
+import { GameCategory } from "../../../core/constants/Types";
+import { useGlobalSessionProvider } from "../../context/GlobalSessionProvider";
+import CategoryDropdown from "./components/CategoryDropdown/CategoryDropdown";
+import { styles } from "./simpleInitScreenStyles";
 
 const STATIC_STYLES = {
   iterationsOpacity: { opacity: 0.4 },
@@ -55,7 +55,7 @@ export const SimpleInitScreen = ({
   onInfoPressed,
 }: SimpleInitScreenProps) => {
   const navigation: any = useNavigation();
-  const { gameKey, isHost } = useGlobalSessionProvider();
+  const { gameSession, isHost } = useGlobalSessionProvider();
   const anchorRef = useRef<View>(null);
 
   const categoryData = [
@@ -121,7 +121,7 @@ export const SimpleInitScreen = ({
           {!createScreen && (
             <View style={styles.headerInline}>
               <Text style={styles.toastHeader}>Rom:</Text>
-              <Text style={styles.headerSecondScreen}>{gameKey?.toUpperCase()}</Text>
+              <Text style={styles.headerSecondScreen}>{gameSession.gameKey?.toUpperCase()}</Text>
             </View>
           )}
           <TouchableOpacity

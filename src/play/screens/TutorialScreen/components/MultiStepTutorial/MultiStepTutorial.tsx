@@ -1,8 +1,8 @@
 import Color from "@/src/core/constants/Color";
+import { moderateScale } from "@/src/core/utils/dimensions";
 import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { moderateScale } from "../../../../core/utils/dimensions";
 import styles from "./multiStepTutorialStyles";
 
 const DOT_SIZE = moderateScale(8);
@@ -12,6 +12,7 @@ interface MultiStepTutorialProps {
   onFinish: () => void;
   onBack: () => void;
   accentColor?: string;
+  lastButtonText?: string;
 }
 
 export const MultiStepTutorial = ({
@@ -19,6 +20,7 @@ export const MultiStepTutorial = ({
   onFinish,
   onBack,
   accentColor = Color.BuzzifyLavender,
+  lastButtonText = "Fortsett",
 }: MultiStepTutorialProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const isLast = currentIndex === pages.length - 1;
@@ -66,7 +68,7 @@ export const MultiStepTutorial = ({
           <Text style={styles.buttonText}>Tilbake</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleNext} style={[styles.nextButton, { backgroundColor: accentColor }]}>
-          <Text style={styles.buttonText}>{isLast ? "Fortsett" : "Neste"}</Text>
+          <Text style={styles.buttonText}>{isLast ? lastButtonText : "Neste"}</Text>
         </TouchableOpacity>
       </View>
     </View>

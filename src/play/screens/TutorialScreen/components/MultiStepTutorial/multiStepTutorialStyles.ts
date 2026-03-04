@@ -1,7 +1,7 @@
+import Color from "@/src/core/constants/Color";
+import Font from "@/src/core/constants/Font";
+import { moderateScale, verticalScale } from "@/src/core/utils/dimensions";
 import { StyleSheet } from "react-native";
-import Color from "../../../../core/constants/Color";
-import Font from "../../../../core/constants/Font";
-import { moderateScale, verticalScale } from "../../../../core/utils/dimensions";
 
 const DOT_SIZE = moderateScale(8);
 

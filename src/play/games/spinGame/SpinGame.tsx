@@ -17,7 +17,7 @@ import PassiveLobbyScreen from "./screens/PassiveLobbyScreen/PassiveLobbyScreen"
 
 export const SpinGame = () => {
   const outerNavigation: any = useNavigation();
-  const { gameEntryMode, hubName, gameKey, setIsHost, clearGlobalSessionValues, isDraft, gameType } =
+  const { gameEntryMode, gameSession, setIsHost, clearGlobalSessionValues, isDraft, gameType } =
     useGlobalSessionProvider();
   const {
     screen,
@@ -50,7 +50,7 @@ export const SpinGame = () => {
     const initScreen = getInitialScreen();
     setScreen(initScreen);
     if (initScreen !== SpinSessionScreen.Create) {
-      initializeHub(hubName, gameKey, initScreen);
+      initializeHub(gameSession.hubName, gameSession.gameKey, initScreen);
     } else {
       setHubReady(true);
     }

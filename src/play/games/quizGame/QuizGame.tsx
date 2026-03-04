@@ -15,7 +15,7 @@ import StartedScreen from "./screens/StartedScreen/StartedScreen";
 
 export const QuizGame = () => {
   const outerNavigation: any = useNavigation();
-  const { gameEntryMode, gameKey, hubName, clearGlobalSessionValues } = useGlobalSessionProvider();
+  const { gameEntryMode, gameSession, clearGlobalSessionValues } = useGlobalSessionProvider();
   const { setQuizSession, setIterations, clearQuizGameValues, screen, setScreen } = useQuizSessionProvider();
   const { connect, disconnect, setListener, invokeFunction } = useHubConnectionProvider();
   const { displayErrorModal } = useModalProvider();
@@ -44,7 +44,7 @@ export const QuizGame = () => {
   }, []);
 
   useEffect(() => {
-    if (!gameKey) {
+    if (!gameSession.gameKey) {
       // TODO - return to home?
       return;
     }
@@ -54,8 +54,8 @@ export const QuizGame = () => {
       return;
     }
 
-    initializeHub(gameKey, hubName);
-  }, [gameKey]);
+    initializeHub(gameSession.gameKey, gameSession.hubName);
+  }, [gameSession.gameKey, gameSession.hubName]);
 
   const initializeHub = async (key: string, hub: string) => {
     const result = await connect(hub);

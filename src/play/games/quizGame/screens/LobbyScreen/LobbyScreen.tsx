@@ -17,7 +17,7 @@ export const LobbyScreen = () => {
   const [started, setStarted] = useState<boolean>(false);
   const [isAddingQuestion, setIsAddingQuestion] = useState<boolean>(false);
 
-  const { gameKey, clearGlobalSessionValues } = useGlobalSessionProvider();
+  const { gameSession, clearGlobalSessionValues } = useGlobalSessionProvider();
   const { disconnect, invokeFunction } = useHubConnectionProvider();
   const { displayErrorModal, displayInfoModal, displayActionModal } = useModalProvider();
   const { iterations, clearQuizGameValues, setScreen } = useQuizSessionProvider();
@@ -48,7 +48,7 @@ export const LobbyScreen = () => {
     setIsAddingQuestion(true);
     const toAdd = question;
     setQuestion("");
-    const result = await invokeFunction("AddQuestion", gameKey, toAdd);
+    const result = await invokeFunction("AddQuestion", gameSession.gameKey, toAdd);
 
     if (result.isError()) {
       console.error(result.error);
@@ -74,7 +74,7 @@ export const LobbyScreen = () => {
     }
 
     setStarted(true);
-    const result = await invokeFunction("StartGame", gameKey);
+    const result = await invokeFunction("StartGame", gameSession.gameKey);
 
     if (result.isError()) {
       displayErrorModal("Kunne ikke starte spillet.");

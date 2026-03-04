@@ -2,15 +2,19 @@ import React, { createContext, ReactNode, useContext, useEffect, useState } from
 import { GameEntryMode, GameType } from "../../core/constants/Types";
 import { registerCrashResetCallback } from "../../core/utils/navigationRef";
 
+interface IGameSessionStore {
+  gameKey: string;
+  hubName: string;
+}
+
 interface IGlobalSessionContext {
   gameEntryMode: GameEntryMode;
   setGameEntryMode: React.Dispatch<React.SetStateAction<GameEntryMode>>;
   gameType: GameType;
   setGameType: React.Dispatch<React.SetStateAction<GameType>>;
-  gameKey: string;
-  setGameKey: React.Dispatch<React.SetStateAction<string>>;
-  hubName: string;
-  setHubName: React.Dispatch<React.SetStateAction<string>>;
+  gameSession: IGameSessionStore;
+  setGameSession: React.Dispatch<React.SetStateAction<IGameSessionStore>>;
+  setGameSessionValues: (gameKey: string, hubName: string) => void;
   isHost: boolean;
   setIsHost: React.Dispatch<React.SetStateAction<boolean>>;
   clearGlobalSessionValues: () => void;
@@ -23,10 +27,12 @@ const defaultContextValue: IGlobalSessionContext = {
   setGameEntryMode: () => {},
   gameType: GameType.Quiz,
   setGameType: () => {},
-  gameKey: "",
-  setGameKey: () => {},
-  hubName: "",
-  setHubName: () => {},
+  gameSession: {
+    gameKey: "",
+    hubName: "",
+  },
+  setGameSession: () => {},
+  setGameSessionValues: () => {},
   isHost: false,
   setIsHost: () => {},
   isDraft: false,
@@ -45,8 +51,7 @@ interface GlobalSessionProviderProps {
 export const GlobalGameProvider = ({ children }: GlobalSessionProviderProps) => {
   const [gameEntryMode, setGameEntryMode] = useState<GameEntryMode>(GameEntryMode.Host);
   const [gameType, setGameType] = useState<GameType>(GameType.Quiz);
-  const [gameKey, setGameKey] = useState<string>("");
-  const [hubName, setHubName] = useState<string>("");
+  const [gameSession, setGameSession] = useState<IGameSessionStore>({ gameKey: "", hubName: "" });
   const [isHost, setIsHost] = useState<boolean>(false);
   const [isDraft, setIsDraft] = useState<boolean>(false);
 
@@ -58,10 +63,13 @@ export const GlobalGameProvider = ({ children }: GlobalSessionProviderProps) => 
 
   const clearGlobalSessionValues = () => {
     setGameEntryMode(GameEntryMode.Creator);
-    setGameType(GameType.Quiz);
-    setGameKey("");
-    setHubName("");
+    setGameSession({ gameKey: "", hubName: "" });
     setIsHost(false);
+    setIsDraft(false);
+  };
+
+  const setGameSessionValues = (gameKey: string, hubName: string) => {
+    setGameSession({ gameKey, hubName });
   };
 
   const value = {
@@ -70,10 +78,9 @@ export const GlobalGameProvider = ({ children }: GlobalSessionProviderProps) => 
     setGameEntryMode,
     gameType,
     setGameType,
-    gameKey,
-    setGameKey,
-    hubName,
-    setHubName,
+    gameSession,
+    setGameSession,
+    setGameSessionValues,
     isHost,
     setIsHost,
     isDraft,

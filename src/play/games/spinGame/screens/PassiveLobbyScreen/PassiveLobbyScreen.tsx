@@ -1,21 +1,21 @@
-import { Text, TouchableOpacity, View } from "react-native";
-import { styles } from "./passiveLobbyScreenStyles";
-import { Feather } from "@expo/vector-icons";
-import { moderateScale } from "@/src/core/utils/dimensions";
-import { useNavigation } from "expo-router";
-import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
-import { useSpinSessionProvider } from "../../context/SpinGameProvider";
-import { resetToHomeScreen } from "@/src/core/utils/utilFunctions";
-import { useHubConnectionProvider } from "@/src/play/context/HubConnectionProvider";
-import { useModalProvider } from "@/src/core/context/ModalProvider";
 import { GameType } from "@/src/core/constants/Types";
-import { SpinSessionScreen } from "../../constants/SpinTypes";
-import { useEffect, useRef, useState } from "react";
+import { useModalProvider } from "@/src/core/context/ModalProvider";
+import { moderateScale } from "@/src/core/utils/dimensions";
+import { resetToHomeScreen } from "@/src/core/utils/utilFunctions";
+import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
+import { useHubConnectionProvider } from "@/src/play/context/HubConnectionProvider";
+import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
+import { useNavigation } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+import { SpinSessionScreen } from "../../constants/SpinTypes";
+import { useSpinSessionProvider } from "../../context/SpinGameProvider";
+import { styles } from "./passiveLobbyScreenStyles";
 
 export const PassiveLobbyScreen = () => {
   const navigation: any = useNavigation();
-  const { gameKey, clearGlobalSessionValues, isHost, gameType } = useGlobalSessionProvider();
+  const { gameSession, clearGlobalSessionValues, isHost, gameType } = useGlobalSessionProvider();
   const { themeColor, clearSpinSessionValues, players, iterations, setScreen } = useSpinSessionProvider();
   const { disconnect, invokeFunction } = useHubConnectionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
@@ -57,7 +57,7 @@ export const PassiveLobbyScreen = () => {
       return;
     }
 
-    if (!gameKey || gameKey == "") {
+    if (!gameSession.gameKey || gameSession.gameKey == "") {
       displayErrorModal("Mangler spillkode. Lag spillet på nytt.");
       setStartGameTriggered(false);
       return;
@@ -78,7 +78,7 @@ export const PassiveLobbyScreen = () => {
       return;
     }
 
-    const startResult = await invokeFunction("StartGame", gameKey, false); // isDraft = false
+    const startResult = await invokeFunction("StartGame", gameSession.gameKey, false); // isDraft = false
     if (startResult.isError()) {
       console.error(startResult.error);
       displayErrorModal("Kunne ikke starte spillet.");
@@ -104,7 +104,7 @@ export const PassiveLobbyScreen = () => {
         </TouchableOpacity>
         <View style={styles.headerInline}>
           <Text style={styles.toastHeader}>Rom:</Text>
-          <Text style={styles.headerSecondScreen}>{gameKey?.toUpperCase()}</Text>
+          <Text style={styles.headerSecondScreen}>{gameSession.gameKey?.toUpperCase()}</Text>
         </View>
         <TouchableOpacity onPress={handleInfoPressed} style={styles.iconWrapper}>
           <Text style={styles.textIcon}>?</Text>

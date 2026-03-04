@@ -1,11 +1,11 @@
 import * as signalR from "@microsoft/signalr";
 import React, { createContext, ReactNode, useContext, useEffect, useRef } from "react";
-import { useModalProvider } from "../../core/context/ModalProvider";
-import { ok, err, Result } from "../../core/utils/result";
-import { resetToHomeGlobal, registerCrashResetCallback } from "../../core/utils/navigationRef";
-import { useAuthProvider } from "../../core/context/AuthProvider";
-import { useGlobalSessionProvider } from "./GlobalSessionProvider";
 import { HUB_URL_BASE } from "../../core/config/api";
+import { useAuthProvider } from "../../core/context/AuthProvider";
+import { useModalProvider } from "../../core/context/ModalProvider";
+import { registerCrashResetCallback, resetToHomeGlobal } from "../../core/utils/navigationRef";
+import { err, ok, Result } from "../../core/utils/result";
+import { useGlobalSessionProvider } from "./GlobalSessionProvider";
 
 interface IHubConnectionContext {
   connect: (hubName: string) => Promise<Result<signalR.HubConnection>>;
@@ -38,13 +38,13 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
   const listenersMapRef = useRef<Map<string, (item: any) => void>>(new Map());
   const gameKeyRef = useRef<string>("");
 
-  const { gameKey, clearGlobalSessionValues } = useGlobalSessionProvider();
+  const { gameSession, clearGlobalSessionValues } = useGlobalSessionProvider();
   const { displayLoadingModal, closeLoadingModal } = useModalProvider();
   const { pseudoId } = useAuthProvider();
 
   useEffect(() => {
-    gameKeyRef.current = gameKey;
-  }, [gameKey]);
+    gameKeyRef.current = gameSession.gameKey;
+  }, [gameSession.gameKey]);
 
   useEffect(() => {
     return registerCrashResetCallback(clearValues);

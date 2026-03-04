@@ -1,27 +1,26 @@
-import { View, Text, TouchableOpacity, Image, Keyboard } from "react-native";
-import * as Haptics from "expo-haptics";
-import styles from "./joinScreenStyles";
-import { TextInput } from "react-native-gesture-handler";
-import { useEffect, useState, useRef } from "react";
-import { useModalProvider } from "@/src/core/context/ModalProvider";
-import { useAuthProvider } from "@/src/core/context/AuthProvider";
-import { useGlobalSessionProvider } from "../../../play/context/GlobalSessionProvider";
-import { Feather } from "@expo/vector-icons";
-import Color from "@/src/core/constants/Color";
-import { GameEntryMode, GameType } from "@/src/core/constants/Types";
-import { useServiceProvider } from "@/src/core/context/ServiceProvider";
-import { useNavigation, useFocusEffect } from "expo-router";
-import Screen from "@/src/core/constants/Screen";
-import { moderateScale } from "@/src/core/utils/dimensions";
-import { useCallback } from "react";
-import ScreenHeader from "@/src/core/components/ScreenHeader/ScreenHeader";
 import { KeyboardAvoidingWrapper } from "@/src/core/components/KeyboardAvoidingWrapper/KeyboardAvoidingWrapper";
+import ScreenHeader from "@/src/core/components/ScreenHeader/ScreenHeader";
+import Color from "@/src/core/constants/Color";
+import Screen from "@/src/core/constants/Screen";
+import { GameEntryMode, GameType } from "@/src/core/constants/Types";
+import { useAuthProvider } from "@/src/core/context/AuthProvider";
+import { useModalProvider } from "@/src/core/context/ModalProvider";
+import { useServiceProvider } from "@/src/core/context/ServiceProvider";
+import { moderateScale } from "@/src/core/utils/dimensions";
+import { Feather } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
+import { useFocusEffect, useNavigation } from "expo-router";
+import { useCallback, useRef, useState } from "react";
+import { Image, Keyboard, Text, TouchableOpacity, View } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
+import { useGlobalSessionProvider } from "../../../play/context/GlobalSessionProvider";
+import styles from "./joinScreenStyles";
 
 export const JoinScreen = () => {
   const navigation: any = useNavigation();
   const { pseudoId } = useAuthProvider();
   const { displayInfoModal } = useModalProvider();
-  const { setGameEntryMode, setGameKey, setHubName, setGameType, setIsHost, setIsDraft } = useGlobalSessionProvider();
+  const { setGameEntryMode, setGameSessionValues, setGameType, setIsHost, setIsDraft } = useGlobalSessionProvider();
   const { gameService } = useServiceProvider();
   const anchorRef = useRef<View>(null);
 
@@ -53,8 +52,7 @@ export const JoinScreen = () => {
     setGameEntryMode(GameEntryMode.Participant);
 
     setIsDraft(response.is_draft);
-    setHubName(response.hub_name);
-    setGameKey(response.game_key);
+    setGameSessionValues(response.game_key, response.hub_name);
     setGameType(response.game_type);
 
     if ([GameType.Duel, GameType.Roulette].includes(response.game_type)) {

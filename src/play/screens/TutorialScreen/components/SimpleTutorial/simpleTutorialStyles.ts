@@ -1,7 +1,7 @@
+import Color from "@/src/core/constants/Color";
+import Font from "@/src/core/constants/Font";
+import { horizontalScale, moderateScale, verticalScale } from "@/src/core/utils/dimensions";
 import { StyleSheet } from "react-native";
-import Color from "../../../../core/constants/Color";
-import Font from "../../../../core/constants/Font";
-import { horizontalScale, moderateScale, verticalScale } from "../../../../core/utils/dimensions";
 
 const styles = StyleSheet.create({
   scrollContent: {
@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    color: Color.LightGray,
     fontFamily: Font.PassionOneRegular,
     fontSize: moderateScale(26),
     marginBottom: verticalScale(4),

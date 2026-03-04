@@ -1,5 +1,4 @@
 import Color from "@/src/core/constants/Color";
-import Font from "@/src/core/constants/Font";
 import { moderateScale, verticalScale } from "@/src/core/utils/dimensions";
 import { StyleSheet } from "react-native";
 
@@ -11,72 +10,74 @@ export const styles = StyleSheet.create({
 
   content: {
     flex: 1,
-    alignItems: "center",
+    backgroundColor: "#5f432f",
+  },
+
+  tableSurface: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#6a4b34",
+    borderWidth: moderateScale(8),
+    borderColor: "#4d3423",
     justifyContent: "center",
-    gap: verticalScale(30),
-    paddingBottom: verticalScale(100),
-  },
-
-  title: {
-    fontSize: moderateScale(32),
-    fontFamily: Font.PassionOneBold,
-    color: Color.OffBlack,
-    textAlign: "center",
-  },
-
-  diceContainer: {
+    alignItems: "center",
+    overflow: "hidden",
     shadowColor: Color.Black,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
     elevation: 8,
   },
 
-  dice: {
-    width: moderateScale(200),
-    height: moderateScale(200),
-    backgroundColor: Color.White,
-    borderRadius: moderateScale(25),
-    borderWidth: moderateScale(6),
-    borderColor: Color.OffBlack,
+  tableFelt: {
+    position: "absolute",
+    width: "97%",
+    height: "96%",
+    borderRadius: moderateScale(14),
+    backgroundColor: "#2f6f4b",
+    borderWidth: moderateScale(2),
+    borderColor: "#204e35",
+  },
+
+  spotlight: {
+    position: "absolute",
+    top: verticalScale(60),
+    width: moderateScale(300),
+    height: moderateScale(180),
+    borderRadius: moderateScale(999),
+    backgroundColor: "rgba(255,255,255,0.1)",
+  },
+
+  diceGroundShadow: {
+    position: "absolute",
+    bottom: verticalScale(175),
+    width: moderateScale(160),
+    height: moderateScale(44),
+    borderRadius: moderateScale(999),
+    backgroundColor: "rgba(8, 16, 12, 0.52)",
+  },
+
+  dicePressable: {
+    width: moderateScale(220),
+    height: moderateScale(220),
+    alignItems: "center",
     justifyContent: "center",
+  },
+
+  diceContainer: {
+    width: moderateScale(140),
+    height: moderateScale(120),
     alignItems: "center",
+    justifyContent: "center",
   },
 
-  diceEmoji: {
-    fontSize: moderateScale(120),
-  },
-
-  resultContainer: {
-    backgroundColor: Color.White,
-    borderRadius: moderateScale(20),
-    borderWidth: moderateScale(4),
-    borderColor: Color.OffBlack,
-    paddingHorizontal: moderateScale(40),
-    paddingVertical: verticalScale(20),
-    alignItems: "center",
-    gap: verticalScale(5),
-    minWidth: moderateScale(150),
-  },
-
-  resultLabel: {
-    fontSize: moderateScale(20),
-    fontFamily: Font.SintonyBold,
-    color: Color.Gray,
-    textTransform: "uppercase",
-  },
-
-  resultValue: {
-    fontSize: moderateScale(50),
-    fontFamily: Font.PassionOneBold,
-    color: Color.HomeRed,
-  },
-
-  hint: {
-    fontSize: moderateScale(18),
-    fontFamily: Font.SintonyRegular,
-    color: Color.OffBlack,
-    textAlign: "center",
-    marginTop: verticalScale(10),
+  diceCube: {
+    width: "100%",
+    height: "100%",
+    shadowColor: Color.Black,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.22,
+    shadowRadius: 8,
+    elevation: 7,
   },
 });

@@ -1,22 +1,21 @@
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
-import * as Haptics from "expo-haptics";
-import { styles } from "./savedGameScreenStyles";
+import ScreenHeader from "@/src/core/components/ScreenHeader/ScreenHeader";
 import VerticalScroll from "@/src/core/components/VerticalScroll/VerticalScroll";
-import { useEffect, useRef, useState } from "react";
-import { useServiceProvider } from "@/src/core/context/ServiceProvider";
+import Color from "@/src/core/constants/Color";
+import Screen from "@/src/core/constants/Screen";
+import { GameBase, GameCategory, GameEntryMode, GameType, PagedResponse } from "@/src/core/constants/Types";
 import { useAuthProvider } from "@/src/core/context/AuthProvider";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
-import { GameBase, GameCategory, GameEntryMode, GameType, PagedResponse } from "@/src/core/constants/Types";
-import { useNavigation } from "@react-navigation/native";
+import { useServiceProvider } from "@/src/core/context/ServiceProvider";
 import { moderateScale } from "@/src/core/utils/dimensions";
-import Color from "@/src/core/constants/Color";
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import ScreenHeader from "@/src/core/components/ScreenHeader/ScreenHeader";
-import React from "react";
 import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
-import Screen from "@/src/core/constants/Screen";
-import { useQuizSessionProvider } from "@/src/play/games/quizGame/context/QuizGameProvider";
 import { QuizSession } from "@/src/play/games/quizGame/constants/quizTypes";
+import { useQuizSessionProvider } from "@/src/play/games/quizGame/context/QuizGameProvider";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import * as Haptics from "expo-haptics";
+import React, { useEffect, useRef, useState } from "react";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { styles } from "./savedGameScreenStyles";
 
 const CATEGORY_LABELS: Record<GameCategory, string> = {
   [GameCategory.Girls]: "Jentene",
@@ -45,7 +44,7 @@ export const SavedGamesScreen = () => {
   const { gameService } = useServiceProvider();
   const { accessToken, pseudoId } = useAuthProvider();
   const { displayErrorModal } = useModalProvider();
-  const { setIsHost, setGameKey, setHubName, setGameEntryMode, setIsDraft } = useGlobalSessionProvider();
+  const { setIsHost, setGameSessionValues, setGameEntryMode, setIsDraft } = useGlobalSessionProvider();
   const { setQuizSession } = useQuizSessionProvider();
 
   const [pagedResponse, setPagedResponse] = useState<PagedResponse<GameBase>>({
@@ -147,8 +146,7 @@ export const SavedGamesScreen = () => {
 
         const roulette = rResult.value;
         setIsDraft(roulette.is_draft);
-        setGameKey(roulette.key);
-        setHubName(roulette.hub_name);
+        setGameSessionValues(roulette.key, roulette.hub_name);
         navigation.navigate(Screen.Spin);
         break;
       case GameType.Duel:
@@ -162,8 +160,7 @@ export const SavedGamesScreen = () => {
 
         const duel = dResult.value;
         setIsDraft(duel.is_draft);
-        setGameKey(duel.key);
-        setHubName(duel.hub_name);
+        setGameSessionValues(duel.key, duel.hub_name);
         navigation.navigate(Screen.Spin);
         break;
       default:

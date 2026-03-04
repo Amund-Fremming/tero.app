@@ -1,38 +1,30 @@
+import { tutorialConfig } from "@/src/core/config/tutorialConfig";
 import { getGameTheme } from "@/src/play/config/gameTheme";
 import * as Haptics from "expo-haptics";
 import { useNavigation } from "expo-router";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import ScreenHeader from "../../../core/components/ScreenHeader/ScreenHeader";
-import Screen from "../../../core/constants/Screen";
-import { GameEntryMode, GameType } from "../../../core/constants/Types";
+import { GameType } from "../../../core/constants/Types";
 import { useGlobalSessionProvider } from "../../context/GlobalSessionProvider";
-import MultiStepTutorial from "./components/MultiStepTutorial";
-import SimpleTutorial from "./components/SimpleTutorial";
-import { tutorialConfig } from "./tutorialConfig";
+import MultiStepTutorial from "./components/MultiStepTutorial/MultiStepTutorial";
+import SimpleTutorial from "./components/SimpleTutorial/SimpleTutorial";
 import styles from "./tutorialScreenStyles";
 
-export const TutorialScreen = () => {
+interface TutorialScreenRouteParams {
+  onFinishedPressed?: () => void;
+  lastButtonText?: string;
+}
+
+export const TutorialScreen = ({ route }: any) => {
   const navigation: any = useNavigation();
-  const { gameType, gameEntryMode, isDraft } = useGlobalSessionProvider();
+  const { gameType } = useGlobalSessionProvider();
+  const params: TutorialScreenRouteParams = route?.params ?? {};
+  const onFinishedPressed = params.onFinishedPressed ?? (() => navigation.goBack());
+  const lastButtonText = params.lastButtonText ?? "Fortsett";
 
   const config = tutorialConfig[gameType] ?? tutorialConfig[GameType.Quiz];
   const theme = getGameTheme(gameType);
-
-  const navigateToGame = () => {
-    const creating = isDraft || gameEntryMode === GameEntryMode.Creator;
-    if (gameType === GameType.Duel || gameType === GameType.Roulette) {
-      navigation.navigate(creating ? Screen.Spin : Screen.GameList);
-      return;
-    }
-
-    if (gameType === GameType.Dice) {
-      navigation.navigate(Screen.Dice);
-      return;
-    }
-
-    navigation.navigate(creating ? gameType : Screen.GameList);
-  };
 
   if (config.mode === "multi") {
     return (
@@ -45,9 +37,10 @@ export const TutorialScreen = () => {
         />
         <MultiStepTutorial
           pages={config.pages}
-          onFinish={navigateToGame}
+          onFinish={onFinishedPressed}
           onBack={() => navigation.goBack()}
           accentColor={theme.secondaryColor}
+          lastButtonText={lastButtonText}
         />
       </View>
     );
@@ -67,11 +60,11 @@ export const TutorialScreen = () => {
       <TouchableOpacity
         onPress={() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-          navigateToGame();
+          onFinishedPressed();
         }}
         style={[styles.continueButton, { backgroundColor: theme.secondaryColor }]}
       >
-        <Text style={styles.continueText}>Fortsett</Text>
+        <Text style={styles.continueText}>{lastButtonText}</Text>
       </TouchableOpacity>
     </View>
   );
