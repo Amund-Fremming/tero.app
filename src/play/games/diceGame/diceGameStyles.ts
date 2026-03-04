@@ -58,15 +58,15 @@ export const styles = StyleSheet.create({
   },
 
   dicePressable: {
-    width: moderateScale(220),
-    height: moderateScale(220),
+    width: moderateScale(320),
+    height: moderateScale(320),
     alignItems: "center",
     justifyContent: "center",
   },
 
   diceContainer: {
-    width: moderateScale(140),
-    height: moderateScale(120),
+    width: moderateScale(250),
+    height: moderateScale(250),
     alignItems: "center",
     justifyContent: "center",
   },
@@ -74,6 +74,8 @@ export const styles = StyleSheet.create({
   diceCube: {
     width: "100%",
     height: "100%",
+    borderRadius: moderateScale(38),
+    overflow: "hidden",
     shadowColor: Color.Black,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.22,

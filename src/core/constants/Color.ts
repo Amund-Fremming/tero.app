@@ -33,6 +33,7 @@ export const Color = {
   DarkGreen: "#28353A",
   LightGreen: "#D3F0D2",
   DeepForest: "#566b5f",
+  DarkBrown: "#4d3423"
 };
 
 export default Color;

@@ -11,17 +11,14 @@ import MultiStepTutorial from "./components/MultiStepTutorial/MultiStepTutorial"
 import SimpleTutorial from "./components/SimpleTutorial/SimpleTutorial";
 import styles from "./tutorialScreenStyles";
 
-interface TutorialScreenRouteParams {
-  onFinishedPressed?: () => void;
-  lastButtonText?: string;
+interface GenericTutorialScreenRouteProps {
+  onFinishedPressed: () => void;
+  lastButtonText: string;
 }
 
-export const TutorialScreen = ({ route }: any) => {
+export const GenericTutorialScreen = ({ onFinishedPressed, lastButtonText }: GenericTutorialScreenRouteProps) => {
   const navigation: any = useNavigation();
   const { gameType } = useGlobalSessionProvider();
-  const params: TutorialScreenRouteParams = route?.params ?? {};
-  const onFinishedPressed = params.onFinishedPressed ?? (() => navigation.goBack());
-  const lastButtonText = params.lastButtonText ?? "Fortsett";
 
   const config = tutorialConfig[gameType] ?? tutorialConfig[GameType.Quiz];
   const theme = getGameTheme(gameType);
@@ -70,4 +67,4 @@ export const TutorialScreen = ({ route }: any) => {
   );
 };
 
-export default TutorialScreen;
+export default GenericTutorialScreen;

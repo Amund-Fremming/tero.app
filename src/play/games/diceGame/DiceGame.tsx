@@ -3,7 +3,7 @@ import Color from "@/src/core/constants/Color";
 import { useNavigation } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Animated, Easing, Pressable, View } from "react-native";
-import Svg, { Circle, Defs, LinearGradient, Polygon, Stop } from "react-native-svg";
+import Svg, { Circle, ClipPath, Defs, G, LinearGradient, Polygon, Rect, Stop } from "react-native-svg";
 import { styles } from "./diceGameStyles";
 
 const FACE_LAYOUTS: Record<number, number[]> = {
@@ -16,15 +16,15 @@ const FACE_LAYOUTS: Record<number, number[]> = {
 };
 
 const PIP_POSITIONS: Record<number, { x: number; y: number }> = {
-  0: { x: 0.2, y: 0.2 },
-  1: { x: 0.5, y: 0.2 },
-  2: { x: 0.8, y: 0.2 },
-  3: { x: 0.2, y: 0.5 },
+  0: { x: 0.28, y: 0.28 },
+  1: { x: 0.5, y: 0.28 },
+  2: { x: 0.72, y: 0.28 },
+  3: { x: 0.28, y: 0.5 },
   4: { x: 0.5, y: 0.5 },
-  5: { x: 0.8, y: 0.5 },
-  6: { x: 0.2, y: 0.8 },
-  7: { x: 0.5, y: 0.8 },
-  8: { x: 0.8, y: 0.8 },
+  5: { x: 0.72, y: 0.5 },
+  6: { x: 0.28, y: 0.72 },
+  7: { x: 0.5, y: 0.72 },
+  8: { x: 0.72, y: 0.72 },
 };
 
 type Vec3 = {
@@ -54,12 +54,12 @@ const FACE_VALUES = {
 } as const;
 
 const BASE_FRONT_ANGLES: Record<number, Angles> = {
-  1: { x: -18, y: -28, z: 0 },
-  2: { x: 72, y: -24, z: 0 },
-  3: { x: -18, y: -118, z: 0 },
-  4: { x: -18, y: 62, z: 0 },
-  5: { x: -108, y: -24, z: 0 },
-  6: { x: -18, y: 152, z: 0 },
+  1: { x: 0, y: 0, z: 0 },
+  2: { x: 90, y: 0, z: 0 },
+  3: { x: 0, y: -90, z: 0 },
+  4: { x: 0, y: 90, z: 0 },
+  5: { x: -90, y: 0, z: 0 },
+  6: { x: 0, y: 180, z: 0 },
 };
 
 const CUBE_POINTS: Vec3[] = [
@@ -74,12 +74,12 @@ const CUBE_POINTS: Vec3[] = [
 ];
 
 const FACE_DEFS = [
-  { id: "front", indices: [0, 1, 2, 3] as const, fill: "url(#frontGrad)" },
-  { id: "back", indices: [5, 4, 7, 6] as const, fill: "#d8d8df" },
-  { id: "right", indices: [1, 5, 6, 2] as const, fill: "url(#rightGrad)" },
-  { id: "left", indices: [4, 0, 3, 7] as const, fill: "#dcdce1" },
-  { id: "top", indices: [4, 5, 1, 0] as const, fill: "url(#topGrad)" },
-  { id: "bottom", indices: [3, 2, 6, 7] as const, fill: "#d5d5db" },
+  { id: "front", indices: [0, 3, 2, 1] as const, fill: "url(#frontGrad)" },
+  { id: "back", indices: [4, 5, 6, 7] as const, fill: "#d8d8df" },
+  { id: "right", indices: [1, 2, 6, 5] as const, fill: "url(#rightGrad)" },
+  { id: "left", indices: [4, 7, 3, 0] as const, fill: "#dcdce1" },
+  { id: "top", indices: [4, 0, 1, 5] as const, fill: "url(#topGrad)" },
+  { id: "bottom", indices: [3, 7, 6, 2] as const, fill: "#d5d5db" },
 ] as const;
 
 const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
@@ -129,11 +129,11 @@ const bilinear = (corners: [Vec2, Vec2, Vec2, Vec2], ux: number, uy: number): Ve
 };
 
 const Dice3D = ({ angles }: { angles: Angles }) => {
-  const size = 36;
-  const cameraZ = 220;
-  const focal = 180;
-  const centerX = 100;
-  const centerY = 100;
+  const size = 54;
+  const cameraZ = 305;
+  const focal = 280;
+  const centerX = 130;
+  const centerY = 130;
 
   const transformed = CUBE_POINTS.map((point) => rotatePoint(point, angles));
   const scaled = transformed.map((point) => ({ x: point.x * size, y: point.y * size, z: point.z * size }));
@@ -170,7 +170,7 @@ const Dice3D = ({ angles }: { angles: Angles }) => {
       fill: face.fill,
       points2d,
       avgZ,
-      visible: normal.z > 0,
+      visible: normal.z > 0.12,
     };
   })
     .filter((face) => face.visible)
@@ -186,8 +186,11 @@ const Dice3D = ({ angles }: { angles: Angles }) => {
   };
 
   return (
-    <Svg width="100%" height="100%" viewBox="0 0 200 200">
+    <Svg width="100%" height="100%" viewBox="0 0 260 260">
       <Defs>
+        <ClipPath id="diceClip">
+          <Rect x="22" y="22" width="216" height="216" rx="58" ry="58" />
+        </ClipPath>
         <LinearGradient id="frontGrad" x1="0" y1="0" x2="1" y2="1">
           <Stop offset="0" stopColor="#ffffff" />
           <Stop offset="1" stopColor="#ececef" />
@@ -202,25 +205,60 @@ const Dice3D = ({ angles }: { angles: Angles }) => {
         </LinearGradient>
       </Defs>
 
-      {faces.map((face) => {
-        const points = face.points2d.map((point) => `${point.x},${point.y}`).join(" ");
-        return <Polygon key={`poly-${face.id}`} points={points} fill={face.fill} stroke="#c9cad0" strokeWidth="2" />;
-      })}
+      <G clipPath="url(#diceClip)">
+        {faces.map((face) => {
+          const points = face.points2d.map((point) => `${point.x},${point.y}`).join(" ");
+          return (
+            <Polygon
+              key={`poly-${face.id}`}
+              points={points}
+              fill={face.fill}
+              stroke="#bfc1c8"
+              strokeWidth="2.5"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+            />
+          );
+        })}
 
-      {faces.map((face) => {
-        const value = valueMap[face.id];
-        if (!value) {
-          return null;
-        }
+        {faces.map((face) => {
+          const value = valueMap[face.id];
+          if (!value) {
+            return null;
+          }
 
-        return FACE_LAYOUTS[value].map((pipIndex) => {
-          const position = PIP_POSITIONS[pipIndex];
-          const pipPoint = bilinear(face.points2d, position.x, position.y);
-          const radius = face.id === "front" ? 4 : 3.4;
+          return FACE_LAYOUTS[value].map((pipIndex) => {
+            const position = PIP_POSITIONS[pipIndex];
+            const pipPoint = bilinear(face.points2d, position.x, position.y);
+            const radius = face.id === "front" ? 7.5 : 6.2;
 
-          return <Circle key={`pip-${face.id}-${pipIndex}`} cx={pipPoint.x} cy={pipPoint.y} r={radius} fill="#20242a" />;
-        });
-      })}
+            return <Circle key={`pip-${face.id}-${pipIndex}`} cx={pipPoint.x} cy={pipPoint.y} r={radius} fill="#20242a" />;
+          });
+        })}
+      </G>
+
+      <Rect
+        x="22"
+        y="22"
+        width="216"
+        height="216"
+        rx="58"
+        ry="58"
+        fill="none"
+        stroke="#bcc0c8"
+        strokeWidth="4"
+      />
+      <Rect
+        x="28"
+        y="28"
+        width="204"
+        height="204"
+        rx="52"
+        ry="52"
+        fill="none"
+        stroke="rgba(255,255,255,0.55)"
+        strokeWidth="1.6"
+      />
     </Svg>
   );
 };
@@ -314,46 +352,13 @@ export const DiceGame = () => {
         useNativeDriver: false,
       }),
     ]).start(() => {
-      Animated.sequence([
-        Animated.parallel([
-          Animated.spring(angleX, {
-            toValue: target.x + (nextValue % 2 === 0 ? 5 : -5),
-            friction: 6,
-            tension: 65,
-            useNativeDriver: false,
-          }),
-          Animated.spring(angleY, {
-            toValue: target.y + (nextValue % 2 === 0 ? -4 : 4),
-            friction: 6,
-            tension: 65,
-            useNativeDriver: false,
-          }),
-        ]),
-        Animated.parallel([
-          Animated.spring(angleX, {
-            toValue: target.x,
-            friction: 8,
-            tension: 85,
-            useNativeDriver: false,
-          }),
-          Animated.spring(angleY, {
-            toValue: target.y,
-            friction: 8,
-            tension: 85,
-            useNativeDriver: false,
-          }),
-          Animated.spring(angleZ, {
-            toValue: target.z,
-            friction: 9,
-            tension: 90,
-            useNativeDriver: false,
-          }),
-        ]),
-      ]).start(() => {
-        currentAnglesRef.current = target;
-        setCubeAngles(target);
-        setIsRolling(false);
-      });
+      // Snap to canonical orientation to prevent end-of-roll face flicker.
+      angleX.setValue(target.x);
+      angleY.setValue(target.y);
+      angleZ.setValue(target.z);
+      currentAnglesRef.current = target;
+      setCubeAngles(target);
+      setIsRolling(false);
     });
   };
 

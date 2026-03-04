@@ -1,7 +1,7 @@
 import { GameType } from "@/src/core/constants/Types";
-import ImposterPage1 from "@/src/play/screens/TutorialScreen/pages/imposter/ImposterPage1";
-import ImposterPage2 from "@/src/play/screens/TutorialScreen/pages/imposter/ImposterPage2";
-import ImposterPage3 from "@/src/play/screens/TutorialScreen/pages/imposter/ImposterPage3";
+import ImposterPage1 from "@/src/play/screens/GenericTutorialScreen/pages/imposter/ImposterPage1";
+import ImposterPage2 from "@/src/play/screens/GenericTutorialScreen/pages/imposter/ImposterPage2";
+import ImposterPage3 from "@/src/play/screens/GenericTutorialScreen/pages/imposter/ImposterPage3";
 import React from "react";
 
 export type SimpleTutorialDef = {

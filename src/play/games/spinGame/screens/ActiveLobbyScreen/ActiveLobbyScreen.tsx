@@ -3,7 +3,7 @@ import { useModalProvider } from "@/src/core/context/ModalProvider";
 import { resetToHomeGlobal } from "@/src/core/utils/navigationRef";
 import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
 import { useHubConnectionProvider } from "@/src/play/context/HubConnectionProvider";
-import SimpleInitScreen from "@/src/play/screens/SimpleInitScreen/SimpleInitScreen";
+import GenericActiveLobbyScreen from "@/src/play/screens/GenericActiveLobbyScreen/GenericActiveLobbyScreen";
 import * as Haptics from "expo-haptics";
 import { useEffect, useRef, useState } from "react";
 import { SpinSessionScreen } from "../../constants/SpinTypes";
@@ -17,8 +17,6 @@ export const ActiveLobbyScreen = () => {
     useSpinSessionProvider();
 
   const [startGameTriggered, setStartGameTriggered] = useState<boolean>(false);
-  const [round, setRound] = useState<string>("");
-  const [isAddingRound, setIsAddingRound] = useState<boolean>(false);
   const prevIterationsRef = useRef(iterations);
 
   useEffect(() => {
@@ -28,33 +26,18 @@ export const ActiveLobbyScreen = () => {
     prevIterationsRef.current = iterations;
   }, [iterations]);
 
-  const handleSetRound = (value: string) => {
-    setRound(value);
-  };
-
-  const handleAddRound = async () => {
-    if (isAddingRound) {
+  const handleAddRound = async (round: string) => {
+    if (round.trim() === "") {
       return;
     }
 
-    if (round === "") {
-      return;
-    }
-
-    setIsAddingRound(true);
-    const roundToAdd = round;
-    setRound("");
-    const result = await invokeFunction("AddRound", gameSession.gameKey, roundToAdd);
+    const result = await invokeFunction("AddRound", gameSession.gameKey, round);
 
     if (result.isError()) {
       console.error(result.error);
       displayErrorModal("Kunne ikke legge til runde.");
-      setIsAddingRound(false);
       return;
     }
-
-    setRound("");
-    setIsAddingRound(false);
   };
 
   const handleStartGame = async () => {
@@ -131,23 +114,17 @@ export const ActiveLobbyScreen = () => {
   };
 
   return (
-    <SimpleInitScreen
-      createScreen={false}
+    <GenericActiveLobbyScreen
       themeColor={themeColor}
       secondaryThemeColor={secondaryThemeColor}
-      onBackPressed={handleBackPressed}
-      onInfoPressed={handleInfoPressed}
-      headerText="Opprett"
-      topButtonText="Leggt til"
-      topButtonOnChange={() => {}}
-      topButtonOnPress={handleAddRound}
-      bottomButtonText="Start spill"
-      bottomButtonCallback={handleStartGame}
       featherIcon={featherIcon}
       iterations={iterations}
       inputPlaceholder="Taperen må..."
-      inputValue={round}
-      setInput={handleSetRound}
+      bottomButtonText="Start spill"
+      onCreatePressed={handleStartGame}
+      onAddRoundPressed={handleAddRound}
+      onBackPressed={handleBackPressed}
+      onInfoPressed={handleInfoPressed}
     />
   );
 };

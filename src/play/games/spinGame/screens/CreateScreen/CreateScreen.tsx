@@ -3,7 +3,7 @@ import { useAuthProvider } from "@/src/core/context/AuthProvider";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
 import { useServiceProvider } from "@/src/core/context/ServiceProvider";
 import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
-import SimpleInitScreen from "@/src/play/screens/SimpleInitScreen/SimpleInitScreen";
+import GenericCreateScreen from "@/src/play/screens/GenericCreateScreen/GenericCreateScreen";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { useSpinSessionProvider } from "../../context/SpinGameProvider";
@@ -86,8 +86,7 @@ export const CreateScreen = ({
   };
 
   return (
-    <SimpleInitScreen
-      createScreen={true}
+    <GenericCreateScreen
       themeColor={themeColor}
       secondaryThemeColor={secondaryThemeColor}
       onBackPressed={() => navigation.goBack()}
@@ -95,11 +94,9 @@ export const CreateScreen = ({
       headerText="Opprett"
       topButtonText={createRequest.category}
       topButtonOnChange={handleSetCategory}
-      topButtonOnPress={() => {}}
       bottomButtonText="Opprett"
       bottomButtonCallback={handleCreateGame}
       featherIcon={featherIcon}
-      iterations={"?"}
       inputPlaceholder="Spillnavn..."
       inputValue={createRequest.name}
       setInput={handleSetName}

@@ -1,7 +1,7 @@
-import { View, Text, Keyboard } from "react-native";
+import { useRef } from "react";
+import { Keyboard, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { styles } from "./categoryDropdownStyles";
-import { useRef } from "react";
 
 interface CategoryItem<T = string> {
   label: string;
@@ -10,7 +10,7 @@ interface CategoryItem<T = string> {
 
 interface CategoryDropdownProps<T = string> {
   data: CategoryItem<T>[];
-  value: T;
+  value?: T;
   onChange: (value: T) => void;
   placeholder?: string;
   buttonBackgroundColor?: string;

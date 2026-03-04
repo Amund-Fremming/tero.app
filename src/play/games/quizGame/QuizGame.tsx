@@ -12,6 +12,7 @@ import { CreateScreen } from "./screens/CreateScreen/CreateScreen";
 import { GameScreen } from "./screens/GameScreen/GameScreen";
 import LobbyScreen from "./screens/LobbyScreen/LobbyScreen";
 import StartedScreen from "./screens/StartedScreen/StartedScreen";
+import TutorialScreen from "./screens/TutorialScreen/TutorialScreen";
 
 export const QuizGame = () => {
   const outerNavigation: any = useNavigation();
@@ -23,7 +24,7 @@ export const QuizGame = () => {
   const getInitialScreen = (): QuizGameScreen => {
     switch (gameEntryMode) {
       case GameEntryMode.Creator:
-        return QuizGameScreen.Create;
+        return QuizGameScreen.Tutorial;
       case GameEntryMode.Host:
         return QuizGameScreen.Game;
       case GameEntryMode.Participant:
@@ -48,7 +49,6 @@ export const QuizGame = () => {
       // TODO - return to home?
       return;
     }
-
 
     if (gameEntryMode === GameEntryMode.Host) {
       return;
@@ -101,13 +101,16 @@ export const QuizGame = () => {
   };
 
   switch (screen) {
-    case QuizGameScreen.Create:
-      return <CreateScreen />;
+    case QuizGameScreen.Tutorial:
+      return <TutorialScreen />;
     case QuizGameScreen.Game:
       return <GameScreen />;
     case QuizGameScreen.Started:
       return <StartedScreen />;
     case QuizGameScreen.Lobby:
+      return <LobbyScreen />;
+    case QuizGameScreen.Create:
+      return <CreateScreen />;
     default:
       return <LobbyScreen />;
   }

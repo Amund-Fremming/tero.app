@@ -1,13 +1,12 @@
-import { CreateGameRequest, GameCategory, GameEntryMode, GameType } from "@/src/core/constants/Types";
+import { GameType } from "@/src/core/constants/Types";
 import { useAuthProvider } from "@/src/core/context/AuthProvider";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
 import { useServiceProvider } from "@/src/core/context/ServiceProvider";
 import { getGameTheme } from "@/src/play/config/gameTheme";
 import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
-import SimpleInitScreen from "@/src/play/screens/SimpleInitScreen/SimpleInitScreen";
+import GenericCreateScreen from "@/src/play/screens/GenericCreateScreen/GenericCreateScreen";
 import { useNavigation } from "expo-router";
-import { useEffect, useState } from "react";
-import { QuizGameScreen as QuizSessionScreen } from "../../constants/quizTypes";
+import { useEffect } from "react";
 import { useQuizSessionProvider } from "../../context/QuizGameProvider";
 
 export const CreateScreen = () => {
@@ -19,84 +18,29 @@ export const CreateScreen = () => {
   const { setScreen } = useQuizSessionProvider();
   const theme = getGameTheme(GameType.Quiz);
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [createRequest, setCreateRequest] = useState<CreateGameRequest>({
-    name: "",
-    category: "" as any,
-  });
-
   useEffect(() => {
     setIsHost(true);
   }, []);
-
-  const handleSetCategory = (value: any) => {
-    setCreateRequest((prev) => ({ ...prev, category: value as GameCategory }));
-  };
-
-  const handleSetName = (value: string) => {
-    setCreateRequest((prev) => ({ ...prev, name: value }));
-  };
-
-  const handleCreateGame = async () => {
-    if (loading) return;
-    const gameName = createRequest.name.trim();
-
-    if (!createRequest.category) {
-      displayInfoModal("Velg kategori.");
-      return;
-    }
-
-    if (gameName === "") {
-      displayInfoModal("Spillnavn kan ikke være tomt");
-      return;
-    }
-
-    if (gameName.length < 3) {
-      displayInfoModal("Spillnavn må ha minst 3 tegn.");
-      return;
-    }
-
-    setLoading(true);
-    const result = await gameService().createInteractiveGame(pseudoId, GameType.Quiz, {
-      ...createRequest,
-      name: gameName,
-    });
-
-    if (result.isError()) {
-      displayErrorModal(result.error);
-      setLoading(false);
-      return;
-    }
-
-    console.info("Game initiated with key:", result.value.key);
-    setGameSessionValues(result.value.key, result.value.hub_name);
-    setGameEntryMode(GameEntryMode.Creator);
-    setScreen(QuizSessionScreen.Lobby);
-    setLoading(false);
-  };
 
   const handleInfoPressed = () => {
     displayInfoModal("Gi ditt nye spill ett navn og en kategori!", "Hva nå?");
   };
 
+  const handlePatchGame = async (name: string) => {
+    // TODO!
+  };
+
   return (
-    <SimpleInitScreen
-      createScreen={true}
+    <GenericCreateScreen
       themeColor={theme.primaryColor}
       secondaryThemeColor={theme.secondaryColor}
       onBackPressed={() => navigation.goBack()}
       onInfoPressed={handleInfoPressed}
       headerText="Opprett"
-      topButtonText={createRequest.category}
-      topButtonOnChange={handleSetCategory}
-      topButtonOnPress={() => {}}
+      topButtonText={"Velg kategori"}
       bottomButtonText="Opprett"
-      bottomButtonCallback={handleCreateGame}
+      bottomButtonCallback={handlePatchGame}
       featherIcon="stack"
-      iterations={"?"}
-      inputPlaceholder="Spillnavn..."
-      inputValue={createRequest.name}
-      setInput={handleSetName}
     />
   );
 };

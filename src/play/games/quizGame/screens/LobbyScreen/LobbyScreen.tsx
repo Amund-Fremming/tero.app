@@ -4,7 +4,7 @@ import { resetToHomeScreen } from "@/src/core/utils/utilFunctions";
 import { getGameTheme } from "@/src/play/config/gameTheme";
 import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
 import { useHubConnectionProvider } from "@/src/play/context/HubConnectionProvider";
-import SimpleInitScreen from "@/src/play/screens/SimpleInitScreen/SimpleInitScreen";
+import GenericActiveLobbyScreen from "@/src/play/screens/GenericActiveLobbyScreen/GenericActiveLobbyScreen";
 import * as Haptics from "expo-haptics";
 import { useNavigation } from "expo-router";
 import { useEffect, useRef, useState } from "react";
@@ -13,9 +13,8 @@ import { useQuizSessionProvider } from "../../context/QuizGameProvider";
 
 export const LobbyScreen = () => {
   const navigation: any = useNavigation();
-  const [question, setQuestion] = useState<string>("");
   const [started, setStarted] = useState<boolean>(false);
-  const [isAddingQuestion, setIsAddingQuestion] = useState<boolean>(false);
+  const [isAddingQuestion, setIsAddingRound] = useState<boolean>(false);
 
   const { gameSession, clearGlobalSessionValues } = useGlobalSessionProvider();
   const { disconnect, invokeFunction } = useHubConnectionProvider();
@@ -32,33 +31,26 @@ export const LobbyScreen = () => {
     prevIterationsRef.current = iterations;
   }, [iterations]);
 
-  const handleSetQuestion = (value: string) => {
-    setQuestion(value);
-  };
-
-  const handleAddQuestion = async () => {
+  const handleAddRound = async (questionToAdd: string) => {
     if (isAddingQuestion) {
       return;
     }
 
-    if (question === "") {
+    if (questionToAdd.trim() === "") {
       return;
     }
 
-    setIsAddingQuestion(true);
-    const toAdd = question;
-    setQuestion("");
-    const result = await invokeFunction("AddQuestion", gameSession.gameKey, toAdd);
+    setIsAddingRound(true);
+    const result = await invokeFunction("AddQuestion", gameSession.gameKey, questionToAdd);
 
     if (result.isError()) {
       console.error(result.error);
       displayErrorModal("Kunne ikke legge til spørsmål.");
-      setIsAddingQuestion(false);
+      setIsAddingRound(false);
       return;
     }
 
-    setQuestion("");
-    setIsAddingQuestion(false);
+    setIsAddingRound(false);
   };
 
   const handleStartGame = async () => {
@@ -104,23 +96,17 @@ export const LobbyScreen = () => {
   };
 
   return (
-    <SimpleInitScreen
-      createScreen={false}
+    <GenericActiveLobbyScreen
       themeColor={theme.primaryColor}
       secondaryThemeColor={theme.secondaryColor}
-      onBackPressed={handleBackPressed}
-      onInfoPressed={handleInfoPressed}
-      headerText="asdasd"
-      topButtonText="Legg til"
-      topButtonOnChange={() => {}}
-      topButtonOnPress={handleAddQuestion}
-      bottomButtonText="Start spill"
-      bottomButtonCallback={handleStartGame}
       featherIcon="layers"
       iterations={iterations}
       inputPlaceholder="Spørsmål..."
-      inputValue={question}
-      setInput={handleSetQuestion}
+      bottomButtonText="Start spill"
+      onCreatePressed={handleStartGame}
+      onAddRoundPressed={handleAddRound}
+      onBackPressed={handleBackPressed}
+      onInfoPressed={handleInfoPressed}
     />
   );
 };
