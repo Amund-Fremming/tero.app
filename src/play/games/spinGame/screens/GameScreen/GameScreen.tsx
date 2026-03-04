@@ -187,19 +187,19 @@ export const GameScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {gameState === SpinGameState.RoundStarted && isHost && (
+      {gameState === SpinGameState.RoundStarted && (
         <View style={styles.tutorialWrapper}>
           <Text style={styles.tutorialHeader}>{tutorialHeader()}</Text>
           <Text style={styles.tutorialText}>{roundText}</Text>
         </View>
       )}
-      <Text style={{ ...styles.text }}>
-        {gameState === SpinGameState.RoundStarted && !isHost && "Gjør deg klar!"}
-        {gameState === SpinGameState.RoundFinished && roundText}
-        {gameState === SpinGameState.Finished && "Spillet er ferdig!"}
-      </Text>
 
-      {gameState === SpinGameState.RoundStarted && isHost && (
+      {gameState === SpinGameState.RoundFinished && selectedBatch.includes(pseudoId) && (
+        <Text style={{ ...styles.text }}>{roundText}</Text>
+      )}
+      {gameState === SpinGameState.Finished && <Text style={{ ...styles.text }}>"Spillet er ferdig!</Text>}
+
+      {gameState === SpinGameState.RoundStarted && (
         <TouchableOpacity onPress={handleStartRound} style={styles.button}>
           <Text style={styles.buttonText}>Start spin</Text>
         </TouchableOpacity>

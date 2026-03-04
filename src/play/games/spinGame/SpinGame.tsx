@@ -78,7 +78,7 @@ export const SpinGame = () => {
 
     setupListeners();
 
-    const groupResult = await invokeFunction("ConnectToGroup", key, pseudoId, false);
+    const groupResult = await invokeFunction("ConnectToGroup", key, pseudoId);
     if (groupResult.isError()) {
       console.error(groupResult.error);
       displayErrorModal("Kunne ikke koble til.");
