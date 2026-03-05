@@ -25,7 +25,7 @@ export const TutorialScreen = () => {
     if (loading) return;
 
     setLoading(true);
-    const result = await gameService().createGame(pseudoId, GameType.Quiz);
+    const result = await gameService().createSession(pseudoId, GameType.Quiz);
 
     if (result.isError()) {
       displayErrorModal(result.error);

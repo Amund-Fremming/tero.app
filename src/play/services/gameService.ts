@@ -7,7 +7,6 @@ import {
   InteractiveGameResponse,
   JoinGameResponse,
   PagedResponse,
-  PatchGameBaseRequest,
 } from "../../core/constants/Types";
 import { err, ok, Result } from "../../core/utils/result";
 import { getHeaders } from "../../core/utils/utilFunctions";
@@ -30,10 +29,10 @@ export class GameService {
     }
   }
 
-  async createGame(pseudoId: string, type: GameType): Promise<Result<InteractiveGameResponse>> {
+  async createSession(pseudoId: string, type: GameType): Promise<Result<InteractiveGameResponse>> {
     try {
       const response = await axios.post<InteractiveGameResponse>(
-        `${this.urlBase}/games/general/${type}/create`,
+        `${this.urlBase}/games/session/${type}/create`,
         {},
         {
           headers: getHeaders(pseudoId, null),
@@ -43,38 +42,8 @@ export class GameService {
       const result: InteractiveGameResponse = response.data;
       return ok(result);
     } catch (error) {
-      console.error("createInteractiveGame:", error);
+      console.error("createSession:", error);
       return err("Klarte ikke opprette spill");
-    }
-  }
-
-  async patchGame(
-    pseudoId: string,
-    gameId: string,
-    request: PatchGameBaseRequest,
-  ): Promise<Result<InteractiveGameResponse>> {
-    try {
-      const response = await axios.patch(`${this.urlBase}/games/general/${gameId}`, request, {
-        headers: getHeaders(pseudoId, null),
-      });
-
-      const result: InteractiveGameResponse = response.data;
-      return ok(result);
-    } catch (error) {
-      console.error("createInteractiveGame:", error);
-      return err("Klarte ikke opprette spill");
-    }
-  }
-
-  async deleteGame(guest_id: string, token: string | null, game_id: string): Promise<Result<void>> {
-    try {
-      await axios.delete(`${this.urlBase}/games/${game_id}`, {
-        headers: getHeaders(guest_id, token),
-      });
-      return ok(undefined);
-    } catch (error) {
-      console.error("deleteGame:", error);
-      return err("Klarte ikke slette spill");
     }
   }
 

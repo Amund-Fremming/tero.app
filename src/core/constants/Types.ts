@@ -109,6 +109,11 @@ export interface PatchGameBaseRequest {
   category?: GameCategory;
 }
 
+export interface CreateGameRequest {
+  name: string;
+  category: GameCategory;
+}
+
 export enum UserRole {
   BaseUser = "BaseUser",
   Admin = "Admin",

@@ -42,7 +42,7 @@ export const TutorialScreen = ({ onGameCreated }: TutorialScreenProps) => {
     }
 
     setLoading(true);
-    const result = await gameService().createGame(pseudoId, gameType, { ...createRequest, name: gameName });
+    const result = await gameService().createSession(pseudoId, gameType, { ...createRequest, name: gameName });
 
     if (result.isError()) {
       displayErrorModal(result.error);
