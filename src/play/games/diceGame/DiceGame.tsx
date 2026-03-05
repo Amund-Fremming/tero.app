@@ -232,33 +232,12 @@ const Dice3D = ({ angles }: { angles: Angles }) => {
             const pipPoint = bilinear(face.points2d, position.x, position.y);
             const radius = face.id === "front" ? 7.5 : 6.2;
 
-            return <Circle key={`pip-${face.id}-${pipIndex}`} cx={pipPoint.x} cy={pipPoint.y} r={radius} fill="#20242a" />;
+            return (
+              <Circle key={`pip-${face.id}-${pipIndex}`} cx={pipPoint.x} cy={pipPoint.y} r={radius} fill="#20242a" />
+            );
           });
         })}
       </G>
-
-      <Rect
-        x="22"
-        y="22"
-        width="216"
-        height="216"
-        rx="58"
-        ry="58"
-        fill="none"
-        stroke="#bcc0c8"
-        strokeWidth="4"
-      />
-      <Rect
-        x="28"
-        y="28"
-        width="204"
-        height="204"
-        rx="52"
-        ry="52"
-        fill="none"
-        stroke="rgba(255,255,255,0.55)"
-        strokeWidth="1.6"
-      />
     </Svg>
   );
 };

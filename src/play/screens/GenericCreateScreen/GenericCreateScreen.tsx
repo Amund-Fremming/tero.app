@@ -42,7 +42,7 @@ export const GenericCreateScreen = ({
   const anchorRef = useRef<View>(null);
 
   const { isHost } = useGlobalSessionProvider();
-  const { displayInfoModal } = useModalProvider();
+  const { displayInfoModal, displayActionModal } = useModalProvider();
 
   const [inputValue, setInputValue] = useState<string>("");
   const [category, setCategory] = useState<GameCategory | undefined>(undefined);
@@ -89,12 +89,18 @@ export const GenericCreateScreen = ({
   };
 
   const handleBack = () => {
-    if (onBackPressed) {
-      onBackPressed();
-      return;
-    }
+    displayActionModal(
+      "Er du sikker på at du ikke vil lagre spillet?",
+      () => {
+        if (onBackPressed) {
+          onBackPressed();
+          return;
+        }
 
-    navigation.goBack();
+        navigation.goBack();
+      },
+      () => {},
+    );
   };
 
   const handleSavePressed = () => {

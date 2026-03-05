@@ -34,6 +34,7 @@ export const JoinScreen = () => {
   );
 
   const handleJoinGame = async () => {
+    setIsHost(false);
     if (userInput === "") {
       displayInfoModal("Du har glemt å skrive inn ett rom navn.", "Oisann");
       return;
@@ -52,7 +53,7 @@ export const JoinScreen = () => {
     setGameEntryMode(GameEntryMode.Participant);
 
     setIsDraft(response.is_draft);
-    setGameSessionValues(response.game_key, response.hub_name);
+    setGameSessionValues(response.game_key, response.hub_name, response.game_id);
     setGameType(response.game_type);
 
     if ([GameType.Duel, GameType.Roulette].includes(response.game_type)) {

@@ -1,4 +1,4 @@
-import { CreateGameRequest, GameCategory, GameEntryMode, GameType } from "@/src/core/constants/Types";
+import { GameEntryMode, GameType } from "@/src/core/constants/Types";
 import { useAuthProvider } from "@/src/core/context/AuthProvider";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
 import { useServiceProvider } from "@/src/core/context/ServiceProvider";
@@ -16,10 +16,6 @@ export const TutorialScreen = () => {
   const { setScreen } = useQuizSessionProvider();
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [createRequest, setCreateRequest] = useState<CreateGameRequest>({
-    name: "Generic",
-    category: GameCategory.Mixed,
-  });
 
   useEffect(() => {
     setIsHost(true);
@@ -27,28 +23,9 @@ export const TutorialScreen = () => {
 
   const onFinishedPressed = async () => {
     if (loading) return;
-    const gameName = createRequest.name.trim();
-
-    if (!createRequest.category) {
-      displayInfoModal("Velg kategori.");
-      return;
-    }
-
-    if (gameName === "") {
-      displayInfoModal("Spillnavn kan ikke være tomt");
-      return;
-    }
-
-    if (gameName.length < 3) {
-      displayInfoModal("Spillnavn må ha minst 3 tegn.");
-      return;
-    }
 
     setLoading(true);
-    const result = await gameService().createInteractiveGame(pseudoId, GameType.Quiz, {
-      ...createRequest,
-      name: gameName,
-    });
+    const result = await gameService().createGame(pseudoId, GameType.Quiz);
 
     if (result.isError()) {
       displayErrorModal(result.error);
@@ -57,7 +34,7 @@ export const TutorialScreen = () => {
     }
 
     console.info("Game initiated with key:", result.value.key);
-    setGameSessionValues(result.value.key, result.value.hub_name);
+    setGameSessionValues(result.value.key, result.value.hub_name, result.value.game_id);
     setGameEntryMode(GameEntryMode.Creator);
     setScreen(QuizGameScreen.Lobby);
     setLoading(false);

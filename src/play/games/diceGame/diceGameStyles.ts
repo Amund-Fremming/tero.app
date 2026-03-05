@@ -74,12 +74,6 @@ export const styles = StyleSheet.create({
   diceCube: {
     width: "100%",
     height: "100%",
-    borderRadius: moderateScale(38),
     overflow: "hidden",
-    shadowColor: Color.Black,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.22,
-    shadowRadius: 8,
-    elevation: 7,
   },
 });

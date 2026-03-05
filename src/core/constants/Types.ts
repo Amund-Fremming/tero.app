@@ -104,6 +104,11 @@ export interface PatchUserRequest {
   birth_date?: string;
 }
 
+export interface PatchGameBaseRequest {
+  name?: string;
+  category?: GameCategory;
+}
+
 export enum UserRole {
   BaseUser = "BaseUser",
   Admin = "Admin",
@@ -128,11 +133,6 @@ export interface CreateGameTipRequest {
   description: string;
 }
 
-export interface CreateGameRequest {
-  name: string;
-  category: GameCategory;
-}
-
 export enum GameCategory {
   Girls = "Girls",
   Boys = "Boys",
@@ -155,10 +155,12 @@ export interface GameTip {
 export interface InteractiveGameResponse {
   key: string;
   hub_name: string;
+  game_id: string;
   is_draft: boolean;
 }
 
 export interface JoinGameResponse {
+  game_id: string;
   game_key: string;
   hub_name: string;
   game_type: GameType;

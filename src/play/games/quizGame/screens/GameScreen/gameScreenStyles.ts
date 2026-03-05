@@ -80,7 +80,6 @@ export const styles = StyleSheet.create({
     width: "86%",
     height: verticalScale(69),
     borderRadius: moderateScale(10),
-    backgroundColor: Color.Black,
   },
 
   nextButton: {

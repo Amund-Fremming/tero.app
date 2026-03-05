@@ -1,8 +1,5 @@
 import axios from "axios";
-import { err, ok, Result } from "../../core/utils/result";
-import { getHeaders } from "../../core/utils/utilFunctions";
 import {
-  CreateGameRequest,
   CreateGameTipRequest,
   GameBase,
   GamePagedRequest,
@@ -10,7 +7,10 @@ import {
   InteractiveGameResponse,
   JoinGameResponse,
   PagedResponse,
+  PatchGameBaseRequest,
 } from "../../core/constants/Types";
+import { err, ok, Result } from "../../core/utils/result";
+import { getHeaders } from "../../core/utils/utilFunctions";
 
 export class GameService {
   urlBase: string;
@@ -30,19 +30,33 @@ export class GameService {
     }
   }
 
-  async createInteractiveGame(
-    pseudoId: string,
-    type: GameType,
-    request: CreateGameRequest,
-  ): Promise<Result<InteractiveGameResponse>> {
+  async createGame(pseudoId: string, type: GameType): Promise<Result<InteractiveGameResponse>> {
     try {
       const response = await axios.post<InteractiveGameResponse>(
-        `${this.urlBase}/games/session/${type}/create`,
-        request,
+        `${this.urlBase}/games/general/${type}/create`,
+        {},
         {
           headers: getHeaders(pseudoId, null),
         },
       );
+
+      const result: InteractiveGameResponse = response.data;
+      return ok(result);
+    } catch (error) {
+      console.error("createInteractiveGame:", error);
+      return err("Klarte ikke opprette spill");
+    }
+  }
+
+  async patchGame(
+    pseudoId: string,
+    gameId: string,
+    request: PatchGameBaseRequest,
+  ): Promise<Result<InteractiveGameResponse>> {
+    try {
+      const response = await axios.patch(`${this.urlBase}/games/general/${gameId}`, request, {
+        headers: getHeaders(pseudoId, null),
+      });
 
       const result: InteractiveGameResponse = response.data;
       return ok(result);

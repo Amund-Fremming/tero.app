@@ -136,33 +136,34 @@ export const GameScreen = () => {
 
   const handleInfoPressed = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    if (isHost) {
-      if (gameType === GameType.Duel) {
-        displayInfoModal(
-          "Les opp hva de 2 utvalgte må duellere om. Når alle er klare kan du starte spinnen, grønn betyr at du er valgt.",
-          "Hva nå?",
-        );
-      }
-      if (gameType === GameType.Roulette) {
-        displayInfoModal(
-          "Les opp hva taperen av ruletten må gjøre. Når alle er klare kan du starte spinnen, grønn betyr at du er valgt.",
-          "Hva nå?",
-        );
-      }
-    } else {
-      if (gameType === GameType.Duel) {
-        displayInfoModal(
-          "Verten vil lese opp hva de 2 utvalgte må duellere om. De som får grønn farge er utvalgt!",
-          "Hva nå?",
-        );
-      }
-      if (gameType === GameType.Roulette) {
-        displayInfoModal(
-          "Verten vil lese opp hva taperen av ruletten må gjøre. Den som får grønn farge er utvalgt!",
-          "Hva nå?",
-        );
-      }
-    }
+    // if (isHost) {
+    //   if (gameType === GameType.Duel) {
+    //     displayInfoModal(
+    //       "Les opp hva de 2 utvalgte må duellere om. Når alle er klare kan du starte spinnen, grønn betyr at du er valgt.",
+    //       "Hva nå?",
+    //     );
+    //   }
+    //   if (gameType === GameType.Roulette) {
+    //     displayInfoModal(
+    //       "Les opp hva taperen av ruletten må gjøre. Når alle er klare kan du starte spinnen, grønn betyr at du er valgt.",
+    //       "Hva nå?",
+    //     );
+    //   }
+    // } else {
+    //   if (gameType === GameType.Duel) {
+    //     displayInfoModal(
+    //       "Verten vil lese opp hva de 2 utvalgte må duellere om. De som får grønn farge er utvalgt!",
+    //       "Hva nå?",
+    //     );
+    //   }
+    //   if (gameType === GameType.Roulette) {
+    //     displayInfoModal(
+    //       "Verten vil lese opp hva taperen av ruletten må gjøre. Den som får grønn farge er utvalgt!",
+    //       "Hva nå?",
+    //     );
+    //   }
+    // }
+    debugDisconnect();
   };
 
   const tutorialHeader = () => {
@@ -199,7 +200,7 @@ export const GameScreen = () => {
       )}
       {gameState === SpinGameState.Finished && <Text style={{ ...styles.text }}>"Spillet er ferdig!</Text>}
 
-      {gameState === SpinGameState.RoundStarted && (
+      {gameState === SpinGameState.RoundStarted && isHost && (
         <TouchableOpacity onPress={handleStartRound} style={styles.button}>
           <Text style={styles.buttonText}>Start spin</Text>
         </TouchableOpacity>

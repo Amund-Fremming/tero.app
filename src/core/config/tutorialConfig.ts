@@ -22,10 +22,10 @@ export const tutorialConfig: Record<GameType, TutorialDef> = {
     mode: "simple",
     title: "Slik spiller du Quiz",
     items: [
-      "Opprett ett spill med ett navn og en kategori",
-      "Del rom navnet til de andre spillerene",
+      "Opprett spill, og den rom navnet med venner",
+      "Venner blir med ved å trykke bli med på hjem skjermen og så bruke rom navnet for å bli med",
       "Legg til så mange spørsmål dere ønsker og start spillet",
-      "Les opp spørsmålet og svar på tur. Her kan dere sende telefonen rundt, eller svare på rundtur",
+      "Spill det som dere ønsker. Spill det som 100 spørsmål med noe som kastes rundt, eller send mobilen på rundtur og svar deretter",
     ],
   },
   [GameType.Roulette]: {

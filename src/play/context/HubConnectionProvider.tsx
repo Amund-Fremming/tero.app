@@ -150,7 +150,13 @@ export const HubConnectionProvider = ({ children }: HubConnectionProviderProps) 
       }
 
       console.info("DEBUG: Forcing disconnect to test reconnection");
-      await connectionRef.current.stop();
+      const ws = (connectionRef.current as any).connection?._transport?.webSocket;
+      if (ws) {
+        ws.close();
+      } else {
+        console.warn("DEBUG: Could not access underlying WebSocket, falling back to stop()");
+        await connectionRef.current.stop();
+      }
     } catch (error) {
       console.error("DEBUG: Failed to force disconnect", error);
     }

@@ -1,21 +1,23 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import Color from "@/src/core/constants/Color";
+import { GameEntryMode } from "@/src/core/constants/Types";
+import { useModalProvider } from "@/src/core/context/ModalProvider";
+import { moderateScale } from "@/src/core/utils/dimensions";
+import { resetToHomeScreen } from "@/src/core/utils/utilFunctions";
+import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
+import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
+import { useNavigation } from "expo-router";
+import { useEffect, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+import { QuizGameScreen, QuizSession } from "../../constants/quizTypes";
 import { useQuizSessionProvider } from "../../context/QuizGameProvider";
 import styles from "./gameScreenStyles";
-import { useEffect, useState } from "react";
-import { useNavigation } from "expo-router";
-import { QuizSession } from "../../constants/quizTypes";
-import { Feather } from "@expo/vector-icons";
-import { moderateScale } from "@/src/core/utils/dimensions";
-import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
-import { resetToHomeScreen } from "@/src/core/utils/utilFunctions";
-import { useModalProvider } from "@/src/core/context/ModalProvider";
 
 export const GameScreen = () => {
   const navigation: any = useNavigation();
   const { quizSession } = useQuizSessionProvider();
-  const { clearGlobalSessionValues } = useGlobalSessionProvider();
-  const { clearQuizGameValues } = useQuizSessionProvider();
+  const { clearGlobalSessionValues, gameEntryMode } = useGlobalSessionProvider();
+  const { clearQuizGameValues, setScreen } = useQuizSessionProvider();
   const { displayInfoModal, displayActionModal } = useModalProvider();
 
   const [quiz, setQuiz] = useState<QuizSession | undefined>(quizSession);
@@ -68,6 +70,14 @@ export const GameScreen = () => {
     );
   };
 
+  const handleFinishedPressed = () => {
+    if (gameEntryMode === GameEntryMode.Creator) {
+      setScreen(QuizGameScreen.Patch);
+    } else {
+      resetToHomeScreen(navigation);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.headerWrapper}>
@@ -88,9 +98,18 @@ export const GameScreen = () => {
         <TouchableOpacity style={styles.nextButton} onPress={handlePrevPressed}>
           <Text style={styles.nextText}>Forrige</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.prevButton} onPress={handleNextPressed}>
-          <Text style={styles.prevText}>Neste</Text>
-        </TouchableOpacity>
+        {(quiz?.current_iteration ?? 0) + 1 === (quiz?.rounds.length ?? 0) ? (
+          <TouchableOpacity
+            style={{ ...styles.prevButton, backgroundColor: Color.HomeRed }}
+            onPress={handleFinishedPressed}
+          >
+            <Text style={styles.prevText}>Avslutt</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={{ ...styles.prevButton, backgroundColor: Color.Black }} onPress={handleNextPressed}>
+            <Text style={styles.prevText}>Neste</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

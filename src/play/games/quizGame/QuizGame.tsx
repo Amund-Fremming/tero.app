@@ -8,9 +8,9 @@ import { useNavigation } from "expo-router";
 import { useEffect } from "react";
 import { QuizGameScreen, QuizSession } from "./constants/quizTypes";
 import { useQuizSessionProvider } from "./context/QuizGameProvider";
-import { CreateScreen } from "./screens/CreateScreen/CreateScreen";
 import { GameScreen } from "./screens/GameScreen/GameScreen";
 import LobbyScreen from "./screens/LobbyScreen/LobbyScreen";
+import { PatchScreen } from "./screens/PatchScreen/PatchScreen";
 import StartedScreen from "./screens/StartedScreen/StartedScreen";
 import TutorialScreen from "./screens/TutorialScreen/TutorialScreen";
 
@@ -109,8 +109,8 @@ export const QuizGame = () => {
       return <StartedScreen />;
     case QuizGameScreen.Lobby:
       return <LobbyScreen />;
-    case QuizGameScreen.Create:
-      return <CreateScreen />;
+    case QuizGameScreen.Patch:
+      return <PatchScreen />;
     default:
       return <LobbyScreen />;
   }
