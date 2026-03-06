@@ -17,7 +17,7 @@ const defaultContextValue: IQuizSessionContext = {
   clearQuizGameValues: () => {},
   quizSession: undefined,
   setQuizSession: () => {},
-  screen: QuizSessionScreen.Patch,
+  screen: QuizSessionScreen.Create,
   setScreen: () => {},
   iterations: 0,
   setIterations: () => {},
@@ -45,7 +45,7 @@ export const QuizSessionProvider = ({ children }: QuizSessionProviderProps) => {
     useQuizScreenStore.getState().clearScreen();
   };
 
-  const screen = useQuizScreenStore((state) => state.screen) || QuizSessionScreen.Patch;
+  const screen = useQuizScreenStore((state) => state.screen) || QuizSessionScreen.Create;
 
   const setScreen = (value: QuizSessionScreen | ((prev: QuizSessionScreen) => QuizSessionScreen)) => {
     const next = typeof value === "function" ? value(screen) : value;

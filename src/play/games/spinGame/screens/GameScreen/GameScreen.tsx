@@ -12,7 +12,7 @@ import * as Haptics from "expo-haptics";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { SpinGameState } from "../../constants/SpinTypes";
+import { SpinGameState, SpinSessionScreen } from "../../constants/SpinTypes";
 import { useSpinSessionProvider } from "../../context/SpinGameProvider";
 import styles from "./gameScreenStyles";
 
@@ -25,7 +25,7 @@ export const GameScreen = () => {
   const disconnectTriggeredRef = useRef<boolean>(false);
 
   const { isHost, clearGlobalSessionValues, gameSession, gameType } = useGlobalSessionProvider();
-  const { clearSpinSessionValues, themeColor, roundText, selectedBatch, gameState, setGameState } =
+  const { clearSpinSessionValues, setScreen, themeColor, roundText, selectedBatch, gameState, setGameState } =
     useSpinSessionProvider();
   const { disconnect, invokeFunction, debugDisconnect } = useHubConnectionProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
@@ -77,6 +77,7 @@ export const GameScreen = () => {
 
   // Only used when `disconnect()` is called first
   const navigateHome = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     clearGlobalSessionValues();
     clearSpinSessionValues();
     resetToHomeGlobal();
@@ -212,14 +213,14 @@ export const GameScreen = () => {
         </TouchableOpacity>
       )}
 
-      {gameState === SpinGameState.Finished && (
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            navigateHome();
-          }}
-        >
+      {gameState === SpinGameState.Finished && isHost && (
+        <TouchableOpacity style={styles.button} onPress={() => setScreen(SpinSessionScreen.Create)}>
+          <Text style={styles.buttonText}>Neste</Text>
+        </TouchableOpacity>
+      )}
+
+      {gameState === SpinGameState.Finished && !isHost && (
+        <TouchableOpacity style={styles.button} onPress={navigateHome}>
           <Text style={styles.buttonText}>Hjem</Text>
         </TouchableOpacity>
       )}

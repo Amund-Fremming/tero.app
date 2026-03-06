@@ -1,15 +1,18 @@
-import { CreateGameRequest, GameCategory, GameEntryMode } from "@/src/core/constants/Types";
+import { GameEntryMode } from "@/src/core/constants/Types";
 import { useAuthProvider } from "@/src/core/context/AuthProvider";
 import { useModalProvider } from "@/src/core/context/ModalProvider";
 import { useServiceProvider } from "@/src/core/context/ServiceProvider";
 import { useGlobalSessionProvider } from "@/src/play/context/GlobalSessionProvider";
 import GenericTutorialScreen from "@/src/play/screens/GenericTutorialScreen/GenericTutorialScreen";
-import { useState } from "react";
+import { useNavigation } from "expo-router";
+import { useEffect, useState } from "react";
 
 interface TutorialScreenProps {
   onGameCreated: (hubName: string, gameKey: string) => Promise<void>;
 }
 export const TutorialScreen = ({ onGameCreated }: TutorialScreenProps) => {
+  const navigation: any = useNavigation();
+
   const { pseudoId } = useAuthProvider();
   const { displayErrorModal, displayInfoModal } = useModalProvider();
   const { gameService } = useServiceProvider();
@@ -18,45 +21,27 @@ export const TutorialScreen = ({ onGameCreated }: TutorialScreenProps) => {
 
   const [loading, setLoading] = useState<boolean>(false);
 
+  useEffect(() => {
+    setIsHost(true);
+  }, []);
+
   const onFinishedPressed = async () => {
-    let createRequest: CreateGameRequest = {
-      name: "Generic",
-      category: GameCategory.Mixed,
-    };
-
     if (loading) return;
-    const gameName = createRequest.name.trim();
 
-    if (!createRequest.category) {
-      displayInfoModal("Velg kategori.");
-      return;
-    }
-
-    if (gameName === "") {
-      displayInfoModal("Skriv inn navn.");
-      return;
-    }
-
-    if (gameName.length < 3) {
-      displayInfoModal("Navn må ha minst 3 tegn.");
-      return;
-    }
-
-    setLoading(true);
-    const result = await gameService().createSession(pseudoId, gameType, {
-      ...createRequest,
-      name: gameName,
-    });
-
+    const result = await gameService().createSession(pseudoId, gameType);
     if (result.isError()) {
-      displayErrorModal(result.error);
+      console.error("Failed to create game session", result.error);
       setLoading(false);
+      displayErrorModal("Klarte ikke opprette spill, forsøk på nytt", () => {
+        navigation.goBack();
+      });
       return;
     }
 
-    console.info("Game initiated with key:", result.value.key, "hub:", result.value.hub_name, "type:", gameType);
+    const data = result.value;
+    setLoading(true);
     setIsDraft(result.value.is_draft);
-    setGameSessionValues(result.value.key, result.value.hub_name);
+    setGameSessionValues(data.key, data.hub_name, data.game_id);
     setGameEntryMode(GameEntryMode.Creator);
     await onGameCreated(result.value.hub_name, result.value.key);
     setLoading(false);

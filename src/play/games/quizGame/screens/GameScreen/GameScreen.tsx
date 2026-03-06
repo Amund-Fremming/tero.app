@@ -72,7 +72,7 @@ export const GameScreen = () => {
 
   const handleFinishedPressed = () => {
     if (gameEntryMode === GameEntryMode.Creator) {
-      setScreen(QuizGameScreen.Patch);
+      setScreen(QuizGameScreen.Create);
     } else {
       resetToHomeScreen(navigation);
     }

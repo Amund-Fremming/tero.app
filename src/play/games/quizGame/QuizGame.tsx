@@ -109,7 +109,7 @@ export const QuizGame = () => {
       return <StartedScreen />;
     case QuizGameScreen.Lobby:
       return <LobbyScreen />;
-    case QuizGameScreen.Patch:
+    case QuizGameScreen.Create:
       return <CreateScreen />;
     default:
       return <LobbyScreen />;
