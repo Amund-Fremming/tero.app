@@ -40,7 +40,6 @@ export const GameScreen = () => {
   useEffect(() => {
     if (gameState === SpinGameState.Finished) {
       setBgColor(Color.Gray);
-      handleGameFinshed();
     } else if (gameState === SpinGameState.RoundStarted) {
       setBgColor(themeColor);
     }
@@ -61,12 +60,6 @@ export const GameScreen = () => {
     clearGlobalSessionValues();
     clearSpinSessionValues();
     resetToHomeGlobal();
-  };
-
-  // Only disconnects the hub
-  const handleGameFinshed = async () => {
-    disconnectTriggeredRef.current = true;
-    await disconnect();
   };
 
   // Only used when `disconnect()` is called first
@@ -97,7 +90,6 @@ export const GameScreen = () => {
     if (state === SpinGameState.Finished) {
       setBgColor(Color.Gray);
       setGameState(state);
-      await handleGameFinshed();
     }
   };
 

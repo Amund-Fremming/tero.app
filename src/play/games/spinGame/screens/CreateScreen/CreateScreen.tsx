@@ -29,7 +29,7 @@ export const CreateScreen = () => {
 
     const result = await invokeFunction("PersistGame", sessionData.gameKey, name, category);
     if (result.isError()) {
-      console.error("Failed to persist game");
+      console.error("Failed to persist game:", result.error);
       displayErrorModal("Klarte ikke lagre spill, forsøk igjen senere", () => {
         setLoading(false);
         resetToHomeScreen(navigation);

@@ -54,6 +54,10 @@ export const SpinGame = () => {
   useEffect(() => {
     setThemeColors(gameType);
 
+    if ([GameEntryMode.Member, GameEntryMode.Participant].includes(gameEntryMode)) {
+      setIsHost(false);
+    }
+
     const initScreen = getInitialScreen();
     setScreen(initScreen);
     if (initScreen !== SpinSessionScreen.Create && initScreen !== SpinSessionScreen.Tutorial) {
